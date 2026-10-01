@@ -14,7 +14,6 @@ detector:
   depth: [1, 2, 2, 1]                    # C2f repeats: stems, stride 8, 16, 32
   p2_head: true                          # spec 7: run once with false to document the stride gap
   se_weighting: false                    # spec 7 optional
-  modality_dropout: 0.15                 # spec 7 low-cost addition
 
 train:
   epochs: 120
@@ -38,11 +37,16 @@ train:
 
 loss: {w_cls: 0.5, w_box: 7.5, w_nwd: 2.0, tiny_px: 16.0, nwd_C: 12.8, topk: 10, near_k: 4}
 
-distill:
-  lambda: 1.0
-  temperature: 2.0
-  box_weight: 1.0
-  score_thresh: 0.1
+distill:                                 # spec 7.2 student training, models/distill.py. Nothing reads this
+                                         # yet: train/engine.py raises NotImplementedError for distill_from
+  modality_dropout: {rgb+lwir: 0.5, lwir: 0.3, rgb: 0.2}  # student input per batch; teacher always gets all 3
+  lambda_resp: 1.0                       # L = L_det + lambda_resp * L_resp + lambda_feat * L_feat
+  lambda_feat: 1.0                       # start values, tune on val; both 0 = the modality-dropout-only ablation
+  temperature: 2.0                       # L_resp: softened class scores and box distributions
+  feat_levels: [p2, p3]                  # L_feat: 1x1 adapters on these neck outputs, dropped after training
+  mask_floor: 0.05                       # M = sum_i w_i G_i + mask_floor
+  cnr_beta: 2.0                          # w_i = 1 + cnr_beta * clip((C_T,i - C_S,i) / cnr_scale, 0, 1); 0 = off
+  cnr_scale: 5.0
 
 eval:
   conf: 0.001                            # detections kept for AP

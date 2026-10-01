@@ -113,7 +113,6 @@ def train_model(name: str, data_root: str, out_root: str, cfgs: dict, teacher_ck
     with open(os.path.join(out, "config.json"), "w") as f:
         json.dump(dict(model=name, bands=bands, train=T, teacher=teacher_ckpt, data=data_root), f, indent=1)
     best, it, hist = -1.0, 0, []
-    D = T["distill"]
     for ep in range(n_ep):
         train_ds.set_epoch(ep)
         model.train()
@@ -122,12 +121,6 @@ def train_model(name: str, data_root: str, out_root: str, cfgs: dict, teacher_ck
             imgs = {b: v.to(dev, non_blocking=True) for b, v in imgs.items()}
             raw = model({b: imgs[b] for b in bands})
             loss, parts = crit(model, raw, tgts)
-            if teacher is not None:
-                with torch.no_grad():
-                    t_raw = teacher({b: imgs[b] for b in teacher.bands})
-                lk, kp = kd_loss(model, raw, teacher, t_raw, D["temperature"], D["box_weight"], D["score_thresh"])
-                loss = loss + D["lambda"] * lk
-                parts.update(kp)
             opt.zero_grad(set_to_none=True)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), tc["grad_clip"])
