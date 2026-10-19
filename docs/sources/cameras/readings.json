@@ -1,0 +1,1717 @@
+{
+ "note": "Numbers read off camera and detector manufacturer documents for the generic camera classes of configs/sensors.yaml cameras (sensor set rule, CLAUDE.md). Each reading quotes the document's text; tools/source_measurements.py camera_quotes() checks every quote against the saved copy (whitespace and Unicode compatibility forms normalised). Documents are git-ignored third-party copies; this file is committed.",
+ "retrieved": "2026-10-12",
+ "documents": {
+  "BOSON-DS": {
+   "file": "Boson_datasheet_102-2013-40_Rev340.pdf",
+   "publisher": "FLIR Systems (Teledyne FLIR)",
+   "title": "FLIR Boson Thermal Imaging Core Product Datasheet, Doc. 102-2013-40, Release 340, March 2021",
+   "url": "https://groupgets-files.s3.amazonaws.com/boson/documents/Boson%20datasheet,%20102-2013-40,%20Rev%20340.pdf",
+   "host": "GroupGets (distributor) copy of the manufacturer's datasheet; document number, release and FLIR copyright checked",
+   "tier": "S1 for the Boson; S2 for the uncooled VOx class",
+   "pages": [
+    1,
+    8,
+    15,
+    22,
+    24,
+    26,
+    27,
+    30,
+    44,
+    45,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    125,
+    127,
+    131,
+    132,
+    134
+   ],
+   "sha256": "ca197a13aedfd3fdad224cdc9b9c2dc0f99481fadde8208ceee9a1965b7e3058"
+  },
+  "BOSON-BROCHURE": {
+   "file": "Boson_datasheet_mirror_militarysystems.pdf",
+   "publisher": "Teledyne FLIR",
+   "title": "BOSON Uncooled LWIR OEM Thermal Camera Module, 10/24/2023 REV1 (2 pp.)",
+   "url": "https://www.militarysystems-tech.com/sites/militarysystems/files/supplier_docs/Boson%20Datasheet%20-%20Teledyne%20FLIR.pdf",
+   "host": "supplier-document copy; Teledyne FLIR copyright and revision checked",
+   "tier": "S1 (cross-check of BOSON-DS)",
+   "pages": [
+    1
+   ],
+   "sha256": "933ee3753f9d7c9604bc1230c94962ef0aab46c7ee82454789325b84392bc189"
+  },
+  "BOSONPLUS-DS": {
+   "file": "Boson_Plus_datasheet_Rev114.pdf",
+   "publisher": "Teledyne FLIR",
+   "title": "Teledyne FLIR Boson+ Thermal Imaging Core Product Datasheet, Doc. 102-2013-45 (release as printed on its cover)",
+   "url": "https://www.acalbfi.com/nl/file/16133/Boson-Plus-Product-Datasheet-Rev-114.pdf",
+   "host": "Acal BFi (distributor) copy of the manufacturer's datasheet; document number and Teledyne FLIR copyright checked",
+   "tier": "S1 for the Boson+; S2 for the class",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "4852d1516c03ff40edc55c3e62d839233558f0732cbe277c4280fb609141a3ec"
+  },
+  "TAU2-DS": {
+   "file": "FLIR_Tau2_datasheet_mirror_wtechnika.pdf",
+   "publisher": "Teledyne FLIR",
+   "title": "TAU 2 datasheet (Teledyne FLIR, 2 pp., PDF of 2021-10-07)",
+   "url": "https://w-technika.cz/cdn/shop/files/tau20220datasheet20-20teledyne20flir.pdf",
+   "host": "reseller copy of the manufacturer's datasheet; Teledyne FLIR content checked",
+   "tier": "S1 for the Tau 2 (legacy 17 um)",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "8d296baee5dd752e87cc3cf0a9fe3af700d91f26ac774112248dd6e4aad70862"
+  },
+  "TENUM640-DS": {
+   "file": "LeonardoDRS_Tenum640_datasheet.pdf",
+   "publisher": "Leonardo DRS",
+   "title": "TENUM 640 Uncooled Thermal Cores datasheet (Leonardo DRS, 2018)",
+   "url": "https://www.leonardodrs.com/media/7126/tenum-640_datasheet.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Tenum 640 (10 um pitch)",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "a61200e98b3dddd0f750ecd7268a9523ecd29fe081d392500593c4c8405e6f3b"
+  },
+  "DIONE1280-DS": {
+   "file": "Exosens_Dione_1280_CAM_leaflet_2026.pdf",
+   "publisher": "Exosens (formerly Xenics)",
+   "title": "Dione 1280 CAM Series leaflet (Exosens, 2026)",
+   "url": "https://www.exosens.com/system/files/2026-06/Exosens_LWIR_Dione%201280%20CAM%20Series_Leaflet.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Dione 1280 (1280x1024 uncooled)",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "13223d9cc1b56f8757f31d8f2eb478dd2fae2e5974d8156e75a8d2727af71d8b"
+  },
+  "SCORPIO-LW-DS": {
+   "file": "Lynred_Scorpio_LW_datasheet_2019.pdf",
+   "publisher": "Lynred",
+   "title": "SCORPIO LW 640 x 512 - 15 um pitch - MCT datasheet (Lynred, May 2019)",
+   "url": "https://www.lynred.com/sites/default/files/2019-10/Scorpio-LW-datasheet.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Scorpio LW; S2 for the cooled LWIR class",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "c567ecaa62dbe52b06ad4ea692681cb1f9ac8becd8121b04260b2bc246b0e948"
+  },
+  "SCORPIO-LW-2026": {
+   "file": "Lynred_Scorpio_LW_R3_2026.pdf",
+   "publisher": "Lynred",
+   "title": "SCORPIO LW preliminary datasheet (Lynred, Oct 2025)",
+   "url": "https://www.lynred.com/sites/default/files/2026-02/R3_SCORPIO%20LW_0.pdf",
+   "host": "manufacturer",
+   "tier": "S1 (cross-check of SCORPIO-LW-DS: same NETD and band)",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "0f9c459b1152890c0f93c74465ea9021a4713f6d3d610eef640db77d22edecb5"
+  },
+  "PELICAN-D-LW-DS": {
+   "file": "SCD_Pelican-D_LW.pdf",
+   "publisher": "SCD (SemiConductor Devices) / SCD USA",
+   "title": "Pelican-D LW 640 x 512, 15 um, T2SL based LWIR Digital IDCA datasheet",
+   "url": "https://scdusa-ir.com/wp-content/uploads/2021/11/Pelican-D-LW.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Pelican-D LW; S2 for the cooled LWIR class",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "14b14dcb3ff944e6dd934f4c83d2ac322c590583d77385a8f36b21490b7e2a00"
+  },
+  "SCORPIO-MW-DS": {
+   "file": "Lynred_Scorpio_MW_datasheet_2019.pdf",
+   "publisher": "Lynred",
+   "title": "SCORPIO MW 640 x 512 - 15 um pitch - MCT datasheet (Lynred, May 2019)",
+   "url": "https://www.lynred.com/sites/default/files/2019-10/Scorpio-MW-datasheet.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Scorpio MW; S2 for the cooled MWIR class",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "846e19c1c0a0c33e53d0556a7a3d5d80d0021afa36d8bc2fcc218ce5dc081ef3"
+  },
+  "SCORPIO-MW-2026": {
+   "file": "Lynred_Scorpio_MW_R3_2026.pdf",
+   "publisher": "Lynred",
+   "title": "SCORPIO MW datasheet (Lynred, 2026)",
+   "url": "https://www.lynred.com/sites/default/files/2026-08/R3_Scorpio_MW_2026.pdf",
+   "host": "manufacturer",
+   "tier": "S1 (cross-check: 19 mK, up to 210 Hz)",
+   "pages": [],
+   "sha256": "d38f10d6cc2a7b10297349e132128101a193d55dd0b78f43e8ea56c196d7f2e2"
+  },
+  "DAPHNIS-HD-MW-DS": {
+   "file": "Lynred_Daphnis_HD_MW_datasheet.pdf",
+   "publisher": "Lynred",
+   "title": "DAPHNIS-HD MW 1280 x 720 - 10 um pitch - MCT datasheet (Lynred, May 2019)",
+   "url": "https://www.lynred.com/sites/default/files/2019-10/Daphnis-HD-MW-datasheet.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Daphnis-HD MW",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "d94c58039a1816fb4bde2a41e3f2c2c35caa3c84eeba04beffbfccc1f148e429"
+  },
+  "MINI-BLACKBIRD-DS": {
+   "file": "SCD_Mini_Blackbird_1280.pdf",
+   "publisher": "SCD USA",
+   "title": "Mini Blackbird SXGA, 1280 x 1024, 10 um, HOT XBn MWIR video core datasheet (Jan 2023)",
+   "url": "https://scdusa-ir.com/wp-content/uploads/2023/04/Mini_Blackbird-1280_14-2-18_updated-V2a.pdf",
+   "host": "manufacturer",
+   "tier": "S1 for the Mini Blackbird (HOT MWIR, HD)",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "832a2bb87348414dd4ef786156a3ac2b83e7b743326e89b3a8ed8e14ea525bfa"
+  },
+  "PELICAN-D-640-WEB": {
+   "file": "SCD_Pelican-D_640_InSb_product_page.html",
+   "publisher": "SCD USA",
+   "title": "PELICAN-D 640 product page (640 x 512, 15 um, InSb MWIR digital IDCA), saved web page",
+   "url": "https://scdusa-ir.com/products/pelican-d-640/",
+   "host": "manufacturer",
+   "tier": "S1 for the Pelican-D InSb",
+   "pages": [],
+   "sha256": "f4b213ec1eaefc37923e36a0a4868d68c07d9fdc1c59e23bc39362f98bef9dd1"
+  },
+  "OPHIR-ZOOM-WEB": {
+   "file": "Ophir_SupIR_MWIR_15-300mm_f4_680313-001.html",
+   "publisher": "MKS Instruments / Ophir",
+   "title": "SupIR 15-300 mm f/5.5 MWIR Zoom Lens, P/N 680313-001, product page (marked obsolete), saved web page",
+   "url": "https://www.ophiropt.com/en/p/680313-001",
+   "host": "manufacturer",
+   "tier": "S1 for that lens; S2 for MWIR zoom fields of view",
+   "pages": [],
+   "sha256": "c68b3f7784bb475ef0d896775c4064e9d3863bed736aa040d370ae26399e2f0f"
+  },
+  "IMX327-PI": {
+   "file": "IMX327_spec_1stvision.pdf",
+   "publisher": "Sony Semiconductor Solutions",
+   "title": "IMX327LQR/LQR1 Product Information, Ver. 1.3 (Sony Semiconductor Solutions, 2017-2018)",
+   "url": "https://www.1stvision.com/cameras/sensor_specs/IMX327.pdf",
+   "host": "1stVision (distributor) copy of Sony's product information; Sony copyright and version checked",
+   "tier": "S1 for the IMX327; S2 for the 1/2.8-inch colour CMOS class",
+   "pages": [
+    1,
+    2
+   ],
+   "sha256": "a30a204c01b5a6178e12971a43c5972bb77a434faf8755c60f05231fd1f250e5"
+  },
+  "FCB-EV7520-TM": {
+   "file": "Sony_FCB-EV7520_technical_manual_sonyjp.pdf",
+   "publisher": "Sony",
+   "title": "FCB-EV7520 technical manual (Japanese, Sony, 2015)",
+   "url": "https://www.sony.jp/camera-module/download/manual/past_data/FCB-EV7520.pdf",
+   "host": "manufacturer (sony.jp)",
+   "tier": "S1 for the FCB-EV7520 30x zoom block; S2 for zoom colour cameras",
+   "pages": [
+    8,
+    10,
+    11,
+    38,
+    55,
+    57
+   ],
+   "sha256": "f505165f37a8cddbe69ca5ba9c8dd430279a8a4fb264827462c4558c81639f05"
+  }
+ },
+ "readings": [
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Pixel size 12 μm",
+   "values": {
+    "pitch_um": 12.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Longwave infrared, nominally 8 μm to 14 μm",
+   "values": {
+    "band_um": [
+     8.0,
+     14.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Array format 320x256 or 640x512",
+   "values": {
+    "formats": [
+     [
+      320,
+      256
+     ],
+     [
+      640,
+      512
+     ]
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 1,
+   "quote": "Fast configuration: 60Hz Slow configuration: 8.6Hz",
+   "values": {
+    "frame_hz": [
+     8.6,
+     60.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Thermal time constant Nominally 8 msec",
+   "values": {
+    "thermal_time_constant_ms": 8.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Industrial grade: < 40 mK",
+   "values": {
+    "netd_mk_max": 40.0,
+    "grade": "industrial"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Professional grade: < 50 mK",
+   "values": {
+    "netd_mk_max": 50.0,
+    "grade": "professional"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 15,
+   "quote": "Consumer grade: < 60 mK",
+   "values": {
+    "netd_mk_max": 60.0,
+    "grade": "consumer"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 127,
+   "quote": "Industrial < 40 mK < 14 mK < 14 mK Professional < 50 mK < 18 mK < 18 mK Consumer < 60 mK < 21 mK < 21 mK",
+   "values": {
+    "temporal_netd_mk": {
+     "industrial": [
+      40,
+      14,
+      14
+     ],
+     "professional": [
+      50,
+      18,
+      18
+     ],
+     "consumer": [
+      60,
+      21,
+      21
+     ]
+    },
+    "columns": [
+     "random temporal (tvh)",
+     "column (th)",
+     "row (tv)"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A095 95.0x77.0 126.3 1.10 4.9",
+   "values": {
+    "lens_640": {
+     "focal_mm": 4.9,
+     "hfov_deg": 95.0,
+     "f_number": 1.1
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 AS50 49.9x39.3 65.9 1.01 9.2",
+   "values": {
+    "lens_640": {
+     "focal_mm": 9.2,
+     "hfov_deg": 49.9,
+     "f_number": 1.01
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A032 32.0x25.6 42.0 1.00 14.0",
+   "values": {
+    "lens_640": {
+     "focal_mm": 14.0,
+     "hfov_deg": 32.0,
+     "f_number": 1.0
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A024 24.3x19.5 31.3 1.04 18.0 33 / 1.0 90% 43%",
+   "values": {
+    "lens_640": {
+     "focal_mm": 18.0,
+     "hfov_deg": 24.3,
+     "f_number": 1.04,
+     "transmission": 0.9,
+     "mtf_nyquist": 0.43
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A018 18.0x14.4 23.1 1.00 24.0",
+   "values": {
+    "lens_640": {
+     "focal_mm": 24.0,
+     "hfov_deg": 18.0,
+     "f_number": 1.0
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A012 12.2x9.8 15.7 1.00 36.0",
+   "values": {
+    "lens_640": {
+     "focal_mm": 36.0,
+     "hfov_deg": 12.2,
+     "f_number": 1.0
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A008 8.0x6.4 10.3 1.01 55.0",
+   "values": {
+    "lens_640": {
+     "focal_mm": 55.0,
+     "hfov_deg": 8.0,
+     "f_number": 1.01
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20640 A006 6.0x4.8 7.7 1.05 72.8",
+   "values": {
+    "lens_640": {
+     "focal_mm": 72.8,
+     "hfov_deg": 6.0,
+     "f_number": 1.05
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 125,
+   "quote": "20320 A016 16.0x12.8 20.4 1.01 13.8",
+   "values": {
+    "lens_320": {
+     "focal_mm": 13.8,
+     "hfov_deg": 16.0,
+     "f_number": 1.01
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSONPLUS-DS",
+   "page": 2,
+   "quote": "Industrial: ≤ 20 mK Professional: ≤ 30 mK",
+   "values": {
+    "netd_mk_max": [
+     20.0,
+     30.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSONPLUS-DS",
+   "page": 2,
+   "quote": "Maximum effective frame rate 60Hz",
+   "values": {
+    "frame_hz_max": 60.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": null,
+   "quote": "640 × 512 VOx Microbolometer",
+   "values": {
+    "formats": [
+     [
+      640,
+      512
+     ]
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": null,
+   "quote": "Pixel Size 17 μm",
+   "values": {
+    "pitch_um": 17.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": null,
+   "quote": "Spectral Band 7.5 - 13.5 μm",
+   "values": {
+    "band_um": [
+     7.5,
+     13.5
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": null,
+   "quote": "Industrial: <30 mK; Performance: <40 mK; Commercial: <50 mK",
+   "values": {
+    "netd_mk_max": [
+     30.0,
+     40.0,
+     50.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": null,
+   "quote": "30 Hz (NTSC); 25 Hz (PAL); <9Hz option for export (factory set)",
+   "values": {
+    "frame_hz": [
+     9.0,
+     25.0,
+     30.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": null,
+   "quote": "lens options available from 7.5mm to 100mm",
+   "values": {
+    "focal_mm": [
+     7.5,
+     100.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TENUM640-DS",
+   "page": null,
+   "quote": "The 10-micron pixel pitch Vanadium Oxide (VOx)",
+   "values": {
+    "pitch_um": 10.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TENUM640-DS",
+   "page": null,
+   "quote": "640 x 512 array size offers superior long-wave infrared (LWIR) detection at 60 fps",
+   "values": {
+    "formats": [
+     [
+      640,
+      512
+     ]
+    ],
+    "frame_hz_max": 60.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TENUM640-DS",
+   "page": null,
+   "quote": "(less than 50 mK NETd)",
+   "values": {
+    "netd_mk_max": 50.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "DIONE1280-DS",
+   "page": null,
+   "quote": "1280 x 1024 pixels / 12 μm",
+   "values": {
+    "formats": [
+     [
+      1280,
+      1024
+     ]
+    ],
+    "pitch_um": 12.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "DIONE1280-DS",
+   "page": null,
+   "quote": "Spectral range 8 - 14 μm",
+   "values": {
+    "band_um": [
+     8.0,
+     14.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "DIONE1280-DS",
+   "page": null,
+   "quote": "<40 mK [at 30 Hz, 300K, F/1]",
+   "values": {
+    "netd_mk_max": 40.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "DIONE1280-DS",
+   "page": null,
+   "quote": "<50 mK [at 30 Hz, 300K, F/1]",
+   "values": {
+    "netd_mk_max": 50.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "DIONE1280-DS",
+   "page": null,
+   "quote": "Max frame rate (full frame) 60 Hz",
+   "values": {
+    "frame_hz_max": 60.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "SCORPIO-LW-DS",
+   "page": null,
+   "quote": "Format 640 x 512 Pixel pitch 15 μm x 15 μm",
+   "values": {
+    "formats": [
+     [
+      640,
+      512
+     ]
+    ],
+    "pitch_um": 15.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "SCORPIO-LW-DS",
+   "page": null,
+   "quote": "7.7 μ m - 9.3 μm at 80 K",
+   "values": {
+    "band_um": [
+     7.7,
+     9.3
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "SCORPIO-LW-DS",
+   "page": null,
+   "quote": "22mK (f/2, 210 Hz) ; 10 mK (f/2 ; 30 Hz post acc. \\ 4 frames)",
+   "values": {
+    "netd_mk": [
+     22.0,
+     10.0
+    ],
+    "conditions": [
+     "f/2, 210 Hz single frame",
+     "f/2, 30 Hz after accumulating 4 frames"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "SCORPIO-LW-DS",
+   "page": null,
+   "quote": "Up to 210 Hz full frame rate",
+   "values": {
+    "frame_hz_max": 210.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "SCORPIO-LW-DS",
+   "page": null,
+   "quote": "13.6 106 e- (standard)",
+   "values": {
+    "capacity_e": 13600000.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "T2SL cut-off wavelength 9.3μm",
+   "values": {
+    "cutoff_um": 9.3
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "Format 640 x 512 Pitch 15μm",
+   "values": {
+    "formats": [
+     [
+      640,
+      512
+     ]
+    ],
+    "pitch_um": 15.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "15mK* @ 65% Well Fill capacity, 30Hz",
+   "values": {
+    "netd_mk": 15.0,
+    "well_fill": 0.65
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "* By averaging 8 frames at detector proxy level",
+   "values": {
+    "frames_averaged": 8
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "Residual Non Uniformity <0.04% STD/DR",
+   "values": {
+    "rnu_frac_of_dr": 0.0004
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "Quantum Efficiency >50%",
+   "values": {
+    "qe_min": 0.5
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "Pixel capacity 6 Me-",
+   "values": {
+    "capacity_e": 6000000.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "up to 360 F/S",
+   "values": {
+    "frame_hz_max": 360.0
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": null,
+   "quote": "F/1.2 standard, F/2.7 optional",
+   "values": {
+    "f_number": [
+     1.2,
+     2.7
+    ]
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "SCORPIO-MW-DS",
+   "page": null,
+   "quote": "Format 640 x 512 Pixel pitch 15 μm x 15 μm",
+   "values": {
+    "formats": [
+     [
+      640,
+      512
+     ]
+    ],
+    "pitch_um": 15.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "SCORPIO-MW-DS",
+   "page": null,
+   "quote": "Detector spectral response 3.7 μm – 4.8 μm",
+   "values": {
+    "band_um": [
+     3.7,
+     4.8
+    ],
+    "detector": "MCT"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "SCORPIO-MW-DS",
+   "page": null,
+   "quote": "18 mK (293 K, 50 % well fill, 100 Hz)",
+   "values": {
+    "netd_mk": 18.0,
+    "well_fill": 0.5
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "SCORPIO-MW-DS",
+   "page": null,
+   "quote": "Up to 120 Hz full frame rate",
+   "values": {
+    "frame_hz_max": 120.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "SCORPIO-MW-DS",
+   "page": null,
+   "quote": "6.5 106 e- (for 100% well fill and ITR mode)",
+   "values": {
+    "capacity_e": 6500000.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "DAPHNIS-HD-MW-DS",
+   "page": null,
+   "quote": "Format 1280 x 720 Pixel pitch 10 μm x 10 μm",
+   "values": {
+    "formats": [
+     [
+      1280,
+      720
+     ]
+    ],
+    "pitch_um": 10.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "DAPHNIS-HD-MW-DS",
+   "page": null,
+   "quote": "Detector spectral response 3.7 μm – 4.8 μm",
+   "values": {
+    "band_um": [
+     3.7,
+     4.8
+    ],
+    "detector": "MCT"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "DAPHNIS-HD-MW-DS",
+   "page": null,
+   "quote": "20 mK (293K, 70% well fill, 2.7 Me-)",
+   "values": {
+    "netd_mk": 20.0,
+    "well_fill": 0.7,
+    "capacity_e": 2700000.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "DAPHNIS-HD-MW-DS",
+   "page": null,
+   "quote": "Up to 85 Hz full frame rate",
+   "values": {
+    "frame_hz_max": 85.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "DAPHNIS-HD-MW-DS",
+   "page": null,
+   "quote": "f/2 to f/4",
+   "values": {
+    "f_number": [
+     2.0,
+     4.0
+    ]
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": null,
+   "quote": "FPA spectral range 3.6÷4.2 μm",
+   "values": {
+    "band_um": [
+     3.6,
+     4.2
+    ],
+    "detector": "HOT XBn"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": null,
+   "quote": "Format 1280×1024 Pitch 10 μm",
+   "values": {
+    "formats": [
+     [
+      1280,
+      1024
+     ]
+    ],
+    "pitch_um": 10.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": null,
+   "quote": "NETD (2Me- Cap.) < 25mK @ 70% well fill capacity",
+   "values": {
+    "netd_mk_max": 25.0,
+    "well_fill": 0.7,
+    "capacity_e": 2000000.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": null,
+   "quote": "90 Hz (full window, raw image)",
+   "values": {
+    "frame_hz_max": 90.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": null,
+   "quote": "Local Residual Non Uniformity < 0.04% STD/DR",
+   "values": {
+    "rnu_frac_of_dr": 0.0004
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": null,
+   "quote": "F Number F/3.4, F/4",
+   "values": {
+    "f_number": [
+     3.4,
+     4.0
+    ]
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "PELICAN-D-640-WEB",
+   "page": null,
+   "quote": "640 x 512 InSb FPA",
+   "values": {
+    "formats": [
+     [
+      640,
+      512
+     ]
+    ],
+    "detector": "InSb"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "PELICAN-D-640-WEB",
+   "page": null,
+   "quote": "NETD 20mK@50% Well Fill capacity",
+   "values": {
+    "netd_mk": 20.0,
+    "well_fill": 0.5
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "PELICAN-D-640-WEB",
+   "page": null,
+   "quote": "Spectral Response 3.6 – 4.9 μm",
+   "values": {
+    "band_um": [
+     3.6,
+     4.9
+    ],
+    "detector": "InSb"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "PELICAN-D-640-WEB",
+   "page": null,
+   "quote": "Frame rate Up to 300Hz",
+   "values": {
+    "frame_hz_max": 300.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "PELICAN-D-640-WEB",
+   "page": null,
+   "quote": "Cold Shield F/5.5",
+   "values": {
+    "f_number": 5.5
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "OPHIR-ZOOM-WEB",
+   "page": null,
+   "quote": "has a 15 to 300 mm focal length with an f-number of 5.5",
+   "values": {
+    "focal_mm": [
+     15.0,
+     300.0
+    ],
+    "f_number": 5.5
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "OPHIR-ZOOM-WEB",
+   "page": null,
+   "quote": "WFOV (15 mm) Format Pitch 640x512 15 μm 36.4°",
+   "values": {
+    "hfov_deg_max": 36.4,
+    "format": [
+     640,
+     512
+    ],
+    "pitch_um": 15.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "OPHIR-ZOOM-WEB",
+   "page": null,
+   "quote": "NFOV (300 mm) Format Pitch 640x512 15 μm 1.8°",
+   "values": {
+    "hfov_deg_min": 1.8,
+    "format": [
+     640,
+     512
+    ],
+    "pitch_um": 15.0
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "OPHIR-ZOOM-WEB",
+   "page": null,
+   "quote": "Spectral Range 3.4-5.0 μm",
+   "values": {
+    "band_um": [
+     3.4,
+     5.0
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": null,
+   "quote": "Type 1/2.8",
+   "values": {
+    "optical_format": "1/2.8"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": null,
+   "quote": "Unit cell size 2.9 μm (H) × 2.9 μm (V)",
+   "values": {
+    "pitch_um": 2.9
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": null,
+   "quote": "Number of recommended recording pixels 1920 (H) × 1080 (V)",
+   "values": {
+    "formats": [
+     [
+      1920,
+      1080
+     ]
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": null,
+   "quote": "Maximum frame rate in Full HD 1080p mode: 60 frame / s",
+   "values": {
+    "frame_hz_max": 60.0
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": null,
+   "quote": "HD 720p 1280 (H) × 720 (V)",
+   "values": {
+    "formats": [
+     [
+      1280,
+      720
+     ]
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 57,
+   "quote": "1/2.8 Type “Exmor R” CMOSセンサー",
+   "values": {
+    "optical_format": "1/2.8"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 57,
+   "quote": "f =4.3 mm (WIDE)、129 mm (TELE)、F1.6 〜F4.7",
+   "values": {
+    "focal_mm": [
+     4.3,
+     129.0
+    ],
+    "f_number": [
+     1.6,
+     4.7
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 57,
+   "quote": "約63.7 度(wide 端)、約2.3 度(tele 端)",
+   "values": {
+    "hfov_deg": [
+     2.3,
+     63.7
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 55,
+   "quote": "09 720p/59.94 0A 720p/60",
+   "values": {
+    "formats": [
+     [
+      1280,
+      720
+     ]
+    ],
+    "output": "720p video output modes of the same zoom block (the whole sensor scaled: same field of view)"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 22,
+   "quote": "The pipeline includes optional frame averager and frame-skip features, non-uniformity correction (NUC) and defect replacement, spatial and temporal filtering",
+   "values": {
+    "pipeline": [
+     "NUC",
+     "defect replacement",
+     "spatial and temporal filtering",
+     "AGC"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 24,
+   "quote": "Bad pixel replacement (BPR): a correction process whereby pixels identified as defective are replaced by a value generated from nearest neighbors",
+   "values": {
+    "bad_pixel_replacement": "nearest neighbours"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 26,
+   "quote": "Below is a brief description of the various filters which are all enabled by factory default.",
+   "values": {
+    "filters_default": "all enabled"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 26,
+   "quote": "Spatial column noise reduction (SCNR): a filter intended to minimize column noise",
+   "values": {
+    "filter": "column noise"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 26,
+   "quote": "Spatial row noise reduction (SRNR): a filter intended to minimize row noise",
+   "values": {
+    "filter": "row noise"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 26,
+   "quote": "Low-frequency shading reduction (LFSR): a filter intended to reduce image side-to-side gradients and circularly-symmetric gradients caused by suboptimal environmental conditions",
+   "values": {
+    "shading_kinds": [
+     "side-to-side gradient",
+     "circularly symmetric gradient"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 44,
+   "quote": "drift over long periods of time can degrade uniformity, resulting in imagery which appears more grainy",
+   "values": {
+    "residual_nonuniformity": "grows with time since FFC"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 45,
+   "quote": "value of 300 represents a 300 second (5 minute) maximum time between successive FFC events",
+   "values": {
+    "ffc_period_s": 300
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 52,
+   "quote": "It is a variant of classic histogram equalization (HEQ), which uses the cumulative histogram as the transfer function.",
+   "values": {
+    "agc": "histogram equalization"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 53,
+   "quote": "Pixel values in the HP image are weighted more heavily during the histogram-generation process",
+   "values": {
+    "agc_ibe": "high-pass weighted histogram"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 53,
+   "quote": "The Plateau Value parameter can reduce this effect by clipping the maximum value of any histogram bin. The factory-default value is 7%.",
+   "values": {
+    "agc_plateau_default": 0.07
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 54,
+   "quote": "The factory-default value of Tail Rejection is 0%.",
+   "values": {
+    "agc_tail_default_pct": 0.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 54,
+   "quote": "For example, if the value is set to 2%, the mapping function ignores the bottom 2% of the histogram as well as the top 2%",
+   "values": {
+    "agc_tail_example_pct": 2.0
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 54,
+   "quote": "Max Gain determines the maximum slope of the transfer function between 16b and 8b.",
+   "values": {
+    "agc_max_gain": "maximum transfer slope"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 54,
+   "quote": "The factory-default value is 1.38",
+   "values": {
+    "agc_max_gain_default": 1.38
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 55,
+   "quote": "The default value of Linear Percent is 20%",
+   "values": {
+    "agc_linear_default": 0.2
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 56,
+   "quote": "(a) Linear Percent = 0% (b) Linear Percent = 30%",
+   "values": {
+    "agc_linear_examples": [
+     0.0,
+     0.3
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 56,
+   "quote": "The scale of values ranges from 0.5-4.0.",
+   "values": {
+    "agc_ace_range": [
+     0.5,
+     4.0
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 56,
+   "quote": "The factory-default is 0.97.",
+   "values": {
+    "agc_ace_default": 0.97
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 57,
+   "quote": "The DDE parameter either attenuates (values less than unity) or amplifies (values greater than unity) the HP content of the scene.",
+   "values": {
+    "dde": "gain on the high-pass content"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 57,
+   "quote": "The factory-default value is 0.95.",
+   "values": {
+    "dde_default": 0.95
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 58,
+   "quote": "(a) DDE = 0.8 (b) DDE = 1.3",
+   "values": {
+    "dde_examples": [
+     0.8,
+     1.3
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 58,
+   "quote": "The factory-default value of Smoothing Factor is 1250",
+   "values": {
+    "agc_smoothing_factor_default": 1250
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 131,
+   "quote": "By factory-default, all defective pixels are replaced in the output-video stream by data from adjacent non-defective pixels.",
+   "values": {
+    "defects_replaced": true
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 8,
+   "quote": "Table 15: Operability Requirements by Camera Grade, 640 Configuration",
+   "values": {
+    "operability_table": 15
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 131,
+   "quote": "Industrial < 1% 0 No 3x3 clusters",
+   "values": {
+    "defects_max_frac": {
+     "industrial": 0.01
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 132,
+   "quote": "Professional < 1.5% < 4 total (non-adjacent)",
+   "values": {
+    "defects_max_frac": {
+     "professional": 0.015
+    },
+    "bad_lines_max": 4
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 132,
+   "quote": "Consumer < 2% < 6 total (<2 adjacent)",
+   "values": {
+    "defects_max_frac": {
+     "consumer": 0.02
+    },
+    "bad_lines_max": 6
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 134,
+   "quote": "A type A INU has a radius < 10 pixels while a Type B INU is one with radius >10 pixels.",
+   "values": {
+    "inu_radius_px": {
+     "A": "<10",
+     "B": ">10"
+    }
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "TAU2-DS",
+   "page": 1,
+   "quote": "Information Based HEQ automatically adjusts AGC",
+   "values": {
+    "agc": "information-based histogram equalization"
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "SCORPIO-LW-DS",
+   "page": 2,
+   "quote": "Array operability 99.8%",
+   "values": {
+    "operability": 0.998
+   }
+  },
+  {
+   "sensor": "lwir_cooled",
+   "doc": "PELICAN-D-LW-DS",
+   "page": 2,
+   "quote": "Operability >99.5%",
+   "values": {
+    "operability_min": 0.995
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "SCORPIO-MW-DS",
+   "page": 2,
+   "quote": "Array operability 99.8%",
+   "values": {
+    "operability": 0.998
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "DAPHNIS-HD-MW-DS",
+   "page": 2,
+   "quote": "Array operability 99.8%",
+   "values": {
+    "operability": 0.998
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": 1,
+   "quote": "Bad-Pixel Replacement (BPR)",
+   "values": {
+    "core_processing": "bad-pixel replacement"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": 1,
+   "quote": "Automatic Exposure / Gain Control (AGC)",
+   "values": {
+    "core_processing": "AGC"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": 1,
+   "quote": "Dynamic Range Compression (DRC)",
+   "values": {
+    "core_processing": "dynamic range compression"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "MINI-BLACKBIRD-DS",
+   "page": 1,
+   "quote": "Spatial & Temporal Noise Reduction",
+   "values": {
+    "core_processing": "spatial and temporal noise reduction"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": 1,
+   "quote": "10-bit / 12-bit A/D converter",
+   "values": {
+    "adc_bits": [
+     10,
+     12
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "IMX327-PI",
+   "page": 1,
+   "quote": "R, G and B primary color mosaic filters",
+   "values": {
+    "cfa": "RGB Bayer mosaic"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 10,
+   "quote": "50.0 dB (28 step)",
+   "values": {
+    "max_gain_db": 50.0
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 11,
+   "quote": "この機能は、Off の状態を含めて、レベル1 からレベル 5 まで6 段階あります。",
+   "values": {
+    "nr_levels": [
+     0,
+     5
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 11,
+   "quote": "効果はゲインに応じて段階的にかかり、設定値はNR 効果の リミッターとなります。",
+   "values": {
+    "nr": "grows with gain, capped by the level"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 11,
+   "quote": "明るい条件では、レベルを変 更してもNR の効果はありません。",
+   "values": {
+    "nr_bright": "none"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 11,
+   "quote": "最大ゲイン量が増加し、より暗い環境でも明るい出力が得ら れます。",
+   "values": {
+    "high_sensitivity": "raises the maximum gain"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 11,
+   "quote": "（最大で4 倍）",
+   "values": {
+    "high_sensitivity_gain_factor_max": 4.0
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 11,
+   "quote": "り見やすくします（16 ステップ）。",
+   "values": {
+    "aperture_steps": 16
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "FCB-EV7520-TM",
+   "page": 38,
+   "quote": "Gamma設定（0: Standard、1: Straight）",
+   "values": {
+    "gamma_modes": [
+     "standard",
+     "straight"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 27,
+   "quote": "Boson provides a highly-configurable contrast-enhancement algorithm for converting 16-bit data to an 8-bit output suitable for display.",
+   "values": {
+    "pipeline_bits": 16,
+    "agc_output_bits": 8
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 30,
+   "quote": "Pre-AGC: ~24 msec",
+   "values": {
+    "output_taps": [
+     "pre-AGC",
+     "post-AGC",
+     "post-zoom"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "BOSON-DS",
+   "page": 53,
+   "quote": "In classic HEQ, the background dominates the histogram for such scenes and is therefore allocated a large percentage of the 8-bit gray shades, leaving few for the foreground details.",
+   "values": {
+    "agc_heq_effect": "background takes most grey levels in sky/ground scenes"
+   }
+  }
+ ]
+}

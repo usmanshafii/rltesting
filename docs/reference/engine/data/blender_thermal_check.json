@@ -1,0 +1,13 @@
+{
+ "blender": "4.2.23 LTS",
+ "mwir_sun": {
+  "irradiance_w_m2": 4.0,
+  "epsilon": 0.5,
+  "specular_fraction": 0.0,
+  "base_w_m2_sr": 0.4009378164141999,
+  "lit_mean_ratio_rendered_over_analytic": 1.0000324241627816,
+  "rms_error_over_sun_amplitude": 4.6723666242178193e-05,
+  "dark_side_mean_minus_base": 1.8784109490077583e-07,
+  "ok": true
+ }
+}

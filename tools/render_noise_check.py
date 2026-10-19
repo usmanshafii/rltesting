@@ -31,7 +31,7 @@ def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     ap = argparse.ArgumentParser()
     ap.add_argument("--scene", type=int, default=0)
-    ap.add_argument("--band", default="rgb", choices=["rgb", "swir"])
+    ap.add_argument("--band", default="rgb", choices=["rgb", "lwir", "lwir_cooled", "mwir", "swir"])
     ap.add_argument("--samples", type=int, default=256)
     ap.add_argument("--threshold", type=float, default=None)
     ap.add_argument("--bounces", type=int, nargs="+", default=[4, 1])

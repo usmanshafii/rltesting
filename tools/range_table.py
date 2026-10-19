@@ -41,17 +41,20 @@ def main():
     l_def = g0["length"] * g0["span_m"]
     print(f"length nose-hub: default {l_def:.2f} m, variants {L.min():.2f}-{L.max():.2f} m, 5-95 % {l_lo:.2f}-{l_hi:.2f} m")
     print(f"span: default {span_def:.2f} m, range {span_lo:.2f}-{span_hi:.2f} m\n")
-    hdr = "| Pixel bin | 50 deg, span-limited | 50 deg, length-limited | 10 deg, span-limited | 10 deg, length-limited |"
+    from render.sampling import load_configs
+    hf_w, hf_n = sorted(load_configs()["sensors"]["hfov_deg"], reverse=True)[:2]
+    hdr = (f"| Pixel bin | {hf_w:.1f} deg, span-limited | {hf_w:.1f} deg, length-limited | "
+           f"{hf_n:.1f} deg, span-limited | {hf_n:.1f} deg, length-limited |")
     print(hdr)
     print("| --- | --- | --- | --- | --- |")
-    f50, f10 = f_px(640, 50), f_px(640, 10)
+    fw, fn = f_px(640, hf_w), f_px(640, hf_n)
     for name, p in zip(NAMES, LOWER):
         cells = []
-        for f in (f50, f10):
+        for f in (fw, fn):
             for lo, hi, de in ((span_lo, span_hi, span_def), (l_lo, l_hi, l_def)):
                 cells.append(f"{f * lo / p:,.0f}-{f * hi / p:,.0f} ({f * de / p:,.0f})")
         print(f"| {name} px | " + " | ".join([cells[0], cells[1], cells[2], cells[3]]) + " |")
-    print(f"\nf_px = {f50:.1f} at 50 deg and {f10:.1f} at 10 deg (N_x = 640)")
+    print(f"\nf_px = {fw:.1f} at {hf_w:.2f} deg and {fn:.1f} at {hf_n:.2f} deg (N_x = 640)")
 
 
 if __name__ == "__main__":

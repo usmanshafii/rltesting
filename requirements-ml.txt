@@ -1,0 +1,3 @@
+# Install in an isolated environment. On Kaggle/Colab, retain their GPU-enabled torch build.
+-r requirements.txt
+torch>=2.1,<3

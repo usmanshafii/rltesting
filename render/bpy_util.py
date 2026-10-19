@@ -352,6 +352,50 @@ def float_image(name: str, values: np.ndarray):
     return img
 
 
+def float_image2d(name: str, values: np.ndarray):
+    """Square single-channel float image (non-colour). Row 0 is the bottom of the image (v = 0)."""
+    v = np.asarray(values, np.float32)
+    h, w = v.shape
+    img = bpy.data.images.new(name, w, h, alpha=True, float_buffer=True)
+    img.colorspace_settings.name = "Non-Color"
+    set_image2d(img, v)
+    return img
+
+
+def set_image2d(img, values: np.ndarray):
+    v = np.asarray(values, np.float32)
+    px = np.ones(v.shape + (4,), np.float32)
+    px[..., 0] = px[..., 1] = px[..., 2] = v
+    img.pixels.foreach_set(px.ravel())
+    img.update()
+
+
+def _object_xyz(nt):
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(tc.outputs["Object"], sep.inputs["Vector"])        # object space, metres (unit scale)
+    return sep.outputs["X"], sep.outputs["Y"], sep.outputs["Z"]
+
+
+def disc_texture(nt, img, half_extent_m: float):
+    """Value of a square image laid over [-h, h]^2 in the object's Y-Z plane (the shaft is the X axis)."""
+    _, y, z = _object_xyz(nt)
+    u = math_node(nt, "MULTIPLY_ADD", y, 0.5 / half_extent_m)
+    u.node.inputs[2].default_value = 0.5
+    v = math_node(nt, "MULTIPLY_ADD", z, 0.5 / half_extent_m)
+    v.node.inputs[2].default_value = 0.5
+    uv = nt.nodes.new("ShaderNodeCombineXYZ")
+    nt.links.new(u, uv.inputs["X"])
+    nt.links.new(v, uv.inputs["Y"])
+    tex = nt.nodes.new("ShaderNodeTexImage")
+    tex.image = img
+    tex.interpolation, tex.extension = "Linear", "CLIP"
+    nt.links.new(uv.outputs[0], tex.inputs["Vector"])
+    sep = nt.nodes.new("ShaderNodeSeparateColor")
+    nt.links.new(tex.outputs["Color"], sep.inputs["Color"])
+    return sep.outputs["Red"]
+
+
 def remove_file(path: str):
     try:
         os.remove(path)

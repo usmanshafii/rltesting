@@ -4,7 +4,7 @@
 # Bands share geometry only (spec 7.2, training rule 4): every value below is drawn separately per
 # band, with no shared latent between LWIR temperatures, SWIR reflectances and RGB albedo, so the
 # student cannot learn a cross-band shortcut that real sensors do not have. The two exceptions are
-# geometric: the fraction of a propeller / rotor disc swept by blades (alpha) and cloud shapes.
+# geometric: the fraction of the propeller disc swept by blades (alpha) and cloud shapes.
 # Even SWIR self-emission of hot parts uses its own temperature draw from the LWIR ranges.
 #
 # Evidence levels (project rule):
@@ -13,13 +13,39 @@
 # The finish and markings are A (photos P3, P1); every numeric reflectance, temperature and
 # emissivity below is C: a physics-based modelling range, not a KAL measurement.
 
+# md550-engine-v1 (2026-10-08): the KAL target with the MD-550 / L550E engine (target/engine_l550e.py, user decision
+# of 2026-10-08). Engine surfaces have their own slots: finned cylinder heads and barrels, case and covers,
+# carburettors, drive flange and exhaust stubs; their temperatures are derived from heat transfer by
+# thermal/engine_heat.py (docs/engine_signature_physics.md) and their SWIR self-emission follows Planck's law.
+# Also in this revision: humidity-driven clear sky (Idso 1981), underside/top skin split, SWIR paint families,
+# blade coverage from blade geometry and rotation blur of the blades (render/rotation_blur.py).
+# Scenes of different revisions are not mixed (render/scene.py refuses to resume across revisions).
+# md550-engine-v2 (2026-10-10): every engine input re-sourced (CLAUDE.md source tiers): ratings, SFC chart and the
+# fin-pack / head / exhaust-stack geometry from Limbach's own L550E datasheet and drawing; CHT and EGT bands from the
+# Rotax 447/503/582 operator's manual; air/fuel ratio and cooling load from AFIT's measured energy balances of small
+# two-strokes (Ausserer 2016); emissivities from the FLIR camera manual's referenced table; the pusher propeller's
+# inflow at the engine from momentum theory. docs/engine_signature_physics.md section 2b.
+# md550-engine-v3 (2026-10-11): Limbach's optional heat sinks as their own surface (engine_heatsink); free-air cooling
+# of the barrel fins and heat sinks from NACA Report 488's wind-tunnel measurements; night RGB glow of hot parts
+# (rgb.hot_emission); LWIR sun glints (lwir.sun_glint); solar calibration from the ASTM G173-03 and E490 standard
+# spectra and the IAU 2015 nominal Sun. docs/engine_signature_physics.md sections 5, 11 and 14.
+model_revision: md550-engine-v3
+
 rgb:
   target:
     groups:
       paint:   {albedo: [0.03, 0.08], roughness: [0.3, 0.6], coat: [0.0, 0.5]}    # spec 3.1; finish A (P3), numbers C
       white:   {albedo: [0.70, 0.85], roughness: [0.4, 0.6]}                       # spec 3.1; markings A (P1, P3)
-      engine:  {albedo: [0.25, 0.45], roughness: [0.3, 0.5], metallic: [0.6, 0.9]} # C: uncowled aluminium engine (P4)
-      exhaust: {albedo: [0.06, 0.15], roughness: [0.5, 0.8], metallic: [0.4, 0.7]} # C: sooted steel headers
+      # Engine finishes from the L550E product photo (B for the analogue): grey cast-aluminium fin packs and
+      # heads, black case and covers, silver carburettors, gold-coloured drive disc, dark oxidised exhaust stubs.
+      engine_alloy:  {albedo: [0.20, 0.40], roughness: [0.4, 0.7], metallic: [0.6, 0.9]}               # numbers C
+      # Limbach's optional heat sinks, fitted (the 410 mm width needs them): black finned blocks on both datasheet
+      # photos (finish B for the analogue); numbers C
+      engine_heatsink: {albedo: [0.02, 0.06], roughness: [0.4, 0.7], metallic: [0.2, 0.6]}
+      engine_case:   {albedo: [0.02, 0.06], roughness: [0.3, 0.6], metallic: [0.0, 0.4]}               # numbers C
+      engine_intake: {albedo: [0.40, 0.70], roughness: [0.2, 0.5], metallic: [0.7, 1.0]}               # numbers C
+      engine_flange: {albedo: [0.30, 0.55], color: [1.0, 0.78, 0.42], roughness: [0.25, 0.5], metallic: [0.7, 1.0]} # C
+      exhaust: {albedo: [0.06, 0.15], roughness: [0.5, 0.8], metallic: [0.4, 0.7]} # C: oxidised / sooted steel
       dark:    {albedo: [0.02, 0.06], roughness: [0.3, 0.6]}                       # C: propeller, antennas
       window:  {albedo: [0.02, 0.03], roughness: [0.02, 0.1]}                      # off on this airframe
     slots:
@@ -30,13 +56,21 @@ rgb:
       tail_cone: paint
       markings: white
       decal: white
-      engine_region: engine
-      exhaust_outlet: exhaust
+      engine_head: engine_alloy
+      engine_heatsink: engine_heatsink
+      engine_barrel: engine_alloy
+      engine_case: engine_case
+      engine_intake: engine_intake
+      engine_flange: engine_flange
+      exhaust_stub: exhaust
       propeller: dark
       propeller_disc: dark
       antenna: dark
       nose_window: window
-    propeller_disc_alpha: [0.15, 0.35]     # spec Phase 2 brief; blade coverage is geometry, reused by LWIR and SWIR
+    # Blade area / disc area (time-averaged blade coverage), reused by LWIR and SWIR. The model's own two
+    # blades (target.yaml chords 75/45 mm, 20 deg pitch, 0.50-0.64 m disc) cover 0.10-0.12 of the disc seen
+    # tail-on; the lower end allows slimmer blades. C -> B-
+    propeller_disc_alpha: [0.07, 0.13]
   negatives:
     bird:           {body: {albedo: [0.04, 0.45], roughness: [0.8, 1.0]}, wing: {same_as: body}}
     kite:           {body: {albedo: [0.30, 0.85], roughness: [0.6, 0.9], saturated: true}, detail: {albedo: [0.02, 0.2], roughness: [0.5, 0.8]}}
@@ -44,6 +78,20 @@ rgb:
     helicopter:     {body: {albedo: [0.04, 0.60], roughness: [0.4, 0.7], coat: [0.0, 0.4]}, hot: {albedo: [0.1, 0.3], roughness: [0.4, 0.6], metallic: [0.4, 0.8]}, disc: {albedo: [0.02, 0.06], roughness: [0.4, 0.6], alpha: [0.08, 0.22]}}
     small_uav:      {body: {albedo: [0.03, 0.80], roughness: [0.3, 0.6]}, hot: {albedo: [0.1, 0.3], roughness: [0.3, 0.5], metallic: [0.5, 0.9]}, disc: {albedo: [0.02, 0.1], roughness: [0.4, 0.6], alpha: [0.10, 0.30]}}
     warm_clutter:   {hot: {albedo: [0.10, 0.50], roughness: [0.6, 0.9]}}
+  # Night red glow of the hottest parts (incandescence): (1 - albedo) x Planck radiance in each colour band
+  # (Kirchhoff, opaque surface), converted to render units like swir.hot_emission. The RGB pass draws its own
+  # temperature from the LWIR ranges (glow_dT, spec 7.2 rule 4). Physics, so always on; it only shows at night on
+  # stubs above ~430 C (render/signatures.rgb_self_emission, docs/engine_signature_physics.md section 11).
+  hot_emission:
+    enabled: true
+    bands_um: {r: [0.60, 0.70], g: [0.50, 0.60], b: [0.40, 0.50]}   # C+: colour camera with an IR-cut filter
+    nishita_sun_units: 140.0               # [calib] Nishita sun-disc irradiance (render units) at 30-60 deg, as SWIR
+    # W/m2 of direct sun in each band: the ASTM G173-03 direct + circumsolar AM1.5 standard spectrum (NREL's table,
+    # docs/sources/astm/band_integrals.csv), the same air mass as nishita_sun_units. B. Cross-check: a 5772 K Sun
+    # (IAU 2015) through Rayleigh and AOD 0.084 extinction gives 130.3 / 133.8 / 105.5 (within 9 %).
+    inband_solar_irradiance: {r: 125.9, g: 133.8, b: 115.1}
+    # Below this a black surface's red-band glow is < 0.1 x the faintest night sky (render.yaml airglow_rgb 3e-6)
+    min_temp_c: 370.0
   environment:
     ground:    {albedo: [0.25, 0.35], roughness: 0.9, tint: [0.12, 0.35]}          # spec; tint strength C
     wall:      {albedo: [0.20, 0.55], roughness: [0.7, 0.9]}                       # C
@@ -54,11 +102,62 @@ lwir:
   # A dT value may be a range, or a dict keyed by thermal state (day, crossover, night).
   states: {day: day, dusk: crossover, night: night}      # spec 3.2: dusk = thermal crossover
   target:
+    # Engine surface temperatures by power setting, DERIVED by thermal/engine_heat.py from heat transfer (run it for the
+    # derivation table; docs/engine_signature_physics.md explains each step and lists every source with its tier;
+    # tests/test_engine_heat.py keeps these lines equal to the model). Each range is the model's envelope over its
+    # uncertain inputs and the flight envelope (39-56 m/s, 0-5,000 m, -20..+50 C), rounded outward to 5 K:
+    #   exhaust_stub   wall of a hot-gas tube in cross-flow: port gas excess (EGT band of the setting, from the
+    #                  Rotax 447/503/582 operator's manual limits) x h_i' / (h_i' + h_o + h_r), cooled along the stub by
+    #                  NTU (Gnielinski inside with entrance and pulsation factors, Churchill-Bernstein outside at the
+    #                  local speed incl. the pusher propeller's inflow, linearised radiation). Stack 31.5 mm OD x 95.5 mm
+    #                  measured on the Limbach L550E datasheet drawing.
+    #   engine_head    head block and plug, 0.85-1.0 x the cylinder-head temperature (CHT band of the setting, Rotax
+    #                  limits at the spark-plug seat, where the L550E's 14 mm CHT thermocouple sits)
+    #   engine_barrel  fin pack: fin-root excess (0.80-0.95 x CHT) x fin efficiency tanh(mL)/(mL), with h from NACA
+    #                  Report 488 (finned cylinders across a free air stream, h ~ V^0.796 s^0.322) at the local air
+    #                  speed incl. the propeller's inflow; 12 fins 108 x 114 mm at 6.67 mm (Limbach drawing)
+    #   engine_heatsink Limbach's optional heat sinks on the heads (the drawing's 363 mm width "with optional heat
+    #                  sinks"): head excess x fin efficiency, h = 0.25-1.0 x the NACA 488 value (fins across the stream)
+    #   engine_case, engine_flange, tail_cone   conduction-fed fractions of the CHT / case excess (C)
+    #   engine_intake  carburettor body, below ambient by fuel evaporation (h_fg / (AFR c_p) ~ 20-29 K), up to a
+    #                  small heat soak from the case
+    # One profile is drawn per scene, independently of time of day; weights are dataset coverage choices, not
+    # duty-cycle data. None of this is a measured MD-550 temperature: the bands are the operating limits of the
+    # closest analogue with published limits (Rotax 503 UL: air-cooled carburetted two-stroke, 37 kW).
+    # Absolute caps (deg C), applied after the scene's air temperature is drawn (to LWIR dT and SWIR emit_dT): the
+    # Rotax 503 UL maximum CHT and the Limbach L 1700 type-certificate limit (EASA TCDS E.082) are both 250 C; on a
+    # hot day a setting that would pass it cannot be held, so the head and fins are clipped there and the record
+    # keeps the uncapped draw.
+    surface_temperature_cap_c: {engine_head: 250.0, engine_heatsink: 250.0, engine_barrel: 250.0}
+    engine_profiles:
+      low_power:  {weight: 0.25, engine_head: [80.0, 215.0], engine_heatsink: [65.0, 215.0], engine_barrel: [65.0, 200.0], engine_case: [20.0, 100.0], engine_intake: [-15.0, 15.0], engine_flange: [5.0, 80.0], exhaust_stub: [65.0, 405.0], tail_cone: [0.0, 40.0]}
+      nominal:    {weight: 0.50, engine_head: [140.0, 215.0], engine_heatsink: [110.0, 215.0], engine_barrel: [110.0, 200.0], engine_case: [40.0, 100.0], engine_intake: [-15.0, 15.0], engine_flange: [10.0, 80.0], exhaust_stub: [115.0, 470.0], tail_cone: [0.0, 40.0]}
+      high_power: {weight: 0.25, engine_head: [140.0, 245.0], engine_heatsink: [110.0, 245.0], engine_barrel: [110.0, 230.0], engine_case: [40.0, 115.0], engine_intake: [-15.0, 20.0], engine_flange: [10.0, 90.0], exhaust_stub: [170.0, 515.0], tail_cone: [0.0, 45.0]}
     groups:
-      skin:      {dT: {day: [-1.0, 8.0], crossover: [-0.5, 0.5], night: [-2.0, 1.0]}, emissivity: [0.85, 0.95]}   # spec -2..+8 overall
-      engine:    {dT: {day: [60.0, 200.0], crossover: [60.0, 120.0], night: [60.0, 200.0]}, emissivity: [0.3, 0.9]} # spec; crossover = "cooler engine range"
-      exhaust:   {dT: [150.0, 450.0], emissivity: [0.3, 0.9]}                     # spec
-      tail_cone: {dT: [5.0, 30.0], emissivity: [0.85, 0.95]}                      # spec
+      # Painted skin: dT = downward-facing surfaces (what a ground camera mostly sees), dT_upper = upward-
+      # facing ones, blended by the surface normal. Convective balance at 39-56 m/s (h ~ 100-130 W m-2 K-1,
+      # recovery heating +0.7..+1.4 K): sunlit top +3..+8 K; shaded underside warmed by ground-reflected sun
+      # and warm ground +1..+4.5 K; at night both within ~1 K of air. Inside the spec's -2..+8 K envelope.
+      # Engineering estimate (C+); no in-flight skin temperature has been measured.
+      # Skin emissivity: dark paint in 8-14 um, FLIR ETS3xx user's manual T810252 (2017) Table 21.1: black lacquer
+      # shiny 0.87 to dull 0.96-0.98; paints of 8 colours and qualities 0.92-0.94 (LW). B (the KAL's paint is unknown).
+      skin:      {dT: {day: [1.0, 4.5], crossover: [-0.5, 1.0], night: [-0.5, 1.2]}, dT_upper: {day: [3.0, 8.0], crossover: [-0.5, 0.5], night: [-1.5, 0.8]}, emissivity: [0.87, 0.98]}
+      # LWIR emissivities (thermal/engine_heat.emissivity_ranges), from the same FLIR table (each entry with its
+      # temperature, waveband and reference): cast aluminium as received 0.09 / blast-cleaned casting 0.46 (LW) / dull
+      # anodised 0.95-0.97 (LW); polished aluminium 0.04-0.06; strongly oxidised aluminium 0.2-0.3; stainless sheet
+      # untreated 0.28 (LW) -> 18-8 oxidised 0.85 -> soot 0.95; black lacquer 0.87-0.98. The fin pack looks darker
+      # than its metal: each fin gap is a groove whose apparent emissivity is eps / (eps + (1 - eps) F),
+      # F = gap / (gap + 2 x fin height) = 0.09, area-weighted with the fin edges.
+      engine_head:   {dT_profile: engine_head, emissivity: [0.09, 0.97]}       # head ring and spark plug
+      # Heat sinks: fins across the ram air at the head temperature x their fin efficiency (thermal/engine_heat.
+      # heatsink_state); black finish 0.87-0.98 (FLIR table) raised by the grooves between the fins.
+      engine_heatsink: {dT_profile: engine_heatsink, emissivity: [0.95, 0.99]}
+      engine_barrel: {dT_profile: engine_barrel, emissivity: [0.36, 0.99]}   # fin-pack cavities
+      engine_case:   {dT_profile: engine_case, emissivity: [0.87, 0.98]}       # black painted case and covers
+      engine_intake: {dT_profile: engine_intake, emissivity: [0.04, 0.30]}   # bare die-cast carburettor bodies
+      engine_flange: {dT_profile: engine_flange, emissivity: [0.06, 0.95]}   # plated or gold-anodised drive disc
+      exhaust:   {dT_profile: exhaust_stub, emissivity: [0.28, 0.95]}           # stainless stacks, heat-tinted -> sooted
+      tail_cone: {dT_profile: tail_cone, emissivity: [0.87, 0.98]}           # painted; conduction + radiation from engine
       propeller: {dT: [0.0, 5.0], emissivity: [0.85, 0.95]}                       # spec
     slots:
       skin: skin
@@ -70,8 +169,13 @@ lwir:
       antenna: skin
       nose_window: skin
       tail_cone: tail_cone
-      engine_region: engine
-      exhaust_outlet: exhaust
+      engine_head: engine_head
+      engine_heatsink: engine_heatsink
+      engine_barrel: engine_barrel
+      engine_case: engine_case
+      engine_intake: engine_intake
+      engine_flange: engine_flange
+      exhaust_stub: exhaust
       propeller: propeller
       propeller_disc: propeller
   negatives:                                             # spec 3.2 table; C beyond that
@@ -82,7 +186,13 @@ lwir:
     small_uav:      {body: {dT: [0.0, 10.0], emissivity: [0.80, 0.95]}, hot: {dT: [10.0, 45.0], emissivity: [0.6, 0.9]}, disc: {dT: [0.0, 5.0], emissivity: [0.85, 0.95]}}
     warm_clutter:   {hot: {dT: [15.0, 60.0], emissivity: [0.85, 0.97]}}
   environment:
-    sky: {dT_horizon: [-7.0, -3.0], dT_zenith: [-55.0, -35.0], shape_deg: [8.0, 20.0]}   # spec: -5 K near horizon to -50 K high up; profile shape C
+    # Clear sky from air temperature and humidity (thermal/sky.py): Idso (1981) 8-14 um zenith emittance and the
+    # 1/cos(zenith) slant law; the radiance is computed per ray elevation. Relative humidity is drawn per thermal
+    # state (afternoon air is drier than night air) and capped by a 28 C dew point, roughly the South Asian
+    # monsoon maximum; hot desert air therefore stays dry. Dry air reproduces the spec's -5 K (low) to -50 K
+    # (high) offsets; humid air brings the low sky to within ~1 K of air temperature, the weak-LWIR case.
+    # Grades: B- humid / C+ dry at 10-30 deg (Arizona fit, band-averaged slant law). RH ranges C.
+    sky: {model: idso1981, rh: {day: [0.10, 0.85], crossover: [0.20, 0.95], night: [0.30, 0.98]}, dew_point_max_c: 28.0}
     clouds: {dT: [-15.0, -2.0]}                                                          # spec: "clouds near air temperature"; C
     ground: {dT: {day: [10.0, 40.0], crossover: [-2.0, 5.0], night: [-6.0, 1.0]}, emissivity: [0.90, 0.97], texture_dT: [1.0, 4.0]}   # spec day; C otherwise
     wall:   {dT: {day: [0.0, 12.0], crossover: [-2.0, 4.0], night: [-3.0, 3.0]}, emissivity: [0.85, 0.95]}   # C
@@ -91,15 +201,126 @@ lwir:
   # kept (no lights, no bounces); the reflected term (1 - e) * L_env is added in the shader with
   # L_env blended from the sky (normal up) to the ground (normal down).
   reflection_term: true
+  # Sun glints: the specular reflection of the sun's own 8-14 um radiance by surfaces with eps < 1. FLIR's note
+  # (16-0539, section 3) warns that they read hundreds of degrees too hot: rare, small, very bright. Added in the
+  # shader of the target and the hard negatives as (1 - eps) x specular_fraction x E_sun / (pi sigma^2) x
+  # exp(-angle^2 / sigma^2), angle between the mirror direction of the view ray and the sun, sigma^2 = lobe^2 +
+  # (sun's angular radius)^2 (energy-conserving Gaussian lobe; a mirror returns the sun's own radiance). E_sun =
+  # sun_toa_irradiance x (1 - eps_zenith)^(1 / sin elevation), the scene's own clear-sky transmittance (Idso 1981
+  # zenith emittance, Granqvist-Hjortsberg slant law, thermal/sky.py). Day and dusk with the sun above the horizon.
+  sun_glint:
+    enabled: true
+    sun_toa_irradiance: 1.261              # W/m2 in 8-14 um at 1 au: ASTM E490 AM0 standard spectrum (NREL's table,
+                                           # docs/sources/astm/band_integrals.csv), B. A 5772 K black body (IAU 2015)
+                                           # gives 1.508: the Sun's brightness temperature at 10 um is ~4,970 K
+    lobe_deg: [0.5, 6.0]                   # C: glint half-width, near-mirror metal to satin paint (smoother at 10 um)
+    specular_fraction: [0.3, 1.0]          # C: share of the reflectance (1 - eps) that is specular in 8-14 um
+    default_eps_zenith: 0.30               # C: legacy fixed-offset sky (no humidity): a mid-latitude clear sky
+
+# LWIR cooled (7.7-9.3 um) and MWIR (the scene's detector band in 3.6-4.9 um; sensors.yaml cameras): the same surfaces
+# as the uncooled LWIR camera at the same instant, so both reuse the LWIR temperature draws (dT, dT_upper, engine
+# profile, caps; ground, wall, roof and cloud temperatures) and its finish: each emissivity sits at the same quantile of
+# its band's range as the LWIR draw (a polished part stays low and a painted one high in every band). RGB keeps its own
+# draws (spec 7.2 rule 4): the student's two bands stay independent, the teacher's thermal bands are physically
+# consistent (CLAUDE.md sensor set rule 4; docs/thermal_bands.md). Radiance from the band's Planck table; sky, path
+# and sun from the scene's layered atmosphere (render.yaml thermal_atmosphere).
+lwir_cooled:
+  # FLIR T810252 Table 21.1 LW entries are 8-14 um averages (the lwir ranges). Painted and oxide surfaces carry
+  # silicate and oxide features near 8-9.5 um, so the painted lower bounds are widened by 0.03 [C].
+  target:
+    emissivity:
+      skin: [0.84, 0.98]
+      tail_cone: [0.84, 0.98]
+      engine_head: [0.09, 0.97]
+      engine_heatsink: [0.92, 0.99]
+      engine_barrel: [0.36, 0.99]
+      engine_case: [0.84, 0.98]
+      engine_intake: [0.04, 0.30]
+      engine_flange: [0.06, 0.95]
+      exhaust: [0.28, 0.95]
+      propeller: [0.82, 0.95]
+  negatives:                             # same quantile as the lwir draw; C
+    bird:           {body: [0.93, 0.96], wing: [0.93, 0.96]}
+    kite:           {body: [0.82, 0.95], detail: [0.82, 0.95]}
+    light_aircraft: {body: [0.77, 0.95], hot: [0.5, 0.9], disc: [0.82, 0.95]}
+    helicopter:     {body: [0.77, 0.95], hot: [0.5, 0.9], disc: [0.82, 0.95]}
+    small_uav:      {body: [0.77, 0.95], hot: [0.6, 0.9], disc: [0.82, 0.95]}
+    warm_clutter:   {hot: [0.82, 0.97]}
+  environment:
+    ground: [0.80, 0.97]                 # C: quartz-rich alluvial soil dips near 8.5-9.3 um (reststrahlen)
+    wall: [0.82, 0.95]
+    roof: [0.82, 0.95]
+  sun_glint: {lobe_deg: [0.5, 6.0], specular_fraction: [0.3, 1.0]}   # C, as lwir
+
+mwir:
+  # FLIR T810252 Table 21.1 SW (2-5 um) and total-band entries, thermal/engine_heat.emissivity_ranges_mwir()
+  # (tests/test_engine_heat.py keeps these equal): paints of 8 colours 0.88-0.96 and white plastic paint 0.84 to grey
+  # flat 0.97; anodised aluminium 0.61-0.67; thin lacquer on aluminium 0.50-0.53; stainless untreated 0.30; the T-band
+  # metal entries (as received 0.09, polished 0.04-0.06, oxidised 0.2-0.3, soot 0.95). B for the materials, C for the
+  # KAL's own finishes (unknown).
+  target:
+    emissivity:
+      skin: [0.84, 0.97]
+      tail_cone: [0.84, 0.97]
+      engine_head: [0.09, 0.94]
+      engine_heatsink: [0.97, 0.98]
+      engine_barrel: [0.36, 0.98]
+      engine_case: [0.50, 0.95]
+      engine_intake: [0.04, 0.30]
+      engine_flange: [0.06, 0.67]
+      exhaust: [0.30, 0.95]
+      propeller: [0.75, 0.97]
+  negatives:                             # same quantile as the lwir draw; C (feathers, fabric, paint, hot metal)
+    bird:           {body: [0.90, 0.95], wing: [0.90, 0.95]}
+    kite:           {body: [0.75, 0.95], detail: [0.75, 0.95]}
+    light_aircraft: {body: [0.84, 0.97], hot: [0.30, 0.90], disc: [0.75, 0.95]}
+    helicopter:     {body: [0.84, 0.97], hot: [0.30, 0.90], disc: [0.75, 0.95]}
+    small_uav:      {body: [0.84, 0.97], hot: [0.30, 0.90], disc: [0.75, 0.95]}
+    warm_clutter:   {hot: [0.85, 0.97]}
+  environment:
+    ground: [0.80, 0.95]                 # C: soils fall below vegetation in 3-5 um; to be sourced (spectral library)
+    wall: [0.81, 0.97]                   # FLIR SW: common brick 0.81-0.86, masonry 0.94, plaster 0.86-0.90, concrete 0.95-0.97
+    roof: [0.84, 0.97]                   # FLIR SW: concrete, tile 0.94, paints
+    cloud_reflectance: [0.05, 0.25]      # C: thick water clouds at 3.7 um reflect 5-25 % of the sun (drop size)
+  # By day every surface also reflects the sun diffusely: a sun lamp of the band's direct irradiance at the ground
+  # (thermal/atmosphere_bands.scene_tables) lights a diffuse BSDF of albedo (1 - eps)(1 - specular_fraction), so
+  # shadows and self-shadowing follow from the scene; the specular part is the glint lobe (lwir.sun_glint formula).
+  sun_glint: {lobe_deg: [0.3, 5.0], specular_fraction: [0.2, 0.9]}   # C: paint looks rougher at 4 than at 10 um
+  sky_scattering: true                   # aerosol single scattering of the sun into the sky (render/thermal.py)
+
+# Exhaust plume (thermal/plume.py), rendered analytically into the thermal bands' object layers.
+plume:
+  enabled: true
+  equivalence_ratio: [1.0, 1.2]          # B: [AUSSERER] p. 316, carburetted small two-strokes (engine_heat.PHI)
+  fuel_h_to_c: [1.87, 2.25]              # B: petrol CH1.87 to iso-octane (engine_heat.FUEL_H_TO_C)
+  short_circuit: [0.18, 1.0]             # B-: fresh air short-circuited per mole of air burnt; [AUSSERER] pp. 307-311:
+                                         #     15-50 % of the charge (s / (1 - s))
+  k_mix: [5.0, 20.0]                     # C: f_c = K D / x; free round jet ~5 (Pope 2000 ch. 5), co-flow slower (log-uniform)
+  spread: [0.08, 0.11]                   # C: half-width / x around Pope's 0.094
+  rays: {n_u: 12, n_v: 7}
 
 swir:
   band_um: [0.9, 1.7]                                    # spec (typical InGaAs)
   target:
+    # Self-emission of the hot engine parts is physics, not an option: it is added in every scene whenever a part
+    # is above hot_emission.min_temp_c (see there). At night heads at 150-250 C emit 2-140 x even the brightest
+    # airglow background; by day a 500 C stub outshines sunlit black paint. Emissivity = 1 - reflectance (Kirchhoff).
+    hot_emission_enabled: true
     groups:                                              # finish (roughness, coat) drawn independently of RGB
-      paint:   {reflectance: [0.03, 0.40], roughness: [0.3, 0.6], coat: [0.0, 0.5]}   # spec: carbon black stays dark, other blacks turn bright
+      # Black paint in 0.9-1.7 um by pigment family (the real paint is unknown, D): carbon/iron-oxide blacks reflect
+      # ~5-10 % from the visible into the NIR; IR-reflective "cool" blacks (chromium-iron oxide, perylene) are
+      # specified at >= 40 % near 1,000 nm and can be higher in 1.2-1.6 um. Mixed formulations fill the gap.
+      # The family is recorded (reflectance_family) so SWIR results can be split by it. Bounds B-, weights C.
+      paint:   {reflectance: {mixture: {carbon_black: {weight: 0.4, range: [0.03, 0.10]}, mixed: {weight: 0.2, range: [0.10, 0.25]}, ir_reflective: {weight: 0.4, range: [0.25, 0.60]}}}, roughness: [0.3, 0.6], coat: [0.0, 0.5]}
       white:   {reflectance: [0.50, 0.85], roughness: [0.4, 0.6]}                     # spec
-      engine:  {reflectance: [0.30, 0.80], roughness: [0.3, 0.5], metallic: [0.5, 0.9]}   # spec (lower when oxidised or sooted)
-      exhaust: {reflectance: [0.30, 0.80], roughness: [0.5, 0.8], metallic: [0.3, 0.7]}   # spec lists both engine slots at 0.3-0.8
+      engine_alloy:  {reflectance: [0.10, 0.80], roughness: [0.4, 0.7], metallic: [0.5, 0.9]}  # bare cast Al 0.5-0.8 to dark paint
+      # Black anodised heat sinks: FLIR's table gives emissivity 0.67 (reflectance ~0.33) for dull black anodised
+      # aluminium in 2-5 um; dyed anodising is brighter towards the near infrared. C
+      engine_heatsink: {reflectance: [0.05, 0.50], roughness: [0.4, 0.7], metallic: [0.2, 0.6]}
+      engine_case:   {reflectance: [0.03, 0.40], roughness: [0.3, 0.6], metallic: [0.0, 0.4]}  # C: black finish, pigment unknown
+      engine_intake: {reflectance: [0.50, 0.85], roughness: [0.2, 0.5], metallic: [0.7, 1.0]}  # C: bare aluminium
+      engine_flange: {reflectance: [0.40, 0.85], roughness: [0.25, 0.5], metallic: [0.7, 1.0]} # C: plated / anodised metal
+      exhaust: {reflectance: [0.08, 0.40], roughness: [0.5, 0.8], metallic: [0.3, 0.7]}        # oxidised steel eps 0.6-0.92 (Kirchhoff)
       dark:    {reflectance: [0.03, 0.30], roughness: [0.3, 0.6]}                     # C
       window:  {reflectance: [0.03, 0.05], roughness: [0.02, 0.1]}
     slots:
@@ -110,8 +331,13 @@ swir:
       tail_cone: paint
       markings: white
       decal: white
-      engine_region: engine
-      exhaust_outlet: exhaust
+      engine_head: engine_alloy
+      engine_heatsink: engine_heatsink
+      engine_barrel: engine_alloy
+      engine_case: engine_case
+      engine_intake: engine_intake
+      engine_flange: engine_flange
+      exhaust_stub: exhaust
       propeller: dark
       propeller_disc: dark
       antenna: dark
@@ -131,10 +357,14 @@ swir:
     cloud_brightness_scale: [1.0, 1.6]                   # C: clouds stay bright while the sky darkens
   sky_divisor: [3.0, 30.0]                               # spec: sky strength 3-30x lower than the visible pass
   night_airglow: [2.0e-5, 2.0e-4]                        # C: uniform nightglow, radiance in render units
-  hot_emission:                                          # spec: optional self-emission above ~250 C
-    enabled_prob: {day: 0.0, dusk: 0.5, night: 1.0}      # C
-    min_temp_c: 250.0
+  hot_emission:                                          # Planck self-emission in 0.9-1.7 um
+    enabled_prob: {day: 0.0, dusk: 0.5, night: 1.0}      # C: optional per-scene switch for the hard negatives only
+    # Below 50 C the in-band radiance of a black surface is < 0.1 x the faintest night airglow background
+    # (night_airglow), so emission is skipped there; above it, it is always added for the target (render/swir.py).
+    # At 100 C it is already ~0.3-3 x the airglow and at 200 C ~20-200 x: InGaAs sees a running engine at night.
+    min_temp_c: 50.0
     # temperature: an independent draw from the part's LWIR dT range (rule above), not the LWIR value
-    inband_solar_irradiance: 250.0                       # C: W/m2 in 0.9-1.7 um for a high sun
+    inband_solar_irradiance: 250.0                       # B: W/m2 in 0.9-1.7 um, ASTM G173-03 direct AM1.5 249.6
+                                                         # (global 262.0; docs/sources/astm/band_integrals.csv)
     nishita_sun_units: 140.0                             # calib: Nishita sun-disc irradiance (render units) at 30-60 deg
     # render radiance = Planck in-band radiance [W/m2/sr] * nishita_sun_units / inband_solar_irradiance

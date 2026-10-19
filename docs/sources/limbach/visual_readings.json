@@ -1,0 +1,58 @@
+{
+ "note": "Readings taken by eye from the datasheet photos and text (not image-processed: the photos are perspective views without a scale). Grade B- for the L550E; target/engine_l550e.HEATSINK uses them. Validation: a close-up photo or the 3D model of the L550E / MD-550 head.",
+ "readings": [
+  {
+   "item": "heat-sink fin count per head",
+   "value": 12,
+   "uncertainty": 2,
+   "images": [
+    "crops/L550EF_heatsinks_zoom.png",
+    "crops/L550E_heatsinks_zoom.png"
+   ],
+   "source": "[L550EF-DS] p. 1 photo, [L550E-DS] p. 1 photo",
+   "used_in": "engine_l550e.HEATSINK fins = 12"
+  },
+  {
+   "item": "heat-sink fin orientation",
+   "value": "plates across the crank axis (in y-z planes), split around the spark plug; closed face on the propeller side",
+   "images": [
+    "crops/L550EF_heatsinks_zoom.png",
+    "crops/L550E_heatsinks_zoom.png"
+   ],
+   "source": "[L550EF-DS] p. 1 photo, [L550E-DS] p. 1 photo",
+   "used_in": "kal_hero heat-sink fins; engine_heat.heatsink_state (fins across the ram air, hs_h_factor 0.25-1.0)"
+  },
+  {
+   "item": "heat-sink finish",
+   "value": "black",
+   "images": [
+    "images/L550EF_photo_p1.png",
+    "images/L550E_photo_p1.png"
+   ],
+   "source": "both datasheet photos",
+   "used_in": "signatures.yaml engine_heatsink groups (RGB albedo 0.02-0.06; LWIR black lacquer 0.87-0.98 raised by the grooves)"
+  },
+  {
+   "item": "heat sinks are optional and widen the engine",
+   "value": "363.4 mm across the heat sinks, 313.6 mm without; overall 410 mm (plug caps)",
+   "images": [
+    "crops/L550E_front_view_width_lines_zoom.png",
+    "crops/L550E_label_363_with_optional_heat_sinks.png",
+    "crops/L550E_label_313_without_heat_sinks.png",
+    "crops/L550E_label_410_overall_width.png"
+   ],
+   "source": "[L550E-DS] p. 2 front view (numbers measured by tools/source_measurements.py: measurements.json e_front.width_lines_mm)",
+   "used_in": "engine_l550e.HEATSINK y0 / y1"
+  },
+  {
+   "item": "cooling and installation",
+   "value": "air cooled; suitable for pusher and tractor installations; no fan or shroud listed",
+   "images": [
+    "images/L550E_description_text.png",
+    "images/L550EF_description_text.png"
+   ],
+   "source": "[L550E-DS] p. 1 text (as an image): 'air cooled ... Suitable for pusher and tractor installations'; [L550EF-DS] p. 1 the same",
+   "used_in": "free-air cooling model (engine_heat.fin_state, heatsink_state); no fan, no baffles"
+  }
+ ]
+}

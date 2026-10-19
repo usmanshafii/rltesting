@@ -1,0 +1,23 @@
+# Thermal arm "electric-like signature" (docs/privileged_teacher_case.md, section 6c): M1's scenes with this engine's
+# geometry and its own free-air cooling surfaces carrying an electric drive's loss heat at the same shaft power, instead
+# of the combustion engine's cooling load. There is no exhaust gas, so the stubs and carburettor bodies sit at the air
+# temperature and there is no plume. It is a variant of this target's engine heat, not the REB 30 of ../fyp (CLAUDE.md).
+# Excess temperatures: thermal/engine_heat.electric_like_yaml_ranges() (S7), the central 90 % of the engine model's heat
+# balance with motor efficiency 0.90-0.96 (EU 2019/1781 Annex I IE3/IE4 at 15-37 kW; Hepperle 2012, motor 95 %;
+# docs/sources/electric_drive/readings.json), rounded outward to 1 K. Grade C+: no electric drive in this installation has
+# been measured. The controller's and the battery's losses stay inside the fuselage and are not modelled, so the arm errs
+# cold. Profile names and weights are M1's, so the draws keep their order. tests/test_thermal_arms.py keeps these lines
+# equal to the model. Rendered into its own folder (out/m1/dataset_electric_like).
+name: m1-electric-like
+notes: M1 scenes, the L550E's cooling surfaces at an electric drive's loss heat, no exhaust or plume
+extends: configs/m1.yaml
+
+signatures:
+  lwir:
+    target:
+      engine_profiles:
+        low_power:  {engine_head: [10.0, 36.0], engine_barrel: [9.0, 34.0], engine_heatsink: [9.0, 34.0], engine_case: [6.0, 28.0], engine_flange: [2.0, 17.0], tail_cone: [1.0, 8.0], engine_intake: [0.0, 0.0], exhaust_stub: [0.0, 0.0]}
+        nominal:    {engine_head: [16.0, 53.0], engine_barrel: [14.0, 50.0], engine_heatsink: [15.0, 51.0], engine_case: [9.0, 41.0], engine_flange: [4.0, 25.0], tail_cone: [1.0, 12.0], engine_intake: [0.0, 0.0], exhaust_stub: [0.0, 0.0]}
+        high_power: {engine_head: [22.0, 71.0], engine_barrel: [20.0, 68.0], engine_heatsink: [20.0, 68.0], engine_case: [13.0, 56.0], engine_flange: [6.0, 34.0], tail_cone: [2.0, 16.0], engine_intake: [0.0, 0.0], exhaust_stub: [0.0, 0.0]}
+  plume:
+    enabled: false

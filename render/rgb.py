@@ -1,5 +1,9 @@
 """RGB band (Phase 2): per-slot Principled materials, Nishita sky with procedural clouds, a sun lamp
-calibrated to the Nishita sun disc, and moonlit / starlit nights. Blender side."""
+calibrated to the Nishita sun disc, and moonlit / starlit nights. Blender side.
+
+Hot parts add their own glow (incandescence): Planck radiance in each colour band x (1 - albedo), in render
+units (render/signatures.rgb_self_emission, signatures.yaml rgb.hot_emission), from the RGB pass's own
+temperature draw. It is always there but only shows at night on the hottest exhaust stubs."""
 from __future__ import annotations
 
 import math
@@ -9,6 +13,8 @@ import bpy
 import numpy as np
 
 from render import bpy_util as bu
+from render.rotation_blur import per_cap_alpha
+from render.signatures import rgb_self_emission
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 ATLAS = os.path.join(ROOT, "assets", "decals", "decal_atlas.png")
@@ -79,7 +85,28 @@ def _grey(a):
     return [float(a)] * 3
 
 
-def target_material(name: str, slot: str, p: dict):
+def hot_emission(p_rgb: dict, T_kelvin: float, sig: dict) -> tuple:
+    """Glow (r, g, b) in render units (render/signatures.rgb_self_emission)."""
+    return rgb_self_emission(p_rgb, T_kelvin, sig)
+
+
+def _add_glow(nt, shader, emission):
+    """Shader + an Emission of colour emission / max and strength max (no-op when it is all zero)."""
+    peak = max(emission) if emission else 0.0
+    if peak <= 0.0:
+        return shader
+    e = nt.nodes.new("ShaderNodeEmission")
+    e.inputs["Color"].default_value = [c / peak for c in emission] + [1.0]
+    e.inputs["Strength"].default_value = float(peak)
+    add = nt.nodes.new("ShaderNodeAddShader")
+    nt.links.new(shader, add.inputs[0])
+    nt.links.new(e.outputs[0], add.inputs[1])
+    return add.outputs[0]
+
+
+def target_material(name: str, slot: str, p: dict, alpha_img=None, emission=None):
+    """alpha_img: (image, half extent m) of the propeller disc's time-averaged rotation coverage.
+    emission: the part's glow (r, g, b) in render units (hot_emission)."""
     m, nt, out = bu.new_material(name)
     if slot == "decal":
         tex = nt.nodes.new("ShaderNodeTexImage")
@@ -91,9 +118,13 @@ def target_material(name: str, slot: str, p: dict):
         nt.links.new(tex.outputs["Color"], sc.inputs[0])
         b = bu.principled(nt, sc.outputs[0], p["roughness"], alpha=tex.outputs["Alpha"])
     elif slot == "propeller_disc":
-        b = bu.principled(nt, _grey(p["albedo"]), p["roughness"], alpha=p["alpha"])
+        alpha = bu.disc_texture(nt, *alpha_img) if alpha_img else float(per_cap_alpha(p["alpha"]))
+        b = bu.principled(nt, _grey(p["albedo"]), p["roughness"], alpha=alpha)
     else:
-        b = bu.principled(nt, _grey(p["albedo"]), p["roughness"], p.get("metallic", 0.0), p.get("coat", 0.0))
+        color = [p["albedo"] * c for c in p.get("color", [1.0, 1.0, 1.0])]
+        b = bu.principled(nt, color, p["roughness"], p.get("metallic", 0.0), p.get("coat", 0.0))
+        nt.links.new(_add_glow(nt, b.outputs[0], emission), out.inputs["Surface"])
+        return m
     nt.links.new(b.outputs[0], out.inputs["Surface"])
     return m
 
@@ -101,8 +132,8 @@ def target_material(name: str, slot: str, p: dict):
 def negative_material(name: str, slot: str, p: dict):
     m, nt, out = bu.new_material(name)
     col = np.asarray(p.get("color", [1, 1, 1]), float) * p["albedo"]
-    b = bu.principled(nt, list(np.clip(col, 0, 1)), p["roughness"], p.get("metallic", 0.0), p.get("coat", 0.0),
-                      p.get("alpha", 1.0))
+    alpha = float(per_cap_alpha(p["alpha"])) if "alpha" in p else 1.0      # discs are two-capped solids
+    b = bu.principled(nt, list(np.clip(col, 0, 1)), p["roughness"], p.get("metallic", 0.0), p.get("coat", 0.0), alpha)
     nt.links.new(b.outputs[0], out.inputs["Surface"])
     return m
 

@@ -43,7 +43,7 @@ def pd_vs_size(reports: dict, out: str, kind: str = "centre"):
     plt.close(fig)
 
 
-def pd_vs_range(reports: dict, out: str, span_range=(2.0, 2.6), width=640, hfovs=(50.0, 10.0), kind="centre"):
+def pd_vs_range(reports: dict, out: str, span_range=(2.0, 2.6), width=640, hfovs=(30.6764, 8.7834), kind="centre"):
     """Each size bin maps to a range band: Z = f_px * span / p for the span limits (spec 5).
     Horizontal bars show that band; vertical bars the bootstrap CI."""
     fig, axes = plt.subplots(1, len(hfovs), figsize=(6 * len(hfovs), 4.0), squeeze=False)
@@ -88,10 +88,10 @@ def ap_per_bin(reports: dict, out: str, key: str = "ap50"):
     plt.close(fig)
 
 
-def all_plots(reports: dict, out_dir: str, span_range=(2.0, 2.6)):
+def all_plots(reports: dict, out_dir: str, span_range=(2.0, 2.6), hfovs=(30.6764, 8.7834)):
     os.makedirs(out_dir, exist_ok=True)
     pd_vs_size(reports, os.path.join(out_dir, "pd_vs_size_centre.png"), "centre")
     pd_vs_size(reports, os.path.join(out_dir, "pd_vs_size_iou50.png"), "iou")
-    pd_vs_range(reports, os.path.join(out_dir, "pd_vs_range.png"), span_range)
+    pd_vs_range(reports, os.path.join(out_dir, "pd_vs_range.png"), span_range, hfovs=tuple(hfovs))
     ap_per_bin(reports, os.path.join(out_dir, "ap50_per_bin.png"), "ap50")
     ap_per_bin(reports, os.path.join(out_dir, "ap_centre_per_bin.png"), "ap_centre")

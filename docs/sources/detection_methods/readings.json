@@ -1,0 +1,298 @@
+{
+ "note": "Detection methods that could give this project better detection: their measured gains, with quotes (tools/source_measurements.detection_method_readings() checks each against the saved copy). Documents are git-ignored copies; this file is committed. docs/detection_gain_plan.md uses them.",
+ "retrieved": "2026-10-18",
+ "documents": {
+  "QI2021-MSAD": {
+   "file": "Qi2021_CVPR_MSAD_low_resolution_distillation.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2021)",
+   "title": "Qi, Kuen, Gu, Lin, Wang, Chen, Li, Jia: Multi-Scale Aligned Distillation for Low-Resolution Detection. CVPR 2021",
+   "url": "https://openaccess.thecvf.com/content/CVPR2021/papers/Qi_Multi-Scale_Aligned_Distillation_for_Low-Resolution_Detection_CVPR_2021_paper.pdf",
+   "sha256": "024f8bb6ddbca918a09350de5de54bd8849253723ea4e7b6493784482f6e84fb",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1
+   ]
+  },
+  "ZHOU2023-UNIDISTILL": {
+   "file": "Zhou2023_CVPR_UniDistill.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2023; arXiv copy)",
+   "title": "Zhou, Liu, Si, Li, Zhang, Wang, Li: UniDistill: A Universal Cross-Modality Knowledge Distillation Framework for 3D Object Detection in Bird's-Eye View. CVPR 2023",
+   "url": "https://arxiv.org/pdf/2303.15083",
+   "sha256": "5a029e85deba4d23ab68372894c4a5f8dd85b7e8d9a5a0c7fe1187065a2d6283",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1
+   ]
+  },
+  "ZHAO2024-SIMDISTILL": {
+   "file": "Zhao2024_AAAI_SimDistill.pdf",
+   "tier": "S2 (peer-reviewed, AAAI-24)",
+   "title": "Zhao, Zhang, Zhao, Chen, Zhang, Tao: SimDistill: Simulated Multi-Modal Distillation for BEV 3D Object Detection. AAAI-24",
+   "url": "https://ojs.aaai.org/index.php/AAAI/article/download/28577/29122",
+   "sha256": "faeed298cd5b64e94ae1464f67f989a1ccddb927fd9f953cb392cded8d8fcb82",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1
+   ]
+  },
+  "KWON2025-MEMDISTILL": {
+   "file": "Kwon2025_ICCV_MemDistill.pdf",
+   "tier": "S2 (peer-reviewed, ICCV 2025)",
+   "title": "Kwon, Yoon, Lee, Kwak: MemDistill: Distilling LiDAR Knowledge into Memory for Camera-Only 3D Object Detection. ICCV 2025",
+   "url": "https://openaccess.thecvf.com/content/ICCV2025/papers/Kwon_MemDistill_Distilling_LiDAR_Knowledge_into_Memory_for_Camera-Only_3D_Object_ICCV_2025_paper.pdf",
+   "sha256": "5f18efce3f6d784cfc50476a88941007042357c7fde77c593cded6ab11f9cec8",
+   "retrieved": "2026-10-18",
+   "pages": [
+    5
+   ]
+  },
+  "ZHANG2025-MOCID": {
+   "file": "Zhang2025_AAAI_MOCID_moving_IR_small_targets.pdf",
+   "tier": "S2 (peer-reviewed, AAAI-25)",
+   "title": "Zhang et al.: MOCID: Motion Context and Displacement Information Learning for Moving Infrared Small Target Detection. AAAI-25",
+   "url": "https://ojs.aaai.org/index.php/AAAI/article/download/33087/35242",
+   "sha256": "10c15099d185f380533b9008469d4a02e659dd3ee8f76658b5c45022d65e794a",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1,
+    6,
+    7
+   ]
+  },
+  "LIU2024-MSHNET": {
+   "file": "Liu2024_CVPR_MSHNet_IRSTD.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2024)",
+   "title": "Liu, Liu, Zheng, Wang, Fu: Infrared Small Target Detection with Scale and Location Sensitivity. CVPR 2024",
+   "url": "https://openaccess.thecvf.com/content/CVPR2024/papers/Liu_Infrared_Small_Target_Detection_with_Scale_and_Location_Sensitivity_CVPR_2024_paper.pdf",
+   "sha256": "5e1a95e48427d045b2434da2ba47f9ba5d641868b22056e9dde9183128fec82a",
+   "retrieved": "2026-10-18",
+   "pages": [
+    5,
+    8
+   ]
+  },
+  "AKYON2022-SAHI": {
+   "file": "Akyon2022_ICIP_SAHI.pdf",
+   "tier": "S2 (peer-reviewed, ICIP 2022; arXiv copy)",
+   "title": "Akyon, Altinuc, Temizel: Slicing Aided Hyper Inference and Fine-Tuning for Small Object Detection. ICIP 2022",
+   "url": "https://arxiv.org/pdf/2202.06934",
+   "sha256": "66c9c5df29fa4c3ea3b410283bcb7aabd82255f096e551508ed929edda41dc49",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1
+   ]
+  },
+  "BOUTHILLIER2021": {
+   "file": "Bouthillier2021_MLSys_variance.pdf",
+   "tier": "S2 (peer-reviewed, MLSys 2021; arXiv copy)",
+   "title": "Bouthillier et al.: Accounting for Variance in Machine Learning Benchmarks. MLSys 2021",
+   "url": "https://arxiv.org/pdf/2103.03098",
+   "sha256": "1f458f7e606e4db86b207315c049a38b52cacde15ad34def2cc6c29124fc5d4c",
+   "retrieved": "2026-10-18",
+   "pages": [
+    2
+   ]
+  },
+  "XIE2025-CST": {
+   "file": "Xie2025_ICCVW_CST_AntiUAV.pdf",
+   "tier": "S2 (peer-reviewed workshop, ICCV 2025 Workshops)",
+   "title": "Xie, Zhang, et al.: CST Anti-UAV: A Thermal Infrared Benchmark for Tiny UAV Tracking in Complex Scenes. ICCVW 2025",
+   "url": "https://openaccess.thecvf.com/content/ICCV2025W/Findings/papers/Xie_CST_Anti-UAV_A_Thermal_Infrared_Benchmark_for_Tiny_UAV_Tracking_ICCVW_2025_paper.pdf",
+   "sha256": "66fed31ef7968a5edacb6f565507e4ea032e19f76689f5e1efd57781aab42bbb",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1
+   ]
+  }
+ },
+ "readings": [
+  {
+   "doc": "QI2021-MSAD",
+   "page": 1,
+   "quote": "outperforming the latter’s low-resolution models by 2.1% to 3.6% in terms of mAP",
+   "values": {
+    "high_res_teacher_to_low_res_student_map_gain": [
+     2.1,
+     3.6
+    ]
+   }
+  },
+  {
+   "doc": "ZHOU2023-UNIDISTILL",
+   "page": 1,
+   "quote": "effectively improves the mAP and NDS of student detectors by 2.0%∼3.2%",
+   "values": {
+    "lidar_teacher_camera_student_gain": [
+     2.0,
+     3.2
+    ]
+   }
+  },
+  {
+   "doc": "ZHAO2024-SIMDISTILL",
+   "page": 1,
+   "quote": "achieving an improvement of 4.8% mAP and 4.1% NDS over the baseline detector",
+   "values": {
+    "map_gain": 4.8,
+    "nds_gain": 4.1
+   }
+  },
+  {
+   "doc": "KWON2025-MEMDISTILL",
+   "page": 5,
+   "quote": "significant performance gain of 9.2%p in mAP and 9.0%p in NDS over its baseline model",
+   "values": {
+    "map_gain": 9.2,
+    "nds_gain": 9.0,
+    "note": "against BEVDepth ResNet-50"
+   }
+  },
+  {
+   "doc": "ZHANG2025-MOCID",
+   "page": 1,
+   "quote": "The Thirty-Ninth AAAI Conference on Artificial Intelligence (AAAI-25)",
+   "values": {}
+  },
+  {
+   "doc": "ZHANG2025-MOCID",
+   "page": 6,
+   "quote": "DNANet (Li et al. 2022) ∗ 89.93 92.49 98.27 95.29 63.61",
+   "values": {
+    "single_frame_dnanet_ap50": {
+     "DAUB": 89.93,
+     "IRDST": 63.61
+    }
+   }
+  },
+  {
+   "doc": "ZHANG2025-MOCID",
+   "page": 6,
+   "quote": "CSPDarknet+DTUM (Li et al. 2023) 88.72 97.58 91.39 94.38 92.14",
+   "values": {
+    "multi_frame_dtum_ap50": {
+     "DAUB": 88.72,
+     "IRDST": 92.14
+    }
+   }
+  },
+  {
+   "doc": "ZHANG2025-MOCID",
+   "page": 6,
+   "quote": "MOCID (Ours) 95.93 99.12 97.34 98.22 94.74",
+   "values": {
+    "multi_frame_mocid_ap50": {
+     "DAUB": 95.93,
+     "IRDST": 94.74
+    }
+   }
+  },
+  {
+   "doc": "ZHANG2025-MOCID",
+   "page": 7,
+   "quote": "AP50 87.57 92.31 95.93 95.91 94.47 95.10 93.32",
+   "values": {
+    "clip_length_T": [
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "daub_ap50": [
+     87.57,
+     92.31,
+     95.93,
+     95.91,
+     94.47,
+     95.1,
+     93.32
+    ]
+   }
+  },
+  {
+   "doc": "LIU2024-MSHNET",
+   "page": 8,
+   "quote": "LS w/o. w 64.83 91.16 5.28",
+   "values": {
+    "iou_loss_iou_pd_fa": [
+     64.83,
+     91.16,
+     5.28
+    ]
+   }
+  },
+  {
+   "doc": "LIU2024-MSHNET",
+   "page": 8,
+   "quote": "LS + LL 67.16 93.88 15.03",
+   "values": {
+    "sls_loss_iou_pd_fa": [
+     67.16,
+     93.88,
+     15.03
+    ]
+   }
+  },
+  {
+   "doc": "AKYON2022-SAHI",
+   "page": 1,
+   "quote": "can increase object detection AP by 6.8%, 5.1% and 5.3% for FCOS, VFNet and TOOD detectors",
+   "values": {
+    "sliced_inference_ap_gain": [
+     6.8,
+     5.1,
+     5.3
+    ]
+   }
+  },
+  {
+   "doc": "AKYON2022-SAHI",
+   "page": 1,
+   "quote": "cumulative increase of 12.7%, 13.4% and 14.5% AP in the same order",
+   "values": {
+    "with_sliced_fine_tuning_ap_gain": [
+     12.7,
+     13.4,
+     14.5
+    ]
+   }
+  },
+  {
+   "doc": "BOUTHILLIER2021",
+   "page": 2,
+   "quote": "As many sources of variation as possible should be ran- domized whenever possible.",
+   "values": {}
+  },
+  {
+   "doc": "BOUTHILLIER2021",
+   "page": 2,
+   "quote": "should not build solely on comparing average performance but account for variance",
+   "values": {}
+  },
+  {
+   "doc": "XIE2025-CST",
+   "page": 1,
+   "quote": "achieves only 35.92% state accuracy",
+   "values": {
+    "tiny_uav_sota_state_accuracy": 35.92,
+    "anti_uav410": 67.69
+   }
+  },
+  {
+   "doc": "XIE2025-CST",
+   "page": 1,
+   "quote": "much lower than the 67.69% observed on the Anti-UAV410",
+   "values": {}
+  },
+  {
+   "doc": "LIU2024-MSHNET",
+   "page": 5,
+   "quote": "We use IoU and false alarm rate (Fa) as the pixel-level evaluation metric and assess target- level performance using the probability of detection (Pd).",
+   "values": {
+    "metric_convention": "infrared small targets: Pd (target level) and Fa (false alarms), not mAP"
+   }
+  }
+ ]
+}

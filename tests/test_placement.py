@@ -45,7 +45,7 @@ def test_bins():
     assert pl.bin_index(300.0, EDGES) == 5 and pl.bin_index(1.9, EDGES) == -1
 
 
-@pytest.mark.parametrize("hfov", [50.0, 10.0])
+@pytest.mark.parametrize("hfov", [30.6764, 8.7834])      # S1 14 mm and 50 mm
 def test_solve_distance_hits_requested_size(hfov):
     rng = np.random.default_rng(1)
     V = rng.normal(size=(200, 3)) * [1.5, 1.1, 0.3]
@@ -59,7 +59,7 @@ def test_solve_distance_hits_requested_size(hfov):
 def test_place_lands_in_bin_and_frame():
     rng = np.random.default_rng(2)
     V = rng.normal(size=(300, 3)) * [1.5, 1.1, 0.3]
-    cam = pl.Camera(640, 512, 10.0, (0, 0, 2), 0.0, 30.0)
+    cam = pl.Camera(640, 512, 8.7834, (0, 0, 2), 0.0, 30.0)
     pose = lambda r: (pl.object_rotation(r.uniform(0, 360)), {})  # noqa: E731
     for k in range(6):
         p = pl.place(cam, V, rng, EDGES, k, pose)

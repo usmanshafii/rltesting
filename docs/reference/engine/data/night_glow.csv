@@ -1,0 +1,14 @@
+quantity,value
+scenes,100000
+night,24867
+stub_above_threshold,32228
+glow_over_scene_sky,2637
+glow_over_faintest_sky,4164
+share_of_all_scenes_glow_over_scene_sky,0.0264
+share_of_all_scenes_glow_over_faintest_sky,0.0416
+share_of_night_scenes_glow_over_scene_sky,0.106
+threshold_min_temp_c,370.0
+black_stub_c_for_faintest_sky,422.4
+black_stub_c_for_brightest_sky_floor,478.9
+hottest_stub_draw_c,564.8
+stub_draw_c_p99,523.9

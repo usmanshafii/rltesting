@@ -2,25 +2,107 @@
 # Every value here is a generic sensor modelling range, not a property of any fielded KAL system.
 #   [spec] fixed by the build spec   [C] plausible modelling assumption   [calib] tied to render units
 
-image: {width: 640, height: 512}       # [spec] RGB, LWIR and SWIR share one 640x512 grid
+image: {width: 640, height: 512}       # [spec] the output grid every band is rendered and emulated on
 sensor_width_mm: 36.0                  # [spec] Blender camera, sensor fit horizontal
-hfov_deg: [50.0, 10.0]                 # [spec] wide and narrow
+# Legacy single shared camera, used only when `cameras` is null (configs/m1.yaml keeps it for the M1 pilot):
+hfov_deg: [30.6764, 8.7834]            # [spec 5] S1 on 12 um pixels: 14 mm (f_px 1166.7) and 50 mm (f_px 4166.7), exact
 hfov_probs: [0.5, 0.5]                 # [C]
 fps: [25, 30]                          # [spec]
 
-psf_sigma_px:                          # [spec 4.1] Gaussian PSF sigma in OUTPUT pixels
-  rgb:  [0.3, 0.6]
+# ---------------------------------------------------------------- camera classes (2026-10-12)
+# CLAUDE.md sensor set rule: the sensors are RGB, LWIR uncooled, LWIR cooled and MWIR (SWIR is deferred; its settings
+# below are unchanged). Each camera is a generic detector class whose formats, lenses, wavebands, NETD and frame rates
+# cover the manufacturer documents saved in docs/sources/cameras/ (readings.json, with page, quote and value; register
+# docs/sources/README.md); tests/test_cameras.py ties these lines to the readings. The field of view always follows
+# from the sampled format and focal length, 2 atan(N p / 2 f) (render/cameras.py), and is never sampled on its own.
+# Rig: the uncooled LWIR camera, the deployable student's thermal sensor, sets each scene's output grid (image above,
+# at its field of view); the zoom cameras cover that grid from the same mount; data/camera_emulation.py emulates each
+# camera on the grid (its pixel scale, coverage and noise). Weights of formats, detectors and frame rates are coverage
+# choices [C]. Source keys refer to docs/sources/cameras/readings.json.
+cameras:
+  lwir_uncooled:                       # VOx microbolometer behind a fixed lens: the most widespread thermal class
+    detector: uncooled VOx microbolometer
+    band_um: [8.0, 14.0]               # Boson "nominally 8 to 14 um", Dione 1280 8-14 um (Tau 2 7.5-13.5) [S1]
+    formats:                           # each format [S1]; weights [C]
+      - {width: 640, height: 512, pitch_um: 12.0, weight: 0.50, source: BOSON-DS}        # Boson / Boson+ 640
+      - {width: 320, height: 256, pitch_um: 12.0, weight: 0.15, source: BOSON-DS}        # Boson 320
+      - {width: 1280, height: 1024, pitch_um: 12.0, weight: 0.15, source: DIONE1280-DS}  # Dione 1280
+      - {width: 640, height: 512, pitch_um: 10.0, weight: 0.10, source: TENUM640-DS}     # Tenum 640, small pitch
+      - {width: 640, height: 512, pitch_um: 17.0, weight: 0.10, source: TAU2-DS}         # Tau 2 640, legacy pitch
+    focal_mm: [4.9, 100.0]             # lenses: Boson 640 4.9-72.8 mm (Table 11), Tau 2 7.5-100 mm [S1]; log-uniform
+    hfov_deg: [5.0, 46.0]              # sampling range of the user's camera table (2026-10-12); lenses outside redrawn
+    netd_mk: [25.0, 50.0]              # user's table, inside the datasheets' 20-60 mK: Boson+ <= 20/30, Tau 2 < 30/40/50,
+                                       # Boson < 40/50/60, Dione < 40/50, Tenum < 50 (f/1, ~30 C scene) [S1]
+    row_column_temporal_frac: [0.0, 0.35]   # temporal row and column noise / NETD, each: Boson Table 13 acceptance
+                                       # limits 14/40, 18/50, 21/60 mK = 0.35 (upper bounds) [S1]
+    frame_hz: {options: [9.0, 25.0, 30.0, 60.0], weights: [0.1, 0.3, 0.3, 0.3]}   # Boson 8.6/60, Tau 2 <9/25/30 Hz [S1]
+    thermal_time_constant_ms: 8.0      # Boson "nominally 8 msec" [S1]; equivalent exposure: lwir_integration_ms below
+  lwir_cooled:                         # T2SL or MCT focal-plane array behind a zoom; rare
+    detector: cooled T2SL / MCT FPA
+    band_um: [7.7, 9.3]                # Scorpio LW 7.7-9.3 um at 80 K; Pelican-D LW cut-off 9.3 um [S1]
+    formats:
+      - {width: 640, height: 512, pitch_um: 15.0, weight: 1.0, source: SCORPIO-LW-DS}    # also Pelican-D LW [S1]
+    zoom_focal_mm: [21.7, 550.0]       # [C] the user's 1-25 deg on 640 x 15 um; no cooled-LWIR zoom datasheet was found
+    netd_mk: [10.0, 25.0]              # Scorpio LW 22 mK (f/2, 210 Hz) and 10 mK (30 Hz, 4 frames accumulated);
+                                       # Pelican-D LW 15 mK (30 Hz, 8 frames averaged) [S1]; the user's 15-25 widened to them
+    f_number: [1.2, 2.7]               # Pelican-D LW cold shield F/1.2 standard, F/2.7 optional; Scorpio LW f/2 [S1]
+    frame_hz: {options: [30.0, 50.0, 60.0, 100.0], weights: [0.4, 0.2, 0.3, 0.1]}   # user's 30-100; detectors to 210/360 Hz [S1]
+    residual_nonuniformity: {frac_of_dynamic_range: 0.0004, fill_range: [0.1, 0.9], well_fill: 0.5, column_share: 0.3}
+                                       # Pelican-D LW < 0.04 % STD/DR at 10-90 % fill [S1] -> <= 34 mK (render/cameras.
+                                       # residual_fpn_k, C+); column share of it [C]
+    integration: {qe: [0.5, 0.7], well_fill: [0.5, 0.65], capacity_e: [6000000.0, 13600000.0]}
+                                       # Pelican-D LW QE > 50 %, 6 Me-, 65 % fill; Scorpio LW 13.6 Me- [S1]; QE top [C]
+                                       # -> 0.1-0.5 ms (render/cameras.integration_ms, C+)
+  mwir:                                # InSb, MCT or HOT focal-plane array behind a zoom
+    detector: cooled MWIR FPA
+    detectors:                         # the detector sets the band [S1]; weights [C]
+      - {name: MCT, band_um: [3.7, 4.8], weight: 0.4, source: SCORPIO-MW-DS}             # also Daphnis-HD MW
+      - {name: InSb, band_um: [3.6, 4.9], weight: 0.3, source: PELICAN-D-640-WEB}
+      - {name: HOT XBn, band_um: [3.6, 4.2], weight: 0.3, source: MINI-BLACKBIRD-DS}     # ends below the CO2 4.3 um band
+    formats:
+      - {width: 640, height: 512, pitch_um: 15.0, weight: 0.6, source: SCORPIO-MW-DS}    # also Pelican-D InSb
+      - {width: 1280, height: 1024, pitch_um: 10.0, weight: 0.2, source: MINI-BLACKBIRD-DS}
+      - {width: 1280, height: 720, pitch_um: 10.0, weight: 0.2, source: DAPHNIS-HD-MW-DS}
+    zoom_focal_mm: [15.0, 300.0]       # SupIR 15-300 mm MWIR zoom, 36.4-1.8 deg on 640 x 15 um [S1]
+    netd_mk: [12.0, 25.0]              # Scorpio MW 18, Daphnis-HD 20, Pelican-D 20, Mini Blackbird < 25 mK [S1]; the 12 mK
+                                       # lower edge is from the user's table, not traced [C]
+    f_number: [2.0, 5.5]               # Scorpio MW / Daphnis-HD f/2-f/4, Mini Blackbird F/3.4-4, Pelican-D and zoom F/5.5 [S1]
+    frame_hz: {options: [25.0, 30.0, 50.0, 60.0, 100.0, 120.0], weights: [0.15, 0.25, 0.15, 0.25, 0.1, 0.1]}   # detectors 85-300 Hz [S1]
+    residual_nonuniformity: {frac_of_dynamic_range: 0.0004, fill_range: [0.1, 0.8], well_fill: 0.5, column_share: 0.3}
+                                       # Mini Blackbird < 0.04 % STD/DR at 10-80 %, Pelican-D 0.04 % [S1] -> <= 14-16 mK (C+)
+    integration: {qe: [0.6, 0.8], well_fill: [0.5, 0.7], capacity_e: [2000000.0, 6500000.0]}
+                                       # Scorpio MW 6.5 Me- at 50 %, Daphnis-HD 2.7 Me- and Blackbird 2 Me- at 70 % [S1];
+                                       # QE [C]; -> ~4 ms (f/2) to the frame period (f/5.5, HOT), C+
+  rgb:                                 # colour CMOS (Bayer, rolling shutter) zoom block
+    detector: 1/2.8-inch colour CMOS
+    band_um: [0.4, 0.7]                # visible behind an IR-cut filter (as signatures.yaml rgb.hot_emission bands) [C+]
+    formats:
+      - {width: 1920, height: 1080, pitch_um: 2.9, weight: 0.8, source: IMX327-PI}
+      - {width: 1280, height: 720, pitch_um: 4.35, weight: 0.2, source: FCB-EV7520-TM, scaled_from: [1920, 2.9]}
+                                       # 720p output of the zoom block [S1]: the whole sensor scaled, 1920 x 2.9 / 1280 um
+    zoom_focal_mm: [4.3, 129.0]        # FCB-EV7520 30x zoom: f = 4.3-129 mm, 63.7-2.3 deg horizontal [S1]
+    read_noise_e: [1.0, 3.0]           # [C] user's table; Sony publishes sensitivity, not read noise
+    frame_hz: {options: [25.0, 30.0, 50.0, 60.0], weights: [0.35, 0.35, 0.15, 0.15]}   # IMX327 up to 60 frame/s [S1]
+
+psf_sigma_px:                          # [spec 4.1] Gaussian PSF sigma in the CAMERA's pixels (= output pixels for the
+  rgb:  [0.3, 0.6]                     # legacy camera); the loader scales it by the camera's pixel scale r
   swir: [0.4, 0.7]
   lwir: [0.4, 0.9]
+  lwir_cooled: [0.4, 1.0]              # C+: diffraction 0.42 lambda F (8.5 um, F/1.2-2.7) with the 15 um pixel aperture
+  mwir: [0.4, 1.0]                     # C+: diffraction 0.42 lambda F (4 um, F/2-5.5) with the 10-15 um pixel aperture
 # The lower edge of each range is applied at supersampled resolution during rendering (keeps
 # sub-pixel position); the loader adds sqrt(sigma^2 - sigma0^2) at output resolution so every
 # epoch sees a fresh PSF inside the spec range.
 
 exposure_ms: {day: [1.0, 5.0], dusk: [5.0, 20.0], night: [20.0, 50.0]}   # [C] spec examples: 5 ms day, 50 ms night
+lwir_integration_ms: [10.0, 33.0]      # [spec 3.2] microbolometer equivalent exposure (thermal time constant), used for rotation blur;
+                                       # a first-order response of tau = 8 ms (Boson) spans 2 tau - 3.5 tau = 16-28 ms [S1 + physics]
 
 registration:                          # [spec 4.6] LWIR vs RGB 0-2 px, 0-1 deg; SWIR the same [C]
   lwir: {shift_px: 2.0, rot_deg: 1.0}
   swir: {shift_px: 2.0, rot_deg: 1.0}
+  lwir_cooled: {shift_px: 2.0, rot_deg: 1.0}   # [C] each camera of the rig is boresighted separately, as LWIR
+  mwir: {shift_px: 2.0, rot_deg: 1.0}
 
 rgb_noise:                             # Brooks et al. (CVPR 2019) style: shot + read noise on linear data, before tone mapping
   electrons_per_unit_ms: [150.0, 600.0]   # [calib] photo-electrons per unit rendered radiance per ms (day sky ~10 units)
@@ -35,7 +117,10 @@ rgb_noise:                             # Brooks et al. (CVPR 2019) style: shot +
   nominal: {electrons_per_unit_ms: 300.0, read_noise_e: 3.0, full_well_e: 12000.0, ae_target: 0.16}   # metadata contrast-to-noise
 
 lwir_noise:                            # He et al. (Applied Optics 2018) style: column FPN + Gaussian noise
-  netd_mk: [30.0, 80.0]                # [spec]
+  # One range for a pragmatic fielded camera (spec 3.2 and 5): current 640x512 12 um VOx cores are specified at
+  # < 40-50 mK at f/1.0 and a 30 C scene (e.g. Teledyne FLIR Boson < 40 mK); the upper end allows a protective
+  # window, a warm camera housing and ageing. Premium < 20-30 mK cores and old 17 um / f/1.2+ units are excluded.
+  netd_mk: [30.0, 60.0]
   counts_per_k: [20.0, 80.0]           # [C] 14-bit responsivity near ambient
   offset_counts: [3000.0, 9000.0]      # [C]
   column_fpn_k: [0.02, 0.15]           # [C] column offset sigma, kelvin-equivalent
@@ -43,7 +128,7 @@ lwir_noise:                            # He et al. (Applied Optics 2018) style: 
   bits: 14                             # [spec]
   agc_low_pct: [0.5, 2.0]              # [C] display stretch: robust minimum percentile
   agc_high_pct: [99.0, 99.9]           # [C] robust maximum percentile
-  nominal: {netd_mk: 50.0, column_fpn_k: 0.05}
+  nominal: {netd_mk: 45.0, column_fpn_k: 0.05}
 
 swir_noise:                            # Jiang, Wang, Zheng (ICCVW 2025) style: shot, dark current, read, row/column FPN, PRNU, bad pixels
   electrons_per_unit_ms: [1500.0, 8000.0]  # [calib] per unit rendered SWIR radiance per ms; ~15 um InGaAs pixels
@@ -61,3 +146,113 @@ swir_noise:                            # Jiang, Wang, Zheng (ICCVW 2025) style: 
   agc_low_pct: [0.5, 2.0]
   agc_high_pct: [99.0, 99.9]
   nominal: {electrons_per_unit_ms: 4000.0, read_noise_e: 50.0, dark_current_e_per_ms: 5.0, full_well_e: 100000.0, ae_target: 0.25}
+
+# ---------------------------------------------------------------- teacher zoom (2026-10-18, loader-only)
+# The privileged zoom cameras (cooled LWIR, MWIR) set narrower than the student's field, so they keep their pixels on
+# a distant target and see only the centre of the student's frame (render/cameras.zoom_in,
+# data/dataset.apply_teacher_zoom; docs/privileged_teacher_case.md, section 6). Off, the zoom cameras keep the setting
+# that covers the student's field (render/cameras.zoom_to_cover) and give up that advantage. Loader-only: scenes stay valid
+# (data/provenance.LOADER_ONLY_SENSORS); on the student's grid a zoomed camera gains by binning its finer pixels.
+teacher_zoom:
+  enabled: false
+  cameras: [lwir_cooled, mwir]
+  factor: [1.0, 3.0]                   # [C] log-uniform per scene and camera beyond the covering setting; the lens's
+                                       # longest focal length still applies (cooled LWIR 550 mm, MWIR 300 mm)
+  seed: 0
+
+# ---------------------------------------------------------------- camera output processing (2026-10-17)
+# What each camera does to its sensor data before its video leaves it, applied by the loader after the sensor model
+# (noise/isp.py, noise/lwir_fpn.apply_camera, noise/rgb_noise.apply_camera; docs/sensor_noise.md). Loader-only: not part
+# of the render contract (data/provenance.LOADER_ONLY_SENSORS). Documents: FLIR Boson product specification
+# 102-2013-40 [BOSON-DS], Lynred / SCD cooled-core datasheets, Sony IMX327 and FCB-EV7520 [cameras/]; papers in
+# docs/sources/sensor_noise/. Where a document names an effect but not its size here, the amplitude is [C].
+camera_pipelines:
+  enabled: false                       # off since the 2026-10-17 verification (docs/sensor_noise.md, "Result"): training on
+                                       # these camera models did not pass the pre-registered rule, and every detector was
+                                       # weakest on their frames. true: the loader applies them; the noise ablation
+                                       # (tools/noise_ablation.py) switches them on for its own variants
+  lwir_uncooled:
+    defects: {frac: [0.0, 0.015], bad_lines: [0, 2], residual_frac: [0.0, 0.00002], residual_offset_netd: [10.0, 100.0]}
+                                       # Boson 640 operability, Table 15: < 1 / 1.5 / 2 % defects by grade, < 4-6 bad rows or
+                                       # columns, all replaced from neighbours by default (sec. 11.3) [S1]; defects the map
+                                       # missed (0-6 per 640 x 512 frame) and their offset [C]
+    rts: {frac: [0.0, 0.0], amplitude_netd: [2.0, 6.0]}   # no blinking-pixel term for microbolometers (none documented)
+    column_poly_frac: [0.0, 0.002]     # [C] residual per-column cubic in the signal: He et al. 2018 column model (degree 3)
+    shading_k: [0.0, 0.3]              # [C] amplitude, K; the kind: Boson low-frequency shading reduction acts on "side-to-
+                                       # side gradients and circularly-symmetric gradients" (sec. 5.4) [S1]; structured,
+                                       # smooth offset from housing heating and optics (Saragadam et al. 2021) [S2]
+    inu: {small: [0, 6], large: [0, 2], amplitude_k: [0.0, 0.05]}   # Boson sec. 11.4: type A (< 10 px) and B INUs [S1];
+                                       # counts and amplitude [C]
+    filter_attenuation: [0.0, 0.8]     # [C] share of the residual fixed pattern removed by the column, row, spatial and
+                                       # shading filters (all on by factory default, sec. 5.4 [S1])
+    agc:                               # Boson AGC, sec. 6.8 [S1]; factory default in brackets
+      histogram_prob: 0.85             # [C] histogram-based AGC (default) rather than linear
+      ibe_prob: 0.85                   # [C] information-based equalization (default enabled)
+      plateau: [0.03, 0.15]            # [C] around the 7 % default
+      tail_pct: [0.0, 2.0]             # default 0 %; the manual's example 2 %
+      max_gain: [0.7, 3.0]             # [C] around 1.38 ("the optimal value varies with application")
+      linear: [0.0, 0.4]               # around 20 %; the manual's examples 0 and 30 %
+      ace: [0.85, 1.15]                # [C] around 0.97 (settable 0.5-4.0)
+      dde: [0.8, 1.3]                  # the manual's examples 0.8 and 1.3 (default 0.95)
+      smoothing_px: [1.5, 4.0]         # [C] the high-pass / low-pass split (Smoothing Factor 1250 has no pixel scale)
+      linear_lo_pct: [0.5, 2.0]        # linear AGC tails [C], as lwir_noise agc_low_pct / agc_high_pct
+      linear_hi_pct: [99.0, 99.9]
+  lwir_cooled:
+    defects: {frac: [0.0005, 0.005], bad_lines: [0, 0], residual_frac: [0.0, 0.00001], residual_offset_netd: [10.0, 100.0]}
+                                       # operability 99.8 % (Scorpio LW), > 99.5 % (Pelican-D LW) [S1]; replaced in the core
+                                       # (defect replacement listed for the cooled Mini Blackbird [S1]); missed defects [C]
+    rts: {frac: [0.0, 0.00002], amplitude_netd: [2.0, 6.0]}
+                                       # blinking (RTS) pixels: "only a few" on a T2SL MWIR FPA, and those that affect the
+                                       # residual pattern are caught by defect detection (Ribet-Mohamed et al. 2019) [S2];
+                                       # share left after replacement and jump size [C]
+    column_poly_frac: [0.0, 0.0005]    # [C]
+    shading_k: [0.0, 0.1]              # [C] residual low-frequency non-uniformity after NUC (drift, narcissus)
+    inu: {small: [0, 3], large: [0, 1], amplitude_k: [0.0, 0.02]}   # [C]
+    filter_attenuation: [0.0, 0.6]     # [C] spatial / temporal noise reduction (Mini Blackbird [S1])
+    agc:                               # AGC / dynamic-range compression of cooled cores (Mini Blackbird [S1]); ranges [C]
+      histogram_prob: 0.7
+      ibe_prob: 0.5
+      plateau: [0.03, 0.15]
+      tail_pct: [0.0, 2.0]
+      max_gain: [0.7, 4.0]
+      linear: [0.0, 0.5]
+      ace: [0.85, 1.15]
+      dde: [0.8, 1.3]
+      smoothing_px: [1.5, 4.0]
+      linear_lo_pct: [0.5, 2.0]
+      linear_hi_pct: [99.0, 99.9]
+  mwir:
+    defects: {frac: [0.0005, 0.002], bad_lines: [0, 0], residual_frac: [0.0, 0.00001], residual_offset_netd: [10.0, 100.0]}
+                                       # operability 99.8 % (Scorpio MW, Daphnis-HD MW): <= 0.2 % defects [S1]; replaced in
+                                       # the core [S1]; a better array than the typical value: lower edge [C]
+    rts: {frac: [0.0, 0.00002], amplitude_netd: [2.0, 6.0]}   # as lwir_cooled (Ribet-Mohamed et al. 2019, T2SL MWIR) [S2 / C]
+    column_poly_frac: [0.0, 0.0005]    # [C]
+    shading_k: [0.0, 0.1]              # [C] residual low-frequency non-uniformity after NUC (drift, narcissus)
+    inu: {small: [0, 3], large: [0, 1], amplitude_k: [0.0, 0.02]}   # [C]
+    filter_attenuation: [0.0, 0.6]     # [C] spatial / temporal noise reduction (Mini Blackbird [S1])
+    agc:
+      histogram_prob: 0.7
+      ibe_prob: 0.5
+      plateau: [0.03, 0.15]
+      tail_pct: [0.0, 2.0]
+      max_gain: [0.7, 4.0]
+      linear: [0.0, 0.5]
+      ace: [0.85, 1.15]
+      dde: [0.8, 1.3]
+      smoothing_px: [1.5, 4.0]
+      linear_lo_pct: [0.5, 2.0]
+      linear_hi_pct: [99.0, 99.9]
+  rgb:
+    adc_bits: [10, 12]                 # IMX327: 10- or 12-bit A/D [S1]
+    max_gain_db: 50.0                  # FCB-EV7520 AE gain curve: 0-50 dB in 28 steps (manual p. 10) [S1]
+    high_sensitivity_prob: 0.3         # [C] high-sensitivity mode, maximum gain up to 4x higher (manual p. 11) [S1 for 4x]
+    read_tukey_lambda: [-0.15, 0.14]   # [C] Tukey-lambda read noise (Wei et al. 2020): 0.14 Gaussian, heavier tails below
+    row_noise_frac: [0.0, 0.25]        # [C] row (banding) noise sigma / read noise (Wei et al. 2020 row term)
+    nr_level: [0, 5]                   # FCB noise reduction: Off and levels 1-5; it acts more as gain rises and not at all
+                                       # in bright light (manual p. 11) [S1]
+    nr_sigma_px: [0.0, 0.4, 0.6, 0.8, 1.0, 1.3]   # [C] Gaussian sigma (camera pixels) per level at full effect
+    nr_gain_db: [6.0, 30.0]            # [C] the effect ramps from none to full between these gains
+    aperture_level: [0, 15]            # FCB edge enhancement, 16 steps (default 10) [S1]
+    sharpen_amount_max: 0.8            # [C] unsharp-mask amount at level 15
+    gamma_standard_prob: 0.8           # FCB gamma Standard (default) or Straight [S1]; curves [C]: BT.709, power 1/2.2
+    chromatic_aberration: [0.0, 0.0015]   # [C] lateral: red and blue scaled about the centre (Carlson et al. 2018 model)

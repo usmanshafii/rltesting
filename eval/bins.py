@@ -19,14 +19,17 @@ def bin_of(size_px: float) -> str | None:
     return None
 
 
+S1_NARROW_HFOV_DEG = 8.7834          # spec 5: 50 mm on 12 um pixels (f_px 4166.7); configs/sensors.yaml is authoritative
+
+
 def f_px(width: int, hfov_deg: float) -> float:
     return width / (2 * math.tan(math.radians(hfov_deg) / 2))
 
 
-def range_for_pixels(p_px: float, extent_m: float, width: int = 640, hfov_deg: float = 10.0) -> float:
+def range_for_pixels(p_px: float, extent_m: float, width: int = 640, hfov_deg: float = S1_NARROW_HFOV_DEG) -> float:
     """Spec 5: p = N W / (2 Z tan(HFOV/2))  ->  Z = f_px W / p."""
     return f_px(width, hfov_deg) * extent_m / p_px
 
 
-def range_band(p_px: float, extent_range_m=(2.00, 2.60), width: int = 640, hfov_deg: float = 10.0):
+def range_band(p_px: float, extent_range_m=(2.00, 2.60), width: int = 640, hfov_deg: float = S1_NARROW_HFOV_DEG):
     return tuple(range_for_pixels(p_px, e, width, hfov_deg) for e in extent_range_m)

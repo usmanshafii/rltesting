@@ -4,6 +4,9 @@ build_target.py turns this mesh into a Blender object. tools/draw_reference.py a
 tools/photo_check.py use the same mesh, so the reference drawing, the photo overlay
 and the rendered model cannot diverge.
 
+Engine: the Geran-2's MD-550 (Limbach L550E copy), user decision of 2026-10-08. Its parts come from
+target/engine_l550e.py in fixed metres; the airframe scales with the sampled wingspan, the engine does not.
+
 Internal frame (span units): x aft from the wing apex, y to starboard, z up.
 Output frame (metres, Blender): +X forward, +Y to port, +Z up, origin on the
 fuselage axis midway between the nose tip and the propeller hub.
@@ -12,13 +15,23 @@ from __future__ import annotations
 
 import math
 import os
+import sys
 from collections import defaultdict
 
 import numpy as np
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:
+    sys.path.insert(0, HERE)
+import engine_l550e as el  # noqa: E402
+
 SLOTS = ["skin", "control_surface", "fin", "fuselage", "markings", "decal",
-         "engine_region", "exhaust_outlet", "tail_cone", "propeller",
-         "propeller_disc", "antenna", "nose_window"]
+         "engine_head", "engine_barrel", "engine_case", "engine_intake", "engine_flange", "exhaust_stub",
+         "tail_cone", "propeller", "propeller_disc", "antenna", "nose_window", "engine_heatsink"]
+# Engine surface classes (configs/signatures.yaml gives each its own temperature and emissivity)
+ENGINE_SLOTS = ("engine_head", "engine_heatsink", "engine_barrel", "engine_case", "engine_intake", "engine_flange",
+                "exhaust_stub")
+HOT_SLOTS = ("engine_head", "engine_heatsink", "engine_barrel", "exhaust_stub")
 SMOOTH_SLOTS = {"skin", "control_surface", "fuselage", "markings", "tail_cone"}
 DECAL_PARTS = {"wing_text_stbd", "wing_text_port", "fin_text_stbd", "fin_text_port", "flag"}
 # Coarse part groups, stored per face in Blender as the INT attribute `kal_part`
@@ -29,13 +42,13 @@ PART_NAMES = ["wing", "fin", "fuselage", "engine", "exhaust", "spinner", "propel
 def part_group(part: str) -> str:
     if part in DECAL_PARTS or part == "nose_window":
         return "decal"
-    for prefix, group in (("fin_", "fin"), ("header_", "exhaust"), ("blade_", "blade"),
-                          ("antenna_", "antenna"), ("cyl_", "engine"), ("head_", "engine")):
+    for prefix, group in (("fin_", "fin"), ("eng_stub_", "exhaust"), ("eng_outlet_", "exhaust"),
+                          ("eng_", "engine"), ("blade_", "blade"), ("antenna_", "antenna")):
         if part.startswith(prefix):
             return group
-    return {"crankcase": "engine", "shaft": "engine", "prop_disc": "propeller_disc"}.get(part, part)
+    return {"prop_disc": "propeller_disc"}.get(part, part)
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+
 DEFAULT_YAML = os.path.join(HERE, "..", "configs", "target.yaml")
 
 
@@ -77,10 +90,13 @@ def ranges(cfg: dict) -> dict:
 def derive(p: dict) -> dict:
     """All dependent quantities. Sweep and length are derived, never entered."""
     g = dict(p)
+    s = p["span_m"]
     cr = p["root_chord"]
     ct = cr * p["tip_over_root"]
     tan_l = (cr - ct) / 0.5
     Rf = p["forebody_dia"] / 2
+    eng0 = p["engine_start_over_root"] * cr                 # mounting face, end of the fuselage
+    eng1 = eng0 + el.LENGTH_M / s                           # drive-flange face (propeller side)
     g.update(
         tip_chord=ct, te_x=cr, tip_le_x=cr - ct, tan_sweep=tan_l,
         sweep_deg=math.degrees(math.atan(tan_l)),
@@ -91,10 +107,12 @@ def derive(p: dict) -> dict:
         collar_x=Rf * tan_l,                    # leading edge meets the forebody side here
         pod0=p["pod_start_over_root"] * cr, pod1=p["pod_max_over_root"] * cr,
         neck_x=p["neck_over_root"] * cr,
-        eng0=p["engine_start_over_root"] * cr,
-        eng1=(p["engine_start_over_root"] + p["engine_len_over_root"]) * cr,
-        hub_x=cr * (1 + p["hub_aft_te_over_root"]),
+        eng0=eng0, eng1=eng1,
+        hub_x=eng1 + p["prop_hub_aft_flange_m"] / s,
         elevon_c=p["elevon_chord_over_root"] * cr,
+        fin_root_chord=p["fin_root_over_tip_chord"] * ct,
+        prop_dia=p["prop_dia_m"] / s, spinner_len=p["spinner_len_m"] / s, spinner_dia=p["spinner_dia_m"] / s,
+        blade_root_chord=p["blade_root_chord_m"] / s, blade_tip_chord=p["blade_tip_chord_m"] / s,
     )
     g["band1"] = g["collar_x"] - 0.010
     g["band0"] = g["band1"] - p["band_width"]
@@ -105,6 +123,10 @@ def derive(p: dict) -> dict:
     rk = math.tan(math.radians(p["fin_te_rake_deg"]))
     g["fin_te_top_x"] = g["te_x"] - p["fin_up_height"] * rk      # + rake tilts the top forward
     g["fin_te_bot_x"] = g["te_x"] + p["fin_down_height"] * rk
+    # engine frame -> internal: x_int = eng1 - x_e / s (x_e runs forward from the flange), y, z scaled
+    fins_fwd = max(xc + el.FIN_PACK["dx"] / 2 for _, _, xc in el.CYLINDERS)
+    g["engine_fins_front_x"] = eng1 - fins_fwd / s                # most forward fin-pack face (internal)
+    g["engine_mount_radius"] = el.MOUNT["r"] / s
     return g
 
 
@@ -114,14 +136,20 @@ def check(g: dict) -> list[str]:
     lo, hi = g["le_sweep_limits_deg"]
     if not lo <= g["sweep_deg"] <= hi:
         bad.append(f"sweep {g['sweep_deg']:.1f} outside {lo}-{hi}")
-    if not (g["nose_x"] + g["dome_len"] < g["band0"] < g["collar_x"] < g["pod0"]
-            < g["pod1"] < g["neck_x"] < g["eng0"] + 1e-9):
+    if not (g["nose_x"] + g["dome_len"] < g["band0"] < g["collar_x"] < g["collar_x"] + g["collar_step_len"]
+            < g["pod0"] < g["pod1"] < g["neck_x"] < g["eng0"] + 1e-9):
         bad.append("fuselage stations out of order")
-    if g["fin_root_chord"] > g["tip_chord"]:
+    if g["fin_root_chord"] > g["tip_chord"] + 1e-9:
         bad.append("fin root chord longer than the wing tip chord")
+    if g["fin_tip_chord"] >= g["fin_root_chord"]:
+        bad.append("fin tip chord not shorter than its root chord")
     if g["elevon_c"] >= 0.9 * g["tip_chord"]:
         bad.append("elevon chord too large for the tip chord")
-    if g["eng1"] >= g["hub_x"] - g["spinner_len"] / 2:
+    if g["engine_fins_front_x"] < g["te_x"] - 1e-9:
+        bad.append("engine cylinders cut the wing trailing edge")
+    if g["R_neck"] < g["engine_mount_radius"] * 0.98:
+        bad.append("fuselage neck narrower than the engine mounting face")
+    if g["eng1"] >= g["hub_x"] - g["spinner_len"] / 2 + 1e-9:
         bad.append("engine overlaps the propeller hub")
     if g["R_tube"] <= 0.5 * g["wing_tc"] * g["te_x"]:
         bad.append("wing root thicker than the fuselage tube")
@@ -222,6 +250,27 @@ class MeshBuilder:
             return
         self.ring_loft([ring(p0, r0), ring(p1, r1)], lambda j, i: slot, part, cap0=slot, cap1=slot)
 
+    def box(self, c, size, slot, part):
+        """Axis-aligned closed box, centre c and full size (internal units)."""
+        hx, hy, hz = (v / 2 for v in size)
+        V = [(c[0] + sx * hx, c[1] + sy * hy, c[2] + sz * hz) for sx in (-1, 1) for sy in (-1, 1) for sz in (-1, 1)]
+        i0 = self.add_verts(V)
+        for q in ((0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)):
+            self.add_face([i0 + k for k in q], slot, part)
+        self.orient_part(part)
+
+    def rrect_prism(self, x, z, y0, y1, dx, dz, corner, n_corner, slot, part):
+        """Rounded-rectangle outline in the x-z plane extruded along y from y0 to y1 (closed)."""
+        r = min(corner, dx / 2, dz / 2)
+        pts = []
+        for cx, cz, a0 in ((x + dx / 2 - r, z + dz / 2 - r, 0), (x - dx / 2 + r, z + dz / 2 - r, 90),
+                           (x - dx / 2 + r, z - dz / 2 + r, 180), (x + dx / 2 - r, z - dz / 2 + r, 270)):
+            for k in range(n_corner + 1):
+                a = math.radians(a0 + 90 * k / n_corner)
+                pts.append((cx + r * math.cos(a), cz + r * math.sin(a)))
+        rings = [np.array([(px, y, pz) for px, pz in pts]) for y in (y0, y1)]
+        self.ring_loft(rings, lambda j, i: slot, part, cap0=slot, cap1=slot)
+
     def plate(self, poly_xz, y_center, thickness, slot, part):
         """Extrude a planar polygon in the x-z plane into a thin plate along y."""
         poly = np.asarray(poly_xz, float)
@@ -253,6 +302,8 @@ def _naca_half(s, tc):
 
 
 def radius_at(g, x) -> float:
+    """Fuselage radius at station x: dome, forebody, smooth collar taper, tube, pod, neck (constant to the
+    engine mounting face)."""
     nx, dl = g["nose_x"], g["dome_len"]
     Rf, Rt, Rp, Rn = g["R_fore"], g["R_tube"], g["R_pod"], g["R_neck"]
     c0, c1 = g["collar_x"], g["collar_x"] + g["collar_step_len"]
@@ -264,7 +315,8 @@ def radius_at(g, x) -> float:
     if x < c0:
         return Rf
     if x < c1:
-        return Rf + (Rt - Rf) * (x - c0) / (c1 - c0)
+        t = (x - c0) / (c1 - c0)
+        return Rf + (Rt - Rf) * (0.5 - 0.5 * math.cos(math.pi * t))     # smooth (cosine) taper, no kink
     if x < g["pod0"]:
         return Rt
     if x < g["pod1"]:
@@ -285,7 +337,7 @@ def wing_upper_z(g, x, y) -> float:
 
 
 def fin_outline(g):
-    """Fin plate outline in the x-z plane: straight TE through the wing TE, swept LEs."""
+    """Fin plate outline in the x-z plane: straight TE through the wing TE, swept LEs, root = fin root chord."""
     te, zw = g["te_x"], g["wing_z"]
     hu, hd = g["fin_up_height"], g["fin_down_height"]
     frc, ftc = g["fin_root_chord"], g["fin_tip_chord"]
@@ -294,7 +346,48 @@ def fin_outline(g):
             (tb, zw - hd), (tb - ftc, zw - hd)]
 
 
+def wing_text_frame(g, side: int):
+    """Centre, reading direction and letter-up direction (internal x-y) of the KAL lettering on one wing.
+
+    Baseline parallel to that wing's leading edge, letter tops toward the leading edge, reading left to
+    right for a viewer behind the aircraft (P8, P3): root -> tip on the starboard wing, tip -> root on port."""
+    t = g["tan_sweep"]
+    n = math.hypot(t, 1.0)
+    c = np.array([g["wing_text_center_over_root"] * g["te_x"], side * g["wing_text_y"]])
+    if side > 0:
+        read, up = np.array([t, 1.0]) / n, np.array([-1.0, t]) / n
+    else:
+        read, up = np.array([-t, 1.0]) / n, np.array([-1.0, -t]) / n
+    return c, read, up
+
+
+def engine_point(g, q) -> tuple:
+    """Engine frame (metres, x forward from the flange) -> internal frame (span units)."""
+    s = g["span_m"]
+    return (g["eng1"] - q[0] / s, q[1] / s, q[2] / s)
+
+
 # ============================================================================ mesh
+def _engine(mb: MeshBuilder, g: dict):
+    """L550E / MD-550 primitives from engine_l550e.parts(), each a closed part named eng_*."""
+    s = g["span_m"]
+    n = int(g.get("engine_segments", 16))
+    for prt in el.parts():
+        name = "eng_" + prt["name"]          # eng_stub_* / eng_outlet_* -> part group "exhaust"
+        if prt["kind"] == "cyl":
+            mb.cylinder(engine_point(g, prt["p0"]), engine_point(g, prt["p1"]), prt["r0"] / s, prt["r1"] / s,
+                        n, prt["slot"], name)
+        elif prt["kind"] == "box":
+            cx, cy, cz = engine_point(g, prt["c"])
+            mb.box((cx, cy, cz), tuple(v / s for v in prt["size"]), prt["slot"], name)
+        elif prt["kind"] == "rrect":
+            xi, _, zi = engine_point(g, (prt["x"], 0.0, prt["z"]))
+            y0, y1 = sorted((prt["side"] * prt["y0"] / s, prt["side"] * prt["y1"] / s))
+            mb.rrect_prism(xi, zi, y0, y1, prt["dx"] / s, prt["dz"] / s, prt["corner"] / s, 3, prt["slot"], name)
+        else:
+            raise ValueError(f"unknown engine primitive {prt['kind']}")
+
+
 def build_mesh(p: dict) -> dict:
     g = derive(p)
     problems = check(g)
@@ -303,11 +396,12 @@ def build_mesh(p: dict) -> dict:
     mb = MeshBuilder()
     zw = g["wing_z"]
 
-    # ---------------- fuselage: body of revolution, dome -> forebody -> collar -> tube -> pod -> neck
+    # ---------------- fuselage: body of revolution, dome -> forebody -> collar taper -> tube -> pod -> neck
     nseg = int(g["fuselage_segments"])
     nx, dl = g["nose_x"], g["dome_len"]
     xs = list(nx + dl * (1 - np.cos(np.linspace(0.08, 1, 8) * math.pi / 2)))
-    xs += [g["band0"], g["band1"], g["collar_x"], g["collar_x"] + g["collar_step_len"]]
+    xs += [g["band0"], g["band1"], g["collar_x"]]
+    xs += list(np.linspace(g["collar_x"], g["collar_x"] + g["collar_step_len"], 5)[1:])
     xs += list(np.linspace(g["collar_x"] + g["collar_step_len"], g["pod0"], 4)[1:])
     xs += list(np.linspace(g["pod0"], g["pod1"], 5)[1:])
     xs += list(np.linspace(g["pod1"], g["neck_x"], 5)[1:])
@@ -372,19 +466,19 @@ def build_mesh(p: dict) -> dict:
     for s, name in ((1, "fin_stbd"), (-1, "fin_port")):
         mb.plate(poly, s * 0.5, g["fin_thickness"], "fin", name)
 
-    # ---------------- decals: wing text, fin text, flag
-    cx = g["wing_text_center_over_root"] * g["te_x"]
+    # ---------------- decals: wing text (parallel to each leading edge), fin text, flag
     L, H = g["wing_text_size"]
     for s, name in ((1, "wing_text_stbd"), (-1, "wing_text_port")):
-        cy = s * g["wing_text_y"]
-        z = max(wing_upper_z(g, cx + dx, cy + dy) for dx in (-H / 2, H / 2) for dy in (-L / 2, L / 2)) + 0.0015
-        # both wings read port-to-starboard with the letter tops toward the LE, i.e. readable
-        # from behind the aircraft (P1)
-        corners = [(cx + H / 2, cy - L / 2, z), (cx + H / 2, cy + L / 2, z), (cx - H / 2, cy + L / 2, z), (cx - H / 2, cy - L / 2, z)]
+        c, rd, up = wing_text_frame(g, s)
+        quad = [c - rd * L / 2 - up * H / 2, c + rd * L / 2 - up * H / 2,
+                c + rd * L / 2 + up * H / 2, c - rd * L / 2 + up * H / 2]
+        z = max(wing_upper_z(g, q[0], q[1]) for q in quad) + 0.0015
+        corners = [(q[0], q[1], z) for q in quad]       # uv (0,0),(1,0),(1,1),(0,1): u along the reading direction
         mb.decal(corners, name, normal=(0, 0, 1))
     if g.get("fin_text", True):
         # largest band inside the fin: z from -0.45 hd to +0.2 hu, x from the LE at that height to near the TE
         z0, z1 = zw - 0.45 * g["fin_down_height"], zw + 0.2 * g["fin_up_height"]
+
         def le_at(z):
             (x0, zz0), (x1, zz1) = (poly[0], poly[1]) if z >= zw else (poly[0], poly[5])
             t = (z - zz0) / (zz1 - zz0)
@@ -402,24 +496,11 @@ def build_mesh(p: dict) -> dict:
     mb.decal([(fx - fl / 2, -fw / 2, zf), (fx + fl / 2, -fw / 2, zf), (fx + fl / 2, fw / 2, zf), (fx - fl / 2, fw / 2, zf)],
              "flag", normal=(0, 0, 1))
 
-    # ---------------- engine: crankcase, sideways cylinders + finned heads, exhaust headers
-    e0, e1 = g["eng0"], g["eng1"]
-    em = 0.5 * (e0 + e1)
-    ew = g["engine_width"]
-    ck = max(g["R_neck"] * 1.1, 0.02)
-    mb.cylinder((e0, 0, 0), (e1, 0, 0), ck, ck * 0.9, 14, "engine_region", "crankcase")
-    rc, rh = g["cylinder_dia"] / 2, g["head_dia"] / 2
-    head_len = 0.022
-    for s, tag in ((1, "stbd"), (-1, "port")):
-        y_base, y_head = s * ck * 0.7, s * (ew / 2 - head_len)
-        mb.cylinder((em, y_base, 0), (em, y_head, 0), rc, rc, 12, "engine_region", f"cyl_{tag}")
-        mb.cylinder((em, y_head, 0), (em, s * ew / 2, 0), rh, rh * 0.95, 12, "engine_region", f"head_{tag}")
-        # header: from the underside of the head, down and aft to an outlet below the axis
-        h0 = np.array([em + 0.004, s * (ew / 2 - head_len / 2), -rh * 0.8])
-        h1 = np.array([e1 + 0.004, s * 0.022, -g["outlet_drop"]])
-        mb.cylinder(h0, h1, g["header_dia"] / 2, g["header_dia"] / 2, 8, "exhaust_outlet", f"header_{tag}")
+    # ---------------- engine: MD-550 / L550E (fixed metres), shaft to the propeller hub
+    _engine(mb, g)
     hub = g["hub_x"]
-    mb.cylinder((e1 - 0.002, 0, 0), (hub - g["spinner_len"] / 2, 0, 0), 0.008, 0.008, 8, "engine_region", "shaft")
+    mb.cylinder((g["eng1"] - 0.001, 0, 0), (hub - g["spinner_len"] / 2, 0, 0), 0.022 / g["span_m"], 0.022 / g["span_m"],
+                12, "engine_flange", "eng_prop_hub")
 
     # ---------------- propeller: spinner, disc and/or blades
     mb.cylinder((hub - g["spinner_len"] / 2, 0, 0), (hub + g["spinner_len"] / 2, 0, 0),
@@ -474,6 +555,21 @@ def to_output_frame(mesh: dict) -> np.ndarray:
     return internal_to_output(mesh["derived"], mesh["vertices_span"])
 
 
+def engine_metadata(g: dict) -> dict:
+    """Engine identity, evidence and placement for scene metadata (output frame, metres). Appearance only:
+    the envelope and where the hot exhaust outlets sit, no performance data."""
+    outs = []
+    for o in el.outlets():
+        c = internal_to_output(g, [engine_point(g, o["centre"])])[0]
+        outs.append(dict(name=o["name"], centre_m=c.tolist(), axis=[0.0, 0.0, -1.0], radius_m=o["radius"]))
+    return dict(model=g.get("engine_model", "MD-550 / L550E"), evidence=g.get("engine_evidence", ""),
+                envelope_m=[el.LENGTH_M, el.WIDTH_M, el.HEIGHT_M],
+                mounting_face_x_m=float(internal_to_output(g, [(g["eng0"], 0, 0)])[0, 0]),
+                flange_face_x_m=float(internal_to_output(g, [(g["eng1"], 0, 0)])[0, 0]),
+                propeller_plane_x_m=float(internal_to_output(g, [(g["hub_x"], 0, 0)])[0, 0]),
+                exhaust_outlets=outs)
+
+
 def keypoints(g: dict) -> dict:
     """Named 3D points (internal frame, span units) used by the photo acceptance check."""
     zw, te, tle = g["wing_z"], g["te_x"], g["tip_le_x"]
@@ -497,8 +593,10 @@ def summary(g: dict) -> dict:
     return {
         "span_m": s, "length_m (nose-hub)": g["length"] * s, "length_m (with probe)": g["length_with_probe"] * s,
         "root_chord_m": g["te_x"] * s, "tip_chord_m": g["tip_chord"] * s, "le_sweep_deg": g["sweep_deg"],
-        "forebody_dia_m": g["forebody_dia"] * s, "fin_height_m": g["fin_total_height"] * s,
-        "prop_dia_m": g["prop_dia"] * s, "engine_width_m": g["engine_width"] * s,
+        "forebody_dia_m": g["forebody_dia"] * s, "tube_dia_m": 2 * g["R_tube"] * s,
+        "fin_height_m": g["fin_total_height"] * s, "fin_root_chord_m": g["fin_root_chord"] * s,
+        "prop_dia_m": g["prop_dia_m"], "engine_length_m": el.LENGTH_M, "engine_width_m": el.WIDTH_M,
+        "engine_height_m": el.HEIGHT_M, "engine_width_over_span": el.WIDTH_M / s,
     }
 
 

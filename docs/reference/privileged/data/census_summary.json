@@ -1,0 +1,311 @@
+{
+ "scenes": 126,
+ "splits": {
+  "train": 107,
+  "val": 19
+ },
+ "lighting": {
+  "day": 54,
+  "night": 72
+ },
+ "median_cnr": {
+  "rgb": 0.25456179678440094,
+  "lwir": 2.9536670446395874,
+  "lwir_cooled": 2.0007200837135315,
+  "mwir": 2.251069188117981
+ },
+ "all": {
+  "n": 126,
+  "table": {
+   "student D / privileged D": 49,
+   "student D / privileged F": 11,
+   "student D / privileged N": 4,
+   "student F / privileged D": 11,
+   "student F / privileged F": 36,
+   "student F / privileged N": 4,
+   "student N / privileged D": 1,
+   "student N / privileged F": 5,
+   "student N / privileged N": 5
+  },
+  "privileged_better": 0.38095238095238093,
+  "privileged_2x": 0.09523809523809523,
+  "student_detectable": 0.5079365079365079,
+  "student_faint_privileged_detectable": 0.0873015873015873,
+  "student_none_privileged_detectable": 0.007936507936507936,
+  "nothing_anywhere": 0.03968253968253968,
+  "ideal_fusion_ratio_median": 1.4952704028956367,
+  "ideal_fusion_teacher_detectable_student_faint": 0.15873015873015872,
+  "lwir_cooled_over_lwir_median_where_seen": 0.9304300053789681,
+  "lwir_cooled_not_seeing_target": 0.15873015873015872,
+  "mwir_over_lwir_median_where_seen": 0.7197840260025542,
+  "mwir_not_seeing_target": 0.03968253968253968
+ },
+ "small": {
+  "n": 63,
+  "table": {
+   "student D / privileged D": 32,
+   "student D / privileged F": 8,
+   "student D / privileged N": 4,
+   "student F / privileged D": 6,
+   "student F / privileged F": 8,
+   "student F / privileged N": 0,
+   "student N / privileged D": 0,
+   "student N / privileged F": 1,
+   "student N / privileged N": 4
+  },
+  "privileged_better": 0.36507936507936506,
+  "privileged_2x": 0.1111111111111111,
+  "student_detectable": 0.6984126984126984,
+  "student_faint_privileged_detectable": 0.09523809523809523,
+  "student_none_privileged_detectable": 0.0,
+  "nothing_anywhere": 0.06349206349206349,
+  "ideal_fusion_ratio_median": 1.366649317904371,
+  "ideal_fusion_teacher_detectable_student_faint": 0.12698412698412698,
+  "lwir_cooled_over_lwir_median_where_seen": 0.9284459585496166,
+  "lwir_cooled_not_seeing_target": 0.25396825396825395,
+  "mwir_over_lwir_median_where_seen": 0.49788648758297166,
+  "mwir_not_seeing_target": 0.07936507936507936
+ },
+ "small_day": {
+  "n": 33,
+  "table": {
+   "student D / privileged D": 20,
+   "student D / privileged F": 1,
+   "student D / privileged N": 3,
+   "student F / privileged D": 4,
+   "student F / privileged F": 4,
+   "student F / privileged N": 0,
+   "student N / privileged D": 0,
+   "student N / privileged F": 0,
+   "student N / privileged N": 1
+  },
+  "privileged_better": 0.42424242424242425,
+  "privileged_2x": 0.15151515151515152,
+  "student_detectable": 0.7272727272727273,
+  "student_faint_privileged_detectable": 0.12121212121212122,
+  "student_none_privileged_detectable": 0.0,
+  "nothing_anywhere": 0.030303030303030304,
+  "ideal_fusion_ratio_median": 1.459121683995304,
+  "ideal_fusion_teacher_detectable_student_faint": 0.12121212121212122,
+  "lwir_cooled_over_lwir_median_where_seen": 0.939992075329513,
+  "lwir_cooled_not_seeing_target": 0.24242424242424243,
+  "mwir_over_lwir_median_where_seen": 0.8687291740791733,
+  "mwir_not_seeing_target": 0.12121212121212122
+ },
+ "small_night": {
+  "n": 30,
+  "table": {
+   "student D / privileged D": 12,
+   "student D / privileged F": 7,
+   "student D / privileged N": 1,
+   "student F / privileged D": 2,
+   "student F / privileged F": 4,
+   "student F / privileged N": 0,
+   "student N / privileged D": 0,
+   "student N / privileged F": 1,
+   "student N / privileged N": 3
+  },
+  "privileged_better": 0.3,
+  "privileged_2x": 0.06666666666666667,
+  "student_detectable": 0.6666666666666666,
+  "student_faint_privileged_detectable": 0.06666666666666667,
+  "student_none_privileged_detectable": 0.0,
+  "nothing_anywhere": 0.1,
+  "ideal_fusion_ratio_median": 1.3220139251849399,
+  "ideal_fusion_teacher_detectable_student_faint": 0.13333333333333333,
+  "lwir_cooled_over_lwir_median_where_seen": 0.8752205743327472,
+  "lwir_cooled_not_seeing_target": 0.26666666666666666,
+  "mwir_over_lwir_median_where_seen": 0.4078956806151286,
+  "mwir_not_seeing_target": 0.03333333333333333
+ },
+ "dprime_all": {
+  "n": 126,
+  "table": {
+   "student D / privileged D": 113,
+   "student D / privileged F": 0,
+   "student D / privileged N": 7,
+   "student F / privileged D": 1,
+   "student F / privileged F": 0,
+   "student F / privileged N": 0,
+   "student N / privileged D": 1,
+   "student N / privileged F": 1,
+   "student N / privileged N": 3
+  },
+  "median": {
+   "rgb": 4.570905257514168,
+   "lwir": 99.60412607291899,
+   "lwir_cooled": 71.22634327857897,
+   "mwir": 158.5365285000469
+  },
+  "noise_share_median": {
+   "rgb": 0.8892329956330938,
+   "lwir": 0.3984313034474882,
+   "lwir_cooled": 0.21547036072549702,
+   "mwir": 0.47171287336022943
+  },
+  "student_detectable": 0.9523809523809523,
+  "privileged_better": 0.7063492063492064,
+  "privileged_2x": 0.373015873015873,
+  "student_faint_privileged_detectable": 0.007936507936507936,
+  "student_none_privileged_detectable": 0.007936507936507936,
+  "fusion_student_detectable": 0.9523809523809523,
+  "fusion_teacher_detectable": 0.9682539682539683,
+  "fusion_ratio_median": 2.053925094645473,
+  "frames": 5,
+  "temporal_student_detectable": 0.9603174603174603,
+  "temporal_bound_student_detectable": 0.9603174603174603,
+  "lwir_cooled_over_lwir_median_where_seen": 1.2276205164434701,
+  "lwir_cooled_not_seeing_target": 0.16666666666666666,
+  "mwir_over_lwir_median_where_seen": 1.4976731413637694,
+  "mwir_not_seeing_target": 0.05555555555555555
+ },
+ "dprime_small": {
+  "n": 63,
+  "table": {
+   "student D / privileged D": 51,
+   "student D / privileged F": 0,
+   "student D / privileged N": 6,
+   "student F / privileged D": 1,
+   "student F / privileged F": 0,
+   "student F / privileged N": 0,
+   "student N / privileged D": 1,
+   "student N / privileged F": 1,
+   "student N / privileged N": 3
+  },
+  "median": {
+   "rgb": 1.077391971384782,
+   "lwir": 34.307033414514514,
+   "lwir_cooled": 24.144377867161193,
+   "mwir": 69.6089356604542
+  },
+  "noise_share_median": {
+   "rgb": 0.8390429037196749,
+   "lwir": 0.7805958539511999,
+   "lwir_cooled": 0.8204597701467506,
+   "mwir": 0.8293160955031227
+  },
+  "student_detectable": 0.9047619047619048,
+  "privileged_better": 0.7619047619047619,
+  "privileged_2x": 0.3492063492063492,
+  "student_faint_privileged_detectable": 0.015873015873015872,
+  "student_none_privileged_detectable": 0.015873015873015872,
+  "fusion_student_detectable": 0.9047619047619048,
+  "fusion_teacher_detectable": 0.9365079365079365,
+  "fusion_ratio_median": 2.131232194328652,
+  "frames": 5,
+  "temporal_student_detectable": 0.9206349206349206,
+  "temporal_bound_student_detectable": 0.9206349206349206,
+  "lwir_cooled_over_lwir_median_where_seen": 1.3494797494597917,
+  "lwir_cooled_not_seeing_target": 0.2698412698412698,
+  "mwir_over_lwir_median_where_seen": 1.473889694529335,
+  "mwir_not_seeing_target": 0.09523809523809523
+ },
+ "dprime_small_day": {
+  "n": 33,
+  "table": {
+   "student D / privileged D": 28,
+   "student D / privileged F": 0,
+   "student D / privileged N": 4,
+   "student F / privileged D": 0,
+   "student F / privileged F": 0,
+   "student F / privileged N": 0,
+   "student N / privileged D": 0,
+   "student N / privileged F": 0,
+   "student N / privileged N": 1
+  },
+  "median": {
+   "rgb": 10.614639287014628,
+   "lwir": 31.79449438376581,
+   "lwir_cooled": 26.566449433023394,
+   "mwir": 100.8318520768704
+  },
+  "noise_share_median": {
+   "rgb": 0.37620996239031257,
+   "lwir": 0.6870777575202189,
+   "lwir_cooled": 0.8918788562518982,
+   "mwir": 0.8105017432132012
+  },
+  "student_detectable": 0.9696969696969697,
+  "privileged_better": 0.7878787878787878,
+  "privileged_2x": 0.3939393939393939,
+  "student_faint_privileged_detectable": 0.0,
+  "student_none_privileged_detectable": 0.0,
+  "fusion_student_detectable": 0.9696969696969697,
+  "fusion_teacher_detectable": 0.9696969696969697,
+  "fusion_ratio_median": 2.2043715966058293,
+  "frames": 5,
+  "temporal_student_detectable": 0.9696969696969697,
+  "temporal_bound_student_detectable": 0.9696969696969697,
+  "lwir_cooled_over_lwir_median_where_seen": 1.4950324637004397,
+  "lwir_cooled_not_seeing_target": 0.24242424242424243,
+  "mwir_over_lwir_median_where_seen": 1.6830725080261144,
+  "mwir_not_seeing_target": 0.12121212121212122
+ },
+ "dprime_small_night": {
+  "n": 30,
+  "table": {
+   "student D / privileged D": 23,
+   "student D / privileged F": 0,
+   "student D / privileged N": 2,
+   "student F / privileged D": 1,
+   "student F / privileged F": 0,
+   "student F / privileged N": 0,
+   "student N / privileged D": 1,
+   "student N / privileged F": 1,
+   "student N / privileged N": 2
+  },
+  "median": {
+   "rgb": 0.41860912507207604,
+   "lwir": 41.89182357567055,
+   "lwir_cooled": 15.242900439422407,
+   "mwir": 51.168138072438225
+  },
+  "noise_share_median": {
+   "rgb": 0.9746468637680165,
+   "lwir": 0.87074966526945,
+   "lwir_cooled": 0.5251389495989992,
+   "mwir": 0.875295730353481
+  },
+  "student_detectable": 0.8333333333333334,
+  "privileged_better": 0.7333333333333333,
+  "privileged_2x": 0.3,
+  "student_faint_privileged_detectable": 0.03333333333333333,
+  "student_none_privileged_detectable": 0.03333333333333333,
+  "fusion_student_detectable": 0.8333333333333334,
+  "fusion_teacher_detectable": 0.9,
+  "fusion_ratio_median": 1.9936262057448007,
+  "frames": 5,
+  "temporal_student_detectable": 0.8666666666666667,
+  "temporal_bound_student_detectable": 0.8666666666666667,
+  "lwir_cooled_over_lwir_median_where_seen": 1.2143061049424344,
+  "lwir_cooled_not_seeing_target": 0.3,
+  "mwir_over_lwir_median_where_seen": 1.2940017963778065,
+  "mwir_not_seeing_target": 0.06666666666666667
+ },
+ "cooled_vs_uncooled": {
+  "n": 106,
+  "observed_cnr_ratio_median": 0.9304300053789681,
+  "noise_only_ratio_median": 1.507045915143268,
+  "implied_contrast_ratio": 0.6173866343617781
+ },
+ "render_time_s": {
+  "day": {
+   "n": 77,
+   "mean_per_scene": 75.72680641149546,
+   "privileged_share": 0.5068249589133219,
+   "student_only_scenes_per_four_band_scene": 2.0276776330703337
+  },
+  "night": {
+   "n": 103,
+   "mean_per_scene": 41.0810382875424,
+   "privileged_share": 0.30522672050047556,
+   "student_only_scenes_per_four_band_scene": 1.439318450358862
+  },
+  "all": {
+   "n": 180,
+   "mean_per_scene": 55.901727985011206,
+   "privileged_share": 0.42204999153411205,
+   "student_only_scenes_per_four_band_scene": 1.7302534567901515
+  }
+ }
+}

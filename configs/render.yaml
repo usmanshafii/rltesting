@@ -25,6 +25,10 @@ render:
   adaptive_threshold: 0.01
   adaptive_min_samples: 16
   lwir_background_samples: 4           # [calib] emission-only, zero bounces: one ray per point is exact; 4 covers the 0.01 px jitter
+                                       # (all thermal bands: tools/render_noise_check.py, horizon scene 14: render sigma
+                                       # 0.01 x sensor in LWIR, 0.04 x in cooled LWIR)
+  mwir_sun_background_samples: 32      # [calib] MWIR by day samples its sun lamp: 4 samples give 0.87 x the sensor sigma,
+                                       # 32 give 0.18 x (target < 0.35, same check); night MWIR uses the 4 above
   filter_width_px: 0.01                # [spec] film filter; the PSF is applied explicitly
   light_paths: {total: 4, diffuse: 2, glossy: 2, transmission: 2, volume: 0, transparent: 8}   # [spec]
   background_bounces: 4                # total bounces for the target-free background renders; object crops always use light_paths
@@ -37,10 +41,18 @@ render:
   crop_margin_px: 3                    # output px added around each object crop, on top of 3 sigma of the PSF
   exr_codec: ZIP
   persistent_data: true                # [spec]
+  # Rotation of the propeller blades over each band's integration time, as a time-averaged coverage texture
+  # (render/rotation_blur.py). Speed: target.yaml prop_rpm. [C: installed operating speed unknown]
+  rotation_blur: {enabled: true, texture_px: 256}   # exact closed-form time average, no time sampling
 
 camera:
   height_m: [1.5, 3.0]                 # [spec]
-  look_elevation_deg: {open_sky: [10.0, 60.0], horizon: [-1.0, 5.0]}   # [spec]
+  # Open sky 5-60 deg, drawn log-uniformly (median ~17 deg for the narrow camera): long-range approaches sit low in
+  # the sky against warm, near-horizon sky, while some high-elevation views remain. The old uniform 10-60 deg
+  # over-weighted cold zenith sky, which flatters LWIR. The wide camera's frame still starts >= 13.4 deg up
+  # (half its 24.8 deg VFOV + margin). Horizon family unchanged. [spec, revised 2026-10-01 on request]
+  look_elevation_deg: {open_sky: [5.0, 60.0], horizon: [-1.0, 5.0]}
+  look_elevation_sampling: {open_sky: log_uniform, horizon: uniform}
   open_sky_edge_margin_deg: 1.0        # [C] open-sky frames keep their lower edge above the horizon
   roll_deg: 0.0
 
@@ -49,7 +61,8 @@ sky:
   sun_near_los_prob: 0.15              # [spec] "including sun near the line of sight"; share [C]
   sun_near_los_cone_deg: 20.0          # [C]
   air: [1.0, 2.0]                      # [spec]
-  dust: [0.5, 6.0]                     # [spec]
+  dust: [0.5, 6.0]                     # [spec] legacy; with the climate on, dust follows the scene's visibility
+                                       # (render/sampling.dust_for_visibility: Blender's Nishita aerosol constants)
   ozone: [1.0, 3.0]                    # [spec]
   sun_angle_deg: 0.526                 # [spec] true solar disc
   # [calib] Sun lamp. The Sky doc suggests 700-1000 W/m2, but Blender's Nishita sky is only ~10
@@ -121,7 +134,63 @@ weather:                               # nominal haze per scene; applied in the 
     haze:  {rgb: 1.0, swir: [0.35, 0.7], lwir: [0.08, 0.3]}
     clear: {rgb: 1.0, swir: [0.35, 0.7], lwir: [0.08, 0.3]}
     fog:   {rgb: 1.0, swir: [0.8, 1.0], lwir: [0.6, 1.0]}
+  # Cooled LWIR and MWIR (CLAUDE.md sensor set rule) see the same aerosol as the uncooled LWIR camera: their ratios are
+  # drawn at the LWIR ratio's quantile within their own ranges (render/sampling.py). [C] MWIR between SWIR and LWIR
+  # (extinction falls with wavelength across 1-10 um for haze and smog aerosol); fog droplets are large in all bands.
+  band_ratio_thermal:
+    haze:  {lwir_cooled: [0.08, 0.3], mwir: [0.15, 0.45]}
+    clear: {lwir_cooled: [0.08, 0.3], mwir: [0.15, 0.45]}
+    fog:   {lwir_cooled: [0.6, 1.0], mwir: [0.7, 1.0]}
   aerosol_scale_height_m: 1500.0       # [C] slant paths: optical depth k*H/sin(el)*(1-exp(-d*sin(el)/H)); null = spec's homogeneous k*d
-  resample_in_training: 0.5            # [C] probability the training loader redraws visibility
+  # LWIR absorption by water vapour along the path, from the scene's humidity draw (thermal/atmosphere.py). Applied in
+  # the loader on top of the aerosol term (no re-render); pre-v2 scenes without humidity are unaffected. Clear air
+  # included: in a monsoon afternoon it alone leaves ~30 % of the target's contrast at 2.4 km.
+  lwir_water_vapour:
+    enabled: true
+    continuum_scale_height_m: 1000.0   # [C+] self-continuum ~ vapour density^2: half of a ~2 km vapour scale height
+    edge_co2: 0.03                     # [C+] band-edge line absorption, saturating within ~100 m (CO2, 13-14 um)
+    edge_h2o_at_45hpa: 0.08            # [C+] water lines near 8 um; with the continuum: 80 % over 100 m at 35 C / 80 % RH (FLIR 2016)
+    edge_saturation_m: 50.0            # [C]
+  resample_in_training: 0.5            # [C] probability the training loader redraws visibility (climate scenes:
+                                       # a 0.7-1.4 jitter around the scene's own, because their sky carries its haze)
 
-air_temp_c: {default: [-20.0, 50.0], desert_day: [35.0, 50.0], desert_day_prob: 0.25}   # [spec]
+air_temp_c: {default: [-20.0, 50.0], desert_day: [35.0, 50.0], desert_day_prob: 0.25}   # [spec] legacy: climate off
+
+# Lahore (CLAUDE.md sensor set rule 6, user 2026-10-12: "Lahore's climate from the past 3 years"): every scene takes a
+# real hour of the NOAA ISD record of LAHORE CITY (416400) in its own lighting state (day: sun >= 15 deg, dusk -6 to 15,
+# night <= -18, as sky.sun_elevation_deg), with that hour's air temperature, humidity, weather (WMO present-weather
+# codes), visibility, total cloud cover and station pressure. NOAA's archive for Lahore ends on 2025-08-24, so the
+# window is the last three years on record (tools/source_measurements.lahore_climate; docs/lahore_climate.md).
+climate:
+  enabled: true
+  source: "NOAA ISD 41640099999 LAHORE CITY, 2022-08-25 to 2025-08-24"
+  file: docs/sources/noaa_isd/lahore_hourly_conditions_2022-08-25_2025-08-24.csv
+  visibility_report_ceiling_km: 5.0      # [B] the station reports above 5 km in 1.4 % of hours (max 8 km in 3 years)
+  visibility_beyond_ceiling_km: 15.0     # [C] an unobscured hour at the ceiling: drawn up to here (log-uniform)
+  visibility_min_km: 0.05                # [B] the record's 50 m floor (fog)
+
+# Clear air for the thermal cameras (thermal/atmosphere_bands.py; docs/thermal_bands.md): a layered atmosphere above the
+# camera from the scene's air temperature and vapour pressure, SP-3080 / HITRAN narrow bands, MT_CKD 4.3 continuum and
+# the N2 band, grey aerosol from the scene's visibility. Drawn per scene on its own random stream; the radiative
+# transfer runs once per scene at render time (scene_tables) and is stored in the metadata (extra.thermal).
+thermal_atmosphere:
+  enabled: true
+  surface_pressure_hpa: 988.0          # [C+] ISA at Lahore City's 214 m (IGRA 2 station list); climate update to source
+  lapse_k_per_km: [4.5, 7.7]           # [B] surface-500 hPa, 10-90 % of 2,756 soundings, Lahore / Patiala / New Delhi
+                                       #     Oct 2023 - Sep 2026 (NOAA IGRA 2; docs/sources/noaa_igra2)
+  # vapour scale height: ln H_w = 6.003 + 0.487 ln e_sfc +- 0.37 (same soundings; thermal/atmosphere_bands.VAPOUR_FIT)
+  co2_ppm: [419.0, 440.0]              # [B] NOAA GML global mean 2023-2026 419-428; top: urban boundary layer [C]
+  n2o_ppb: [336.0, 340.0]              # [B] NOAA GML global mean 2023-2025 336.7-338.9
+  ch4_ppb: [1920.0, 2100.0]            # [B] NOAA GML global mean 2023-2025 1921-1936; top: South Asian plains [C]
+  co_ppb_surface: [150.0, 3000.0]      # [C] polluted urban boundary layer (log-uniform); free troposphere below
+  co_ppb_free: 100.0                   # [C]
+  boundary_layer_m: 1500.0             # [C] = aerosol_scale_height_m
+  continuum_scale: [1.0, 1.44]         # [B] water-vapour continuum: MT_CKD 4.3 (1.0) to Roberts et al. 1976 (1.44 at
+                                       #     1000 cm-1): two sources, the range covers both (CLAUDE.md evidence rule 5)
+  # The clear-air 8-14 um flux emittance comes out 0.04-0.15 below Idso (1981) (no ozone, no aerosol in the model);
+  # a grey window absorber (714-1300 cm-1) closes a uniformly drawn share of the gap (scene_tables).
+  window_absorber_scale_height_m: 1500.0   # [C]
+  aerosol:                             # grey per band; extinction = 3.912 / V x weather.band_ratio
+    scale_height_m: 1500.0             # [C] = weather.aerosol_scale_height_m
+    asymmetry_g: [0.6, 0.8]            # [C] Henyey-Greenstein g of haze / smog aerosol at 4 um
+    omega0: {lwir: [0.3, 0.7], lwir_cooled: [0.3, 0.7], mwir: [0.6, 0.95]}   # [C] single-scattering albedo

@@ -1,0 +1,9 @@
+# Exact versions of the first laptop, so both laptops build identical camera-frame caches.
+# torch 2.1.2 (CPU) is installed first by RUN_ME.bat from the PyTorch index.
+numpy==1.26.0
+scipy==1.11.3
+PyYAML==6.0.1
+Pillow==10.0.1
+matplotlib==3.8.0
+# The live detection console (app/) runs from the same environment
+Flask==2.2.5

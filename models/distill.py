@@ -2,7 +2,8 @@
 
     L = L_det + lambda_r * L_resp + lambda_f * L_feat
 
-L_resp  response distillation from the frozen teacher (RGB + LWIR + SWIR):
+L_resp  response distillation from the frozen teacher (RGB + LWIR uncooled + LWIR cooled + MWIR; CLAUDE.md
+        sensor set rule 5) into the student (RGB + LWIR uncooled):
         * class scores: BCE between the student's and the teacher's temperature-softened sigmoids
           (T = 2), x T^2, at every location, weighted by teacher confidence + a floor so the
           teacher's "nothing here" also transfers;
@@ -17,7 +18,8 @@ L_feat  masked feature distillation at the P2 and P3 neck outputs: a 1x1 adapter
 w_i     CNR-gap weight 1 + beta * clip((C_T,i - C_S,i) / 5, 0, 1), beta = 2: C_T,i is the largest
         per-band contrast-to-noise of object i over the teacher's bands, C_S,i over the bands the
         student received in this batch (loader CNR after noise, magnitude). It puts the effort on
-        objects the teacher sees much better than the student - the LWIR-weak / SWIR-strong case.
+        objects the teacher sees much better than the student - the case where the uncooled LWIR camera is weak
+        but the cooled LWIR or MWIR camera (or RGB) sees the target well.
 
 Nothing here runs at test time: the student is an ordinary detector.
 """
@@ -27,7 +29,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-BAND_INDEX = {"rgb": 0, "lwir": 1, "swir": 2}      # columns of the loader's per-object CNR array
+# columns of the loader's per-object CNR array (data/dataset.object_cnr); SWIR deferred
+BAND_INDEX = {"rgb": 0, "lwir": 1, "lwir_cooled": 2, "mwir": 3, "swir": 4}
 
 
 # ============================================================================ response distillation
@@ -53,7 +56,7 @@ def response_kd(s, t, t_pos, temperature: float = 2.0, floor: float = 0.05):
 
 # ============================================================================ object weights and masks
 def cnr_gap_weights(cnr, teacher_bands, student_bands, beta: float = 2.0, scale: float = 5.0):
-    """cnr: [N, 3] per-object contrast-to-noise after noise (rgb, lwir, swir; NaN = not loaded)."""
+    """cnr: [N, 5] per-object contrast-to-noise (columns BAND_INDEX; NaN = not known or not loaded)."""
     c = torch.as_tensor(cnr, dtype=torch.float32).abs().nan_to_num(0.0)
     if c.numel() == 0:
         return torch.zeros(0)

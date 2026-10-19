@@ -1,0 +1,9 @@
+surface,eps_min,eps_max
+engine_head,0.09,0.97
+engine_heatsink,0.95,0.99
+engine_barrel,0.36,0.99
+engine_case,0.87,0.98
+engine_intake,0.04,0.3
+engine_flange,0.06,0.95
+exhaust,0.28,0.95
+tail_cone,0.87,0.98

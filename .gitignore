@@ -25,9 +25,36 @@ venv/
 ENV/
 env/
 
-# Bulk data and heavy artefacts (regenerable); small results under out/ (json, png, logs) are kept
+# Generated outputs: ignored by default. Datasets, caches, frames, weights and videos travel as zips
+# (tools/m1_det2.py export-data / package-results); only small evidence summaries are versioned.
+out/**
+!out/**/
+!out/m1/pilot/*.md
+!out/m1/pilot/*.json
+!out/m1/pilot/*.png
+!out/m1/pilot/gallery/*
+!out/m1/pilot/demo/*/*
+!out/m1/m1_pilot_evidence.json
+!out/m1/m1_pilot_bundle_verification.json
+!out/m1/production_process.json
+!out/m1/cnn/STATUS.md
+!out/m1/cnn/manifest.json
+!out/m1/cnn/runs/*/training.json
+!out/m1/det2/manifest.json
+!out/m1/det2/*.md
+!out/m1/det2/report.json
+!out/m1/det2/sequences.json
+!out/m1/det2/test_lock.json
+!out/m1/det2/cache_fingerprint.json
+!out/m1/det2/learning_curves.png
+!out/m1/det2/gallery/*
+!out/m1/det2/runs/*/training.json
+!out/m1/det2/runs/*/history.json
 out/**/tmp/
 tmp/
+member/job_log.txt
+/m1_dataset_*.zip
+member/*.zip
 .pytest_cache/
 *.npz
 *.npy
@@ -39,6 +66,7 @@ tmp/
 *.ckpt
 *.onnx
 out/**/*.blend
+out/m1/*.zip
 
 # Videos and media
 *.mp4
@@ -78,3 +106,22 @@ Thumbs.db
 .env
 .env.local
 *.local.json
+
+# Third-party source documents and images (docs/sources/README.md lists each one with its URL and SHA-256): kept
+# locally, not redistributed through the repository. The data read off them (CSV/JSON), the register and the guide
+# are committed.
+docs/sources/**/*.pdf
+docs/sources/**/*.png
+docs/sources/**/*.xls
+docs/sources/astm/ASTM_*_from_NREL_workbook.csv
+docs/sources/**/*.html
+docs/sources/**/*.par
+docs/sources/**/*.nc
+docs/sources/**/*.zip
+docs/sources/**/*.f90
+
+# A saved web-page record of a third-party paper (docs/sources/sensor_noise): kept locally like the PDFs
+docs/sources/**/*_record.txt
+
+# Local analysis notes (e.g. text extracted from the department's FYP booklet): kept locally, not redistributed
+.analysis/

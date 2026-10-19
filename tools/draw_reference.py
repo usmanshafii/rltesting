@@ -8,6 +8,7 @@ produces, so the drawing cannot drift from the model. Run after any YAML change:
 import math
 import os
 import sys
+from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
@@ -17,14 +18,16 @@ from matplotlib.collections import PolyCollection
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "target"))
+import engine_l550e as el  # noqa: E402
 import kal_geometry as kg  # noqa: E402
 
 OUT = os.path.join(HERE, "..", "docs", "reference")
 COLORS = {
     "skin": "#d3d8de", "control_surface": "#b7c1cc", "fin": "#aab5c2", "fuselage": "#9ba7b4",
-    "tail_cone": "#9ba7b4", "markings": "#ffffff", "engine_region": "#c0392b",
-    "exhaust_outlet": "#7b1d12", "propeller": "#4a4f55", "propeller_disc": "#c9ced4",
-    "antenna": "#2f3338", "nose_window": "#223",
+    "tail_cone": "#9ba7b4", "markings": "#ffffff",
+    "engine_head": "#8d9298", "engine_barrel": "#a3a8ae", "engine_case": "#3a3f45", "engine_intake": "#d0d4d8",
+    "engine_flange": "#c79a3c", "exhaust_stub": "#7a4a2a", "engine_heatsink": "#25292e",
+    "propeller": "#4a4f55", "propeller_disc": "#c9ced4", "antenna": "#2f3338", "nose_window": "#223",
 }
 INK = "#1c232b"
 
@@ -133,8 +136,9 @@ def main():
     side.text(xd, -g["R_fore"] - 0.03, f"forebody {m(g['forebody_dia'])}", fontsize=7.2, ha="center")
     side.annotate(f"wing, edge-on (root section t/c {g['wing_tc']:.2f}, mid-wing)", (0.35, zw - 0.01), (0.12, zw - 0.16),
                   fontsize=7.2, color="#333", arrowprops=dict(arrowstyle="-", lw=0.6, color="#777"))
-    side.annotate("engine + exhaust headers (red)", (g["eng0"] + 0.03, -0.03), (0.62, -0.20),
-                  fontsize=7, color="#7b1d12", arrowprops=dict(arrowstyle="-", lw=0.6, color="#b77"))
+    side.annotate(f"MD-550 / L550E engine ({el.LENGTH_M * 1000:.0f} mm long), exhaust stubs down",
+                  (g["eng0"] + 0.03, -0.05), (0.52, -0.21),
+                  fontsize=7, color="#7a4a2a", arrowprops=dict(arrowstyle="-", lw=0.6, color="#7a4a2a"))
     side.text(nx - 0.02, g["R_fore"] + 0.05, "probe + 2 antennas", fontsize=7, color="#333")
     side.text(X[0], 0.175, "SIDE VIEW   from port, same scale", fontsize=10, weight="bold")
 
@@ -155,10 +159,10 @@ def main():
     for z0, z1, lab in ((zw, zw + hu, f"up {m(hu)}"), (zw, zw - hd, f"down {m(hd)}")):
         rear.annotate("", (xf2, z0), (xf2, z1), arrowprops=dict(arrowstyle="<->", lw=0.8, color="#555", shrinkA=0, shrinkB=0))
         rear.text(xf2 + 0.015, (z0 + z1) / 2, lab, fontsize=6.6, va="center", ha="left", color="#222")
-    ew = g["engine_width"]
-    dim(rear, (-ew / 2, -0.20), (ew / 2, -0.20), f"engine {m(ew)}", off=(0, -0.035), fs=6.8)
-    rear.annotate("exhaust headers + outlets", (0.02, -g["outlet_drop"]), (0.12, -0.13), fontsize=6.8, color="#7b1d12",
-                  arrowprops=dict(arrowstyle="-", lw=0.6, color="#b77"))
+    ew = el.WIDTH_M / S
+    dim(rear, (-ew / 2, -0.20), (ew / 2, -0.20), f"engine width {el.WIDTH_M * 1000:.0f} mm", off=(0, -0.035), fs=6.8)
+    rear.annotate("finned cylinders, drive flange", (ew / 2 - 0.01, 0.0), (0.15, -0.16), fontsize=6.8, color="#7a4a2a",
+                  arrowprops=dict(arrowstyle="-", lw=0.6, color="#7a4a2a"))
     rear.text(FRX[0], 0.25, "REAR VIEW   from behind, same scale", fontsize=10, weight="bold")
 
     notes = (
@@ -169,14 +173,27 @@ def main():
         "  root chord / span -> sweep, length\n"
         "  absolute span (not published)\n"
         "  wing thickness / chord\n\n"
-        "red = engine_region + exhaust_outlet\n"
+        "MD-550 / L550E engine (G1 analogue)\n"
+        "  300 x 410 x 301 mm envelope,\n"
+        "  fixed metric size across variants\n"
+        "grey = finned heads and barrels\n"
+        "black = heat sinks; dark = case\n"
+        "brown = exhaust stubs\n"
+        "gold = drive flange; silver = carbs\n"
         "white = markings band\n"
         "decals omitted in this drawing"
     )
-    fig.text((xr + 0.1) / FW, 0.33, notes, fontsize=8.2, va="top", family="monospace")
+    fig.text((xr + 0.1) / FW, 0.44, notes, fontsize=8.2, va="top", family="monospace")
     os.makedirs(OUT, exist_ok=True)
     for ext in ("png", "svg"):
-        fig.savefig(os.path.join(OUT, f"kal_views.{ext}"), dpi=150)
+        path = Path(OUT) / f"kal_views.{ext}"
+        fig.savefig(path, dpi=150)
+        if ext == "svg":
+            path.write_text("\n".join(line.rstrip() for line in path.read_text(encoding="utf-8").splitlines()) + "\n",
+                            encoding="utf-8")
+        # Exact alias for historical links (including SVG internal IDs).
+        (Path(OUT) / f"kal_3view.{ext}").write_bytes(path.read_bytes())
+    kg.export_obj(mesh, os.path.join(OUT, "kal_canonical.obj"))
     print("wrote", os.path.join(OUT, "kal_views.png"))
 
 

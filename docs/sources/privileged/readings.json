@@ -1,0 +1,501 @@
+{
+ "note": "Learning with privileged information and distillation: what the papers state and measured, with quotes (tools/source_measurements.privileged_readings() checks each against the saved copy). Documents are git-ignored copies; this file is committed. docs/privileged_teacher_case.md uses them.",
+ "retrieved": "2026-10-17",
+ "documents": {
+  "VAPNIK2015": {
+   "file": "Vapnik2015_JMLR_LUPI.pdf",
+   "tier": "S2 (peer-reviewed, JMLR 16, 2015)",
+   "title": "Vapnik, Izmailov: Learning Using Privileged Information: Similarity Control and Knowledge Transfer. JMLR 16 (2015) 2023-2049",
+   "url": "https://jmlr.org/papers/volume16/vapnik15b/vapnik15b.pdf",
+   "sha256": "0ecf0f2145f53fff8772eed87bfa1d07e2d2f7aa138d8931827eb431647e9fa8",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1,
+    5
+   ]
+  },
+  "LOPEZPAZ2016": {
+   "file": "LopezPaz2016_ICLR_generalized_distillation.pdf",
+   "tier": "S2 (peer-reviewed, ICLR 2016; arXiv copy)",
+   "title": "Lopez-Paz, Bottou, Schoelkopf, Vapnik: Unifying Distillation and Privileged Information. ICLR 2016",
+   "url": "https://arxiv.org/pdf/1511.03643",
+   "sha256": "ce6789e21df1c908593c68cf9cdc8e7e333f5fac26c05aef7bd8cce21ab396ba",
+   "retrieved": "2026-10-17",
+   "pages": [
+    5,
+    8
+   ]
+  },
+  "MENON2021": {
+   "file": "Menon2021_ICML_statistical_distillation.pdf",
+   "tier": "S2 (peer-reviewed, ICML 2021, PMLR 139)",
+   "title": "Menon, Rawat, Reddi, Kim, Kumar: A Statistical Perspective on Distillation. ICML 2021, pp. 7632-7642",
+   "url": "https://proceedings.mlr.press/v139/menon21a/menon21a.pdf",
+   "sha256": "00e6d2209e083b2d267de5d8a2fb0dee7edb2a56c32f82b2d8f3d1715c11d994",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  },
+  "HOFFMAN2016": {
+   "file": "Hoffman2016_CVPR_modality_hallucination.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2016)",
+   "title": "Hoffman, Gupta, Darrell: Learning with Side Information through Modality Hallucination. CVPR 2016, pp. 826-834",
+   "url": "https://openaccess.thecvf.com/content_cvpr_2016/papers/Hoffman_Learning_With_Side_CVPR_2016_paper.pdf",
+   "sha256": "deae01e35fd7df045b34934323e353abb1fe87696d058ba8745f10e63da464cd",
+   "retrieved": "2026-10-17",
+   "pages": [
+    5
+   ]
+  },
+  "XU2017": {
+   "file": "Xu2017_CVPR_cross_modal_pedestrian.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2017)",
+   "title": "Xu, Ouyang, Ricci, Wang, Sebe: Learning Cross-Modal Deep Representations for Robust Pedestrian Detection. CVPR 2017, pp. 5363-5371",
+   "url": "https://openaccess.thecvf.com/content_cvpr_2017/papers/Xu_Learning_Cross-Modal_Deep_CVPR_2017_paper.pdf",
+   "sha256": "f5c175e8615baf3f0a0a7e91249cf21836789970a1473006b6d08a43739e5dee",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1,
+    6,
+    7
+   ]
+  },
+  "GARCIA2018": {
+   "file": "Garcia2018_ECCV_modality_distillation.pdf",
+   "tier": "S2 (peer-reviewed, ECCV 2018)",
+   "title": "Garcia, Morerio, Murino: Modality Distillation with Multiple Stream Networks for Action Recognition. ECCV 2018",
+   "url": "https://openaccess.thecvf.com/content_ECCV_2018/papers/Nuno_Garcia_Modality_Distillation_with_ECCV_2018_paper.pdf",
+   "sha256": "fb701f075145266a581d6e410d4b9edaa7757b4711ee89afb04d6ddae7428344",
+   "retrieved": "2026-10-17",
+   "pages": [
+    10
+   ]
+  },
+  "LOU2026": {
+   "file": "AAAI_IR_privileged_UAV_detection.pdf",
+   "tier": "S2 (peer-reviewed, AAAI-26)",
+   "title": "Lou, Zhang, Luo, Cao, Qian, Chen, Fang: Infrared-Privileged UAV Detection via Cross-Modal Vector-Quantization. AAAI-26",
+   "url": "https://ojs.aaai.org/index.php/AAAI/article/download/37692/41654",
+   "sha256": "b48b24022e505a2ac503e7de7c759f96e9488e664023dd6bf44e4dad4387083a",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1,
+    5,
+    6
+   ]
+  },
+  "XUE2023": {
+   "file": "Xue2023_ICLR_modality_focusing.pdf",
+   "tier": "S2 (peer-reviewed, ICLR 2023; arXiv copy)",
+   "title": "Xue, Gao, Ren, Zhao: The Modality Focusing Hypothesis: Towards Understanding Crossmodal Knowledge Distillation. ICLR 2023",
+   "url": "https://arxiv.org/pdf/2206.06487",
+   "sha256": "7f40863bb91a6cd05965fb6600822f3a7f28388a9302b88929779508217a37fa",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1,
+    3,
+    4,
+    5
+   ]
+  },
+  "FURLANELLO2018": {
+   "file": "Furlanello2018_ICML_born_again.pdf",
+   "tier": "S2 (peer-reviewed, ICML 2018; arXiv copy)",
+   "title": "Furlanello, Lipton, Tschannen, Itti, Anandkumar: Born-Again Neural Networks. ICML 2018 (PMLR 80)",
+   "url": "https://arxiv.org/pdf/1805.04770",
+   "sha256": "0fd15e913ed8b0a6b263f916dd4f248ead69f194901caf5b0290f56a8ec97cd4",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  },
+  "YUAN2020": {
+   "file": "Yuan2020_CVPR_KD_label_smoothing.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2020)",
+   "title": "Yuan, Tay, Li, Wang, Feng: Revisiting Knowledge Distillation via Label Smoothing Regularization. CVPR 2020",
+   "url": "https://openaccess.thecvf.com/content_CVPR_2020/papers/Yuan_Revisiting_Knowledge_Distillation_via_Label_Smoothing_Regularization_CVPR_2020_paper.pdf",
+   "sha256": "b8ce6af08ea3b03050d75740301e8d8e74294ee5526c3c89c6650d809e9db245",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  },
+  "STANTON2021": {
+   "file": "Stanton2021_NeurIPS_does_KD_work.pdf",
+   "tier": "S2 (peer-reviewed, NeurIPS 2021; arXiv copy)",
+   "title": "Stanton, Izmailov, Kirichenko, Alemi, Wilson: Does Knowledge Distillation Really Work? NeurIPS 2021",
+   "url": "https://arxiv.org/pdf/2106.05945",
+   "sha256": "7d5107382bfcba9a22fae389fb1df55f09569b4bca4d9198d4138332ec857bde",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  },
+  "CHO2019": {
+   "file": "Cho2019_ICCV_efficacy_KD.pdf",
+   "tier": "S2 (peer-reviewed, ICCV 2019)",
+   "title": "Cho, Hariharan: On the Efficacy of Knowledge Distillation. ICCV 2019",
+   "url": "https://openaccess.thecvf.com/content_ICCV_2019/papers/Cho_On_the_Efficacy_of_Knowledge_Distillation_ICCV_2019_paper.pdf",
+   "sha256": "bcdab0d30abb0353905e5426c85964641a48ecff2e9e475d1fd9cce0d79f4d31",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  },
+  "YANG2022": {
+   "file": "Yang2022_NeurIPS_privileged_features_distillation.pdf",
+   "tier": "S2 (peer-reviewed, NeurIPS 2022)",
+   "title": "Yang, Sanghavi, Rahmanian, Bakus, Vishwanathan: Toward Understanding Privileged Features Distillation in Learning-to-Rank. NeurIPS 2022",
+   "url": "https://proceedings.neurips.cc/paper_files/paper/2022/file/aa31dc84098add7dd2ffdd20646f2043-Paper-Conference.pdf",
+   "sha256": "b88d7e6f3ef7fb50ff4ce5cda91cf2c514452406f45f439105ab9c0c58ade966",
+   "retrieved": "2026-10-18",
+   "pages": [
+    1,
+    10
+   ]
+  }
+ },
+ "readings": [
+  {
+   "doc": "VAPNIK2015",
+   "page": 1,
+   "quote": "two mechanisms that can be used for significantly accelerating the speed of Student’s learning using privileged information",
+   "values": {
+    "claim": "LUPI speeds up learning"
+   }
+  },
+  {
+   "doc": "VAPNIK2015",
+   "page": 5,
+   "quote": "in the separable case, the rate of convergence has the order of magnitude 1/ℓ",
+   "values": {
+    "rate_separable": "1/l",
+    "rate_non_separable": "1/sqrt(l)"
+   }
+  },
+  {
+   "doc": "LOPEZPAZ2016",
+   "page": 5,
+   "quote": "the teacher is most helpful in low data regimes",
+   "values": {
+    "claim": "the gain is largest with little data"
+   }
+  },
+  {
+   "doc": "LOPEZPAZ2016",
+   "page": 8,
+   "quote": "As expected, the benefits of distillation diminished as we further increased the sample size.",
+   "values": {
+    "experiment": "MNIST: 7x7 images regular, 28x28 privileged"
+   }
+  },
+  {
+   "doc": "LOPEZPAZ2016",
+   "page": 8,
+   "quote": "Distillation on the 300 labeled samples did not improve the student performance.",
+   "values": {
+    "experiment": "CIFAR-10: noisy images regular, clean images privileged; the gain came only from soft labels on unlabelled data"
+   }
+  },
+  {
+   "doc": "MENON2021",
+   "page": 1,
+   "quote": "providing the true class- probabilities can lower the variance of the student objective",
+   "values": {
+    "claim": "a Bayes teacher (true class probabilities for the student's input) lowers the variance"
+   }
+  },
+  {
+   "doc": "MENON2021",
+   "page": 1,
+   "quote": "namely, the quality of its probability estimates",
+   "values": {
+    "criterion": "a good teacher = good probability estimates"
+   }
+  },
+  {
+   "doc": "HOFFMAN2016",
+   "page": 5,
+   "quote": "30.5 mAP vs 26.6 mAP for the AlexNet architecture and 34.0 mAP vs 29.9 mAP for the VGG-1024 architecture",
+   "values": {
+    "rgb_only_A": 26.6,
+    "hallucination_A": 30.5,
+    "rgb_only_V": 29.9,
+    "hallucination_V": 34.0
+   }
+  },
+  {
+   "doc": "HOFFMAN2016",
+   "page": 5,
+   "quote": "56.1 29.0",
+   "values": {
+    "rgb_ensemble_A_A_mAP": 29.0,
+    "note": "last cells of the RGB ensemble (A-A) row of Table 1"
+   }
+  },
+  {
+   "doc": "HOFFMAN2016",
+   "page": 5,
+   "quote": "50.2 32.7",
+   "values": {
+    "rgb_ensemble_A_V_mAP": 32.7,
+    "note": "last cells of the RGB ensemble (A-V) row of Table 1"
+   }
+  },
+  {
+   "doc": "HOFFMAN2016",
+   "page": 5,
+   "quote": "This suggests that our hallucination model offers more benefit than a simple RGB ensemble.",
+   "values": {}
+  },
+  {
+   "doc": "XU2017",
+   "page": 1,
+   "quote": "at test time, thermal data are not needed",
+   "values": {}
+  },
+  {
+   "doc": "XU2017",
+   "page": 6,
+   "quote": "CMT-CNN-SA 54.26% 52.44% 58.97%",
+   "values": {
+    "log_avg_miss_rate_all_day_night": [
+     54.26,
+     52.44,
+     58.97
+    ],
+    "model": "RGB, one sub-network"
+   }
+  },
+  {
+   "doc": "XU2017",
+   "page": 6,
+   "quote": "CMT-CNN-SA-SB(ImageNet) 52.15% 50.71% 57.65%",
+   "values": {
+    "log_avg_miss_rate_all_day_night": [
+     52.15,
+     50.71,
+     57.65
+    ],
+    "model": "RGB, two sub-networks, no thermal (capacity control)"
+   }
+  },
+  {
+   "doc": "XU2017",
+   "page": 6,
+   "quote": "CMT-CNN 49.55% 47.30% 54.78%",
+   "values": {
+    "log_avg_miss_rate_all_day_night": [
+     49.55,
+     47.3,
+     54.78
+    ],
+    "model": "RGB at test, thermal-trained sub-network"
+   }
+  },
+  {
+   "doc": "XU2017",
+   "page": 6,
+   "quote": "CMT-CNN-SA-SB(RGB-KAIST) 12.51% CMT-CNN 10.69%",
+   "values": {
+    "caltech_reasonable_mr": {
+     "best_control": 12.51,
+     "cmt_cnn": 10.69
+    }
+   }
+  },
+  {
+   "doc": "XU2017",
+   "page": 7,
+   "quote": "is not only due to an increased number of parameters",
+   "values": {}
+  },
+  {
+   "doc": "GARCIA2018",
+   "page": 10,
+   "quote": "Ours - step 1, RGB stream RGB x-entr 66.52% 71.39%",
+   "values": {
+    "rgb_only_cs_cv": [
+     66.52,
+     71.39
+    ]
+   }
+  },
+  {
+   "doc": "GARCIA2018",
+   "page": 10,
+   "quote": "Ours - step 4 RGB x-entr 73.42% 77.21%",
+   "values": {
+    "rgb_test_depth_privileged_cs_cv": [
+     73.42,
+     77.21
+    ]
+   }
+  },
+  {
+   "doc": "GARCIA2018",
+   "page": 10,
+   "quote": "RGB & Depth x-entr 79.73% 81.43%",
+   "values": {
+    "rgb_depth_at_test_cs_cv": [
+     79.73,
+     81.43
+    ]
+   }
+  },
+  {
+   "doc": "LOU2026",
+   "page": 1,
+   "quote": "The Fortieth AAAI Conference on Artificial Intelligence (AAAI-26)",
+   "values": {}
+  },
+  {
+   "doc": "LOU2026",
+   "page": 6,
+   "quote": "CSPDarknet53 91.0 55.8 43.1 86.3 43.4 63.9",
+   "values": {
+    "yolov8m_rgb_only_map50": 63.9
+   }
+  },
+  {
+   "doc": "LOU2026",
+   "page": 6,
+   "quote": "FeatHalu CSPDarknet53 92.7 54.8 45.2 88.2 45.6 65.3",
+   "values": {
+    "feature_hallucination_map50": 65.3
+   }
+  },
+  {
+   "doc": "LOU2026",
+   "page": 6,
+   "quote": "92.4 57.4 45.3 88.2 46.5 66.0",
+   "values": {
+    "ir_to_rgb_distillation_map50": 66.0,
+    "note": "M2D-LIF dagger row"
+   }
+  },
+  {
+   "doc": "LOU2026",
+   "page": 6,
+   "quote": "Ours+YOLOv8m CSPDarknet53 91.9 62.4 47.3 88.5 47.7 67.6",
+   "values": {
+    "vq_hallucination_map50": 67.6
+   }
+  },
+  {
+   "doc": "LOU2026",
+   "page": 6,
+   "quote": "97.8 81.0 67.9 96.0 64.6 81.4",
+   "values": {
+    "rgb_ir_at_test_map50": 81.4,
+    "note": "M2D-LIF with IR at test"
+   }
+  },
+  {
+   "doc": "LOU2026",
+   "page": 5,
+   "quote": "could reach about 85% of the upper-bound revealed by RGB-IR methods",
+   "values": {}
+  },
+  {
+   "doc": "LOU2026",
+   "page": 5,
+   "quote": "We evaluated random seed values in the range 1–10 and observed that all settings yielded comparable performance.",
+   "values": {
+    "seed_spread_reported": false
+   }
+  },
+  {
+   "doc": "XUE2023",
+   "page": 1,
+   "quote": "KD is not a universal cure in crossmodal knowledge transfer",
+   "values": {}
+  },
+  {
+   "doc": "XUE2023",
+   "page": 3,
+   "quote": "RGB 46.36 UM-KD",
+   "values": {
+    "no_kd_student_miou": 46.36
+   }
+  },
+  {
+   "doc": "XUE2023",
+   "page": 3,
+   "quote": "RGB 48.00 CM-KD",
+   "values": {
+    "unimodal_teacher_student_miou": 48.0
+   }
+  },
+  {
+   "doc": "XUE2023",
+   "page": 3,
+   "quote": "RGB + D 51.00 (↑) RGB 47.78 (↓)",
+   "values": {
+    "multimodal_teacher_miou": 51.0,
+    "multimodal_teacher_student_miou": 47.78
+   }
+  },
+  {
+   "doc": "XUE2023",
+   "page": 4,
+   "quote": "the great increase in teacher performance (i.e., +4.64%) does not translate to student improvement (i.e., -0.22%) for NYU Depth V2",
+   "values": {}
+  },
+  {
+   "doc": "XUE2023",
+   "page": 5,
+   "quote": "distillation performance is depen- dent on the proportion of modality-general decisive features preserved in the teacher network",
+   "values": {}
+  },
+  {
+   "doc": "FURLANELLO2018",
+   "page": 1,
+   "quote": "these Born-Again Networks (BANs), outperform their teachers significantly",
+   "values": {}
+  },
+  {
+   "doc": "YUAN2020",
+   "page": 1,
+   "quote": "a poorly-trained teacher with much lower accuracy than the student can still improve the latter significantly",
+   "values": {}
+  },
+  {
+   "doc": "STANTON2021",
+   "page": 1,
+   "quote": "while knowledge distillation can improve student generalization, it does not typically work as it is commonly understood",
+   "values": {}
+  },
+  {
+   "doc": "CHO2019",
+   "page": 1,
+   "quote": "larger models do not often make better teachers",
+   "values": {}
+  },
+  {
+   "doc": "YANG2022",
+   "page": 1,
+   "quote": "as the predictive power of a privileged feature increases, the performance of the resulting student model initially increases but then decreases.",
+   "values": {
+    "finding": "non-monotone: a too predictive privileged teacher hurts the student"
+   }
+  },
+  {
+   "doc": "YANG2022",
+   "page": 1,
+   "quote": "a very predictive privileged teacher produces predictions with high variance",
+   "values": {
+    "mechanism": "teacher-prediction variance"
+   }
+  },
+  {
+   "doc": "YANG2022",
+   "page": 10,
+   "quote": "PFD is effective by reducing the variance of student estimation",
+   "values": {
+    "mechanism": "privileged distillation helps by variance reduction"
+   }
+  }
+ ]
+}

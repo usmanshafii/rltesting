@@ -3,7 +3,8 @@
 For each photo, a weak-perspective camera (rotation, scale, image offset; 6 dof) is
 fitted to hand-measured keypoints, then the whole mesh is drawn over the photo.
 Pass criterion: RMS keypoint error under 3% of the projected span, and no visible
-outline mismatch in the overlay.
+outline mismatch in the overlay. P1 is AI-generated (user, 2026-10-08) and used for appearance
+only: it is still fitted and overlaid, but never scored.
 
     python tools/photo_check.py          -> docs/reference/overlay_<photo>.png
 
@@ -30,9 +31,9 @@ OUT = os.path.join(HERE, "..", "docs", "reference")
 
 # Pixel keypoints. "L"/"R" = image left/right; the fit decides which is port.
 # `surface`: which wing surface faces the camera. The P1 render has a slimmer fuselage
-# than the flying article, so its fuselage-width points are not used.
+# than the flying article, so its fuselage-width points are not used; `scored=False`: appearance only.
 KEYPOINTS = {
-    "P1_render_oblique_top.png": dict(surface="upper", pts={
+    "P1_render_oblique_top.png": dict(surface="upper", scored=False, pts={
         "nose": (375, 40), "hub": (900, 520),
         "tip_le_L": (357, 605), "tip_le_R": (1223, 283),
         "tip_te_L": (485, 672), "tip_te_R": (1240, 367),
@@ -172,10 +173,11 @@ def main():
             continue
         best = fit(mesh["derived"], spec)
         pct = 100 * best["rms"] / best["span_px"]
+        scored = spec.get("scored", True)
         passed = pct < 3.0
-        ok &= passed
-        print(f"\n{photo}: RMS {best['rms']:.1f} px ({pct:.1f}% of span)  image-left = {best['left']}  "
-              f"{'PASS' if passed else 'FAIL'}")
+        ok &= passed or not scored
+        verdict = ("PASS" if passed else "FAIL") if scored else "appearance only, not scored"
+        print(f"\n{photo}: RMS {best['rms']:.1f} px ({pct:.1f}% of span)  image-left = {best['left']}  {verdict}")
         for n, (dx, dy) in zip(best["names"], best["res"]):
             print(f"    {n:14s} {dx:+6.1f} {dy:+6.1f}")
         sens = []

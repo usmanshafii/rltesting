@@ -1,0 +1,46 @@
+{
+ "model_revision": "md550-engine-v3",
+ "blender": "4.2.23 LTS",
+ "lwir_glint": {
+  "epsilon": 0.09,
+  "sun_azimuth_deg": 30.0,
+  "sun_elevation_deg": 40.0,
+  "lobe_deg": 6.0,
+  "specular_fraction": 1.0,
+  "peak_per_reflectance_w_m2_sr": 20.97334329059266,
+  "base_w_m2_sr": 4.098445786981763,
+  "peak_rendered": 23.150310516357422,
+  "peak_analytic": 23.149143189611245,
+  "peak_ratio": 1.0000504263478185,
+  "rms_error_over_glint_amplitude": 1.9208723351359106e-05,
+  "spot_px_rendered": [
+   105,
+   231
+  ],
+  "spot_px_analytic": [
+   105,
+   231
+  ],
+  "ok": true
+ },
+ "rgb_glow": {
+  "temperature_c": 500.0,
+  "albedo": 0.1,
+  "expected_rgb": [
+   5.852906730605741e-05,
+   1.0398074999488384e-06,
+   4.170020599945114e-09
+  ],
+  "rendered_rgb": [
+   5.8523015468381345e-05,
+   1.039451944961911e-06,
+   4.170715328655206e-09
+  ],
+  "ratio": [
+   0.9998966011598234,
+   0.9996580569125104,
+   1.000166600786121
+  ],
+  "ok": true
+ }
+}

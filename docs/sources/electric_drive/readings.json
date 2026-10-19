@@ -1,0 +1,155 @@
+{
+ "note": "Electric drive efficiency for the electric-like signature arm (docs/privileged_teacher_case.md 6c; thermal/engine_heat.py MOTOR_EFFICIENCY). tools/source_measurements.electric_drive_readings() checks each quote on its cited page of the saved copy, and each SHA-256. Documents are git-ignored copies; this file is committed.",
+ "retrieved": "2026-10-19",
+ "documents": {
+  "EU2019_1781": {
+   "file": "EU_2019_1781_ecodesign_motors.pdf",
+   "sha256": "250417dc724e3b8c18c682a641c6b4e9dbf36469ff1d6bc7eee04639b5587ca6",
+   "pages": 21,
+   "cited_pages": [
+    10,
+    12,
+    13
+   ],
+   "title": "Commission Regulation (EU) 2019/1781 of 1 October 2019 laying down ecodesign requirements for electric motors and variable speed drives",
+   "reference": "Official Journal of the European Union L 272, 25.10.2019, p. 74; Annex I Tables 2 and 3 on pp. L 272/84-85",
+   "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:32019R1781",
+   "retrieved": "2026-10-19",
+   "tier": "S1 for the motors it regulates (a regulator document); S2 here, as an analogue: 50 Hz industrial induction motors at rated output, 25 C ambient, not an aero drive",
+   "relevance": "Minimum efficiencies of motors of the L550E power class (15-37 kW): what a mass-produced motor reaches at least"
+  },
+  "HEPPERLE2012": {
+   "file": "Hepperle2012_STO-MP-AVT-209-09.pdf",
+   "sha256": "5f0841a203dfacef039763aef45bb7b9ee8811fccfab740a249519785a64c227",
+   "pages": 30,
+   "cited_pages": [
+    8,
+    9
+   ],
+   "title": "Hepperle, M.: Electric Flight - Potential and Limitations. NATO STO-MP-AVT-209, paper 9 (2012), DLR Institute of Aerodynamics and Flow Technology",
+   "reference": "Energy Efficient Technologies and Concepts of Operation, Lisbon, 22-24 October 2012; DLR elib 78726",
+   "url": "https://elib.dlr.de/78726/1/MP-AVT-209-09.pdf",
+   "retrieved": "2026-10-19",
+   "tier": "S2 (government research report by DLR; the efficiencies are stated as assumed typical values)",
+   "relevance": "Electric propulsion chain of small and medium aircraft at about 50 kW, close to the L550E (37 kW)"
+  }
+ },
+ "readings": [
+  {
+   "doc": "EU2019_1781",
+   "page": 10,
+   "quote": "IE classes are determined at rated output power (PN), rated voltage (UN), based on the 50 Hz operation and 25 °C ambient reference temperature",
+   "use": "conditions of the tables"
+  },
+  {
+   "doc": "EU2019_1781",
+   "page": 12,
+   "quote": "15 91,9 92,1 91,2 89,6",
+   "value_pct": {
+    "kW": 15,
+    "IE3": [
+     91.9,
+     92.1,
+     91.2,
+     89.6
+    ],
+    "poles": [
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "use": "IE3 at 15 kW (about 40 % of the L550E rating)"
+  },
+  {
+   "doc": "EU2019_1781",
+   "page": 12,
+   "quote": "37 93,7 93,9 93,3 91,8",
+   "value_pct": {
+    "kW": 37,
+    "IE3": [
+     93.7,
+     93.9,
+     93.3,
+     91.8
+    ],
+    "poles": [
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "use": "IE3 at 37 kW (the L550E rating)"
+  },
+  {
+   "doc": "EU2019_1781",
+   "page": 12,
+   "quote": "15 93,3 93,9 92,9 91,2",
+   "value_pct": {
+    "kW": 15,
+    "IE4": [
+     93.3,
+     93.9,
+     92.9,
+     91.2
+    ],
+    "poles": [
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "use": "IE4 at 15 kW"
+  },
+  {
+   "doc": "EU2019_1781",
+   "page": 13,
+   "quote": "37 94,8 95,2 94,5 93,1",
+   "value_pct": {
+    "kW": 37,
+    "IE4": [
+     94.8,
+     95.2,
+     94.5,
+     93.1
+    ],
+    "poles": [
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "use": "IE4 at 37 kW"
+  },
+  {
+   "doc": "HEPPERLE2012",
+   "page": 8,
+   "quote": "Typical values for the efficiency of the individual components have been assumed",
+   "use": "the figure values are assumed typical values"
+  },
+  {
+   "doc": "HEPPERLE2012",
+   "page": 9,
+   "quote": "Electric Motor η= % 95",
+   "value": 0.95,
+   "use": "electric motor efficiency in the battery and fuel-cell chains (Figure 7)"
+  },
+  {
+   "doc": "HEPPERLE2012",
+   "page": 9,
+   "quote": "Controller η= % 98",
+   "value": 0.98,
+   "use": "motor controller efficiency (Figure 7); its losses stay in the fuselage, not on the engine surfaces"
+  },
+  {
+   "doc": "HEPPERLE2012",
+   "page": 9,
+   "quote": "requiring a propulsive power of 50 kW for fast cruise",
+   "use": "the power class of the example aircraft"
+  }
+ ]
+}

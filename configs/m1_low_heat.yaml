@@ -1,0 +1,19 @@
+# Thermal arm "low thermal signature" (docs/privileged_teacher_case.md, section 6c): M1's scenes with zero engine heat.
+# Every engine part sits at the air temperature (0 K excess in all three power-setting profiles, which keep their names
+# and weights, so the profile and value draws keep their order and every other scene parameter is unchanged), and there
+# is no exhaust plume. A bound below any powered propulsion: the airframe skin, propeller and environment are M1's.
+# It is a variant of this target's engine heat, not the REB 30 of ../fyp (CLAUDE.md). Rendered into its own folder
+# (out/m1/dataset_low_heat); tests/test_thermal_arms.py keeps it as stated.
+name: m1-low-heat
+notes: M1 scenes, engine parts at the air temperature, no exhaust plume (zero-engine-heat bound)
+extends: configs/m1.yaml
+
+signatures:
+  lwir:
+    target:
+      engine_profiles:
+        low_power:  {engine_head: [0.0, 0.0], engine_heatsink: [0.0, 0.0], engine_barrel: [0.0, 0.0], engine_case: [0.0, 0.0], engine_intake: [0.0, 0.0], engine_flange: [0.0, 0.0], exhaust_stub: [0.0, 0.0], tail_cone: [0.0, 0.0]}
+        nominal:    {engine_head: [0.0, 0.0], engine_heatsink: [0.0, 0.0], engine_barrel: [0.0, 0.0], engine_case: [0.0, 0.0], engine_intake: [0.0, 0.0], engine_flange: [0.0, 0.0], exhaust_stub: [0.0, 0.0], tail_cone: [0.0, 0.0]}
+        high_power: {engine_head: [0.0, 0.0], engine_heatsink: [0.0, 0.0], engine_barrel: [0.0, 0.0], engine_case: [0.0, 0.0], engine_intake: [0.0, 0.0], engine_flange: [0.0, 0.0], exhaust_stub: [0.0, 0.0], tail_cone: [0.0, 0.0]}
+  plume:
+    enabled: false

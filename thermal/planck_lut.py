@@ -91,12 +91,23 @@ class BandLUT:
 
 @lru_cache(maxsize=None)
 def lwir_lut() -> BandLUT:
-    return BandLUT(LWIR_BAND_UM, 200.0, 800.0, 0.01)
+    # to 900 K: the hottest exhaust stub is air +50 C + 515 K = 838 K (thermal/engine_heat.py)
+    return BandLUT(LWIR_BAND_UM, 200.0, 900.0, 0.01)
 
 
 @lru_cache(maxsize=None)
 def swir_lut() -> BandLUT:
     return BandLUT(SWIR_BAND_UM, 200.0, 1200.0, 0.05)
+
+
+@lru_cache(maxsize=None)
+def band_lut(band_um: tuple) -> BandLUT:
+    """Table for any thermal camera band (render/cameras.py): the 8-14 um table itself, otherwise 200-900 K at
+    0.05 K (cooled LWIR 7.7-9.3 um, the MWIR detector bands)."""
+    band_um = tuple(float(b) for b in band_um)
+    if band_um == tuple(float(b) for b in LWIR_BAND_UM):
+        return lwir_lut()
+    return BandLUT(band_um, 200.0, 900.0, 0.05)
 
 
 def celsius(tc):

@@ -1,0 +1,3 @@
+{
+  "note": "superseded 2026-10-15: rendered scenes now travel as part zips that carry their own SHA-256 list and render contract (tools/m1_det2.py pack-part / unpack-part; member/README.md)"
+}

@@ -19,18 +19,25 @@ import os
 
 import numpy as np
 
+from data.provenance import atomic_json
+
 from data import composite as cp
 from data.imgio import write_exr, write_png
 from noise import lwir_fpn, rgb_noise, swir_noise
 from render import psf
 
-BANDS = ("rgb", "lwir", "swir")
+BANDS = ("rgb", "lwir", "lwir_cooled", "mwir", "swir")
+THERMAL = ("lwir", "lwir_cooled", "mwir")
+BAND_CAMERA = {"rgb": "rgb", "lwir": "lwir_uncooled", "lwir_cooled": "lwir_cooled", "mwir": "mwir"}
 
 
 def nominal_image(layer: dict, objects: list, spec: dict, band: str) -> np.ndarray:
+    from thermal import atmosphere_bands as atb
     w = spec["weather"]
     k = cp.extinction(w["visibility_km"], w["band_ratio"][band])
-    img = cp.composite(layer, objects, k, w.get("aerosol_scale_height_m"))
+    gas = atb.gas_table(spec, band)
+    wv = w.get("lwir_water_vapour") if band == "lwir" and gas is None else None
+    img = cp.composite(layer, objects, k, w.get("aerosol_scale_height_m"), wv=wv, gas=gas)
     extra = psf.extra_sigma(spec["psf"][band]["nominal"], spec["psf"][band]["sigma0"])
     return psf.gaussian_blur(img, extra)
 
@@ -40,6 +47,16 @@ def noise_sigma(band: str, level: float, spec: dict, sensors: dict) -> float:
         return rgb_noise.nominal_sigma(level, spec["camera"]["exposure_ms"], sensors["rgb_noise"])
     if band == "lwir":
         return lwir_fpn.nominal_sigma(spec["air_temp_c"] + 273.15, sensors["lwir_noise"])
+    if band in ("lwir_cooled", "mwir"):
+        # the scene's camera (rig) NETD in the band's own radiance units; no rig: the class's NETD range centre
+        from thermal.planck_lut import band_lut
+        cam = ((spec.get("cameras") or {}).get("cameras") or {}).get(BAND_CAMERA[band]) or {}
+        cls = (sensors.get("cameras") or {}).get(BAND_CAMERA[band]) or {}
+        band_um = tuple(((spec.get("thermal") or {}).get("bands_um") or {}).get(band) or cam.get("band_um")
+                        or cls.get("band_um") or (7.7, 9.3))
+        netd = cam.get("netd_mk") or (0.5 * sum(cls["netd_mk"]) if cls.get("netd_mk") else 20.0)
+        cfg = dict(sensors["lwir_noise"], nominal=dict(netd_mk=float(netd), column_fpn_k=float(cam.get("column_fpn_k", 0.0))))
+        return lwir_fpn.nominal_sigma(spec["air_temp_c"] + 273.15, cfg, lut=band_lut(band_um))
     return swir_noise.nominal_sigma(level, spec["camera"]["exposure_ms"], sensors["swir_noise"])
 
 
@@ -88,11 +105,19 @@ def write_scene(root: str, spec: dict, layers: dict, cfgs: dict, calib: dict | N
     objs = spec["objects"]
     target = objs[0]
     modalities = {}
+    if (cfgs.get("render") or {}).get("thermal_atmosphere"):
+        from thermal import atmosphere_bands as atb
+        atb.ensure_tables(spec, cfgs["render"])        # normally already done by render/scene.py
     for band, (layer, objects) in layers.items():
         for d in (f"layers/{band}", band):
             os.makedirs(os.path.join(root, d), exist_ok=True)
         lpath = f"layers/{band}/{sid}.npz"
-        cp.save_layers(os.path.join(root, lpath), layer, objects, half=(band != "lwir"))
+        if band in THERMAL and not any(o.get("name") == "plume" for o in objects):
+            from render.plume_layer import plume_object
+            po = plume_object(spec, band)              # the exhaust plume, analytic (render/plume_layer.py)
+            if po is not None:
+                objects = list(objects) + [po]
+        cp.save_layers(os.path.join(root, lpath), layer, objects, half=(band not in THERMAL))
         img = nominal_image(layer, objects, spec, band)
         rel = f"{band}/{sid}.exr"
         if exr:
@@ -130,11 +155,17 @@ def write_scene(root: str, spec: dict, layers: dict, cfgs: dict, calib: dict | N
                    for o in objs[1:]],
         extra=dict(objects=objs, camera=cam, sun=spec["sun"], moon=spec["moon"], atmosphere=spec["atmosphere"],
                    clouds=spec["clouds"], weather=spec["weather"], psf=spec["psf"], family=spec["family"],
-                   swir_hot_emission=spec["swir_hot_emission"], signatures=spec["signatures"],
+                   signature_model=spec.get("signature_model", "legacy-combustion"),
+                   engine=spec.get("engine"),
+                   config_overlay=spec.get("config_overlay"), rotation=spec.get("rotation"),
+                   render_contract=spec.get("render_contract"),
+                   swir_hot_emission=spec["swir_hot_emission"], sun_glint=spec.get("sun_glint"),
+                   cameras=spec.get("cameras"), thermal=spec.get("thermal"), climate=spec.get("climate"),
+                   signatures=spec["signatures"],
                    terrain=spec["terrain"], structures=spec["structures"], resample=spec.get("resample"),
                    ground_texture=spec.get("ground_texture"), sun_calibration=calib, timings_s=timings),
     )
     os.makedirs(os.path.join(root, "meta"), exist_ok=True)
-    with open(os.path.join(root, "meta", f"{sid}.json"), "w") as f:
-        json.dump(meta, f, indent=1)
+    # Metadata is the completion marker: publish it only after all layer files exist.
+    atomic_json(os.path.join(root, "meta", f"{sid}.json"), meta)
     return meta

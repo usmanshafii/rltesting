@@ -57,7 +57,7 @@ def test_missing_band_and_predict():
 
 
 def test_distillation_loss():
-    t = Detector(["rgb", "lwir", "swir"], 7, **SMALL).eval()
+    t = Detector(["rgb", "lwir", "lwir_cooled", "mwir"], 7, **SMALL).eval()      # CLAUDE.md sensor set rule 5
     s = Detector(["rgb", "lwir"], 7, **SMALL).train()
     imgs, tg = _imgs(t.bands), _targets()
     with torch.no_grad():
@@ -66,7 +66,8 @@ def test_distillation_loss():
     sraw, sfeat = s({b: imgs[b] for b in s.bands}, return_feats=True)
     t_pos = assign_batch(Assigner(7), tf, tg)[2]           # teacher-positive locations
     l_resp, _ = response_kd(s.flatten(sraw), tf, t_pos)
-    cnr = [torch.tensor([[1.0, 0.5, 9.0], [4.0, 2.0, 6.5]]), torch.zeros(0, 3)]    # per object: rgb, lwir, swir
+    nan = float("nan")                                     # per object: rgb, lwir, lwir_cooled, mwir, swir (deferred)
+    cnr = [torch.tensor([[1.0, 0.5, 9.0, 3.0, nan], [4.0, 2.0, 6.5, 1.0, nan]]), torch.zeros(0, 5)]
     w = [cnr_gap_weights(c, t.bands, s.bands) for c in cnr]
     assert w[0].tolist() == [3.0, 2.0]                     # 1 + 2 * clip(gap / 5, 0, 1) for gaps 8 and 2.5
     fd = FeatureDistiller(s.feat_channels, t.feat_channels)

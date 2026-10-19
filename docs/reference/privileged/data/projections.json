@@ -1,0 +1,34 @@
+{
+ "note": "Detection at 0.01 false alarms per frame predicted by each model's fitted detection curve from the census d' (one frame), after averaging `frames` frames of a static scene (sensor noise only), the moving-target bound (sqrt(frames) on all of d'), and the teacher's fused four-camera d' (the ceiling of what privileged information could give). Estimates: they hold the network's efficiency fixed.",
+ "frames": 5,
+ "projections": {
+  "rgb_lwir all": {
+   "one_frame": 0.6362469368253053,
+   "five_frames_static": 0.6776916021174622,
+   "five_frames_moving_bound": 0.7466853978267659,
+   "teacher_signal": 0.7672915795416319,
+   "n": 126
+  },
+  "rgb_lwir small": {
+   "one_frame": 0.49111946835355136,
+   "five_frames_static": 0.5573733287423809,
+   "five_frames_moving_bound": 0.6343278933459725,
+   "teacher_signal": 0.6838290186677309,
+   "n": 63
+  },
+  "rgb_lwir_s31 all": {
+   "one_frame": 0.48521559666242525,
+   "five_frames_static": 0.5244580500753747,
+   "five_frames_moving_bound": 0.5762830061776754,
+   "teacher_signal": 0.5898984510075828,
+   "n": 126
+  },
+  "rgb_lwir_s31 small": {
+   "one_frame": 0.368267082477597,
+   "five_frames_static": 0.4199421715235045,
+   "five_frames_moving_bound": 0.4640725177601711,
+   "teacher_signal": 0.48653321229566243,
+   "n": 63
+  }
+ }
+}

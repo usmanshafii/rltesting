@@ -16,8 +16,8 @@ CFGS = sampling.load_configs()
 def fake_layers(spec):
     H, W = spec["camera"]["height"], spec["camera"]["width"]
     out = {}
-    for band, C in (("rgb", 3), ("lwir", 1), ("swir", 1)):
-        base = {"rgb": 8.0, "lwir": 30.0, "swir": 0.5}[band]
+    for band, C in (("rgb", 3), ("lwir", 1), ("lwir_cooled", 1), ("mwir", 1), ("swir", 1)):
+        base = {"rgb": 8.0, "lwir": 30.0, "lwir_cooled": 8.0, "mwir": 0.8, "swir": 0.5}[band]
         sky = (base * np.linspace(0.8, 1.2, H)[:, None, None] * np.ones((H, W, C))).astype(np.float32)
         layer = dict(sky=sky, psf_sigma0=spec["psf"][band]["sigma0"])
         objs = []
@@ -28,7 +28,7 @@ def fake_layers(spec):
             cx, cy = b["x"] + b["w"] / 2, b["y"] + b["h"] / 2
             A = np.exp(-((xx - cx) ** 2 / (0.5 * max(b["w"], 1) ** 2)
                          + (yy - cy) ** 2 / (0.5 * max(b["h"], 1) ** 2))).astype(np.float32)
-            val = {"rgb": 1.0, "lwir": 60.0, "swir": 0.2}[band]
+            val = {"rgb": 1.0, "lwir": 60.0, "lwir_cooled": 15.0, "mwir": 3.0, "swir": 0.2}[band]
             objs.append(dict(name=o["name"], crop=[x0, y0, x1, y1], P=A[..., None] * val * np.ones(C, np.float32), A=A,
                              range_m=o["range_m"], elevation_deg=o["elevation_deg"]))
         out[band] = (layer, objs)
@@ -50,18 +50,32 @@ def test_metadata_follows_spec_schema(root):
         assert k in m
     for k in ("variant", "yaw_deg", "range_m", "elevation_deg", "airspeed_mps", "projected_size_m", "bbox_px", "size_bin"):
         assert k in m["target"]
-    assert set(m["modalities"]) == {"rgb", "lwir", "swir"} and "cnr" in m["modalities"]["lwir"]
+    assert set(m["modalities"]) == {"rgb", "lwir", "lwir_cooled", "mwir", "swir"} and "cnr" in m["modalities"]["lwir"]
     assert os.path.exists(os.path.join(root, m["target"]["variant"]["params_file"]))
     assert m["modalities"]["lwir"]["cnr"] > 0                      # hot synthetic blob
+    assert m["extra"]["signature_model"] == "md550-engine-v3"
+    assert len(m["extra"]["engine"]["exhaust_outlets"]) == 4
+    assert "exhaust_stub" in m["extra"]["signatures"]["target"]["lwir"]
+    assert "sun_glint" in m["extra"]                               # None at night, the scene's lobe draw by day
+    assert set(m["extra"]["cameras"]["cameras"]) == {"rgb", "lwir_uncooled", "lwir_cooled", "mwir"}   # the camera rig
+    assert "glow_dT" in m["extra"]["signatures"]["target"]["rgb"]["exhaust_stub"]
+    assert m["extra"]["objects"][0]["hot_visible_cm2"]["hot_total"] >= 0.0
+    th = m["extra"]["thermal"]                                       # layered thermal atmosphere and plume draws
+    assert set(th["tables"]["bands"]) == {"lwir", "lwir_cooled", "mwir"} and th["plume"]["k_mix"] > 0
+    for b in ("lwir_cooled", "mwir"):                                # shared temperatures, own emissivities
+        t = m["extra"]["signatures"]["target"]
+        assert t[b]["exhaust_stub"]["dT"] == t["lwir"]["exhaust_stub"]["dT"]
+        assert t[b]["exhaust_stub"]["emissivity"] != t["lwir"]["exhaust_stub"]["emissivity"] or b == "lwir_cooled"
 
 
 @pytest.mark.parametrize("train", [False, True])
 def test_loader(root, train):
-    ds = SceneDataset(root, None, ["rgb", "lwir", "swir"], CFGS, train=train,
+    ds = SceneDataset(root, None, ["rgb", "lwir", "lwir_cooled", "mwir"], CFGS, train=train,
                       aug=dict(hflip=0.5, scale=[0.75, 1.6], scale_prob=1.0, min_obj_px=1.5))
     for i in range(len(ds)):
         s = ds.load(i)
         assert s["images"]["rgb"].shape == (512, 640, 3) and s["images"]["lwir"].shape == (512, 640, 1)
+        assert s["images"]["lwir_cooled"].shape == s["images"]["mwir"].shape == (512, 640, 1)
         for v in s["images"].values():
             assert np.isfinite(v).all() and v.min() >= 0 and v.max() <= 1
         if len(s["boxes"]):
@@ -94,3 +108,14 @@ def test_coco_export(root):
     split = next(iter(counts))
     c = json.load(open(os.path.join(root, "coco", f"{split}.json")))
     assert c["categories"][0]["name"] == "target" and all(len(a["bbox"]) == 4 for a in c["annotations"])
+
+
+def test_thermal_layers_carry_the_plume(root):
+    from data.composite import load_layers
+    m = json.load(open(os.path.join(root, "meta", "s000000.json")))
+    for b in ("lwir", "lwir_cooled", "mwir"):
+        _, objs = load_layers(os.path.join(root, m["modalities"][b]["layers"]))
+        plume = [o for o in objs if o["name"] == "plume"]
+        assert len(plume) == 1 and 0.0 < plume[0]["t_gas"] <= 1.0
+    _, objs = load_layers(os.path.join(root, m["modalities"]["rgb"]["layers"]))
+    assert not any(o["name"] == "plume" for o in objs)             # invisible in RGB (and no box in any band)

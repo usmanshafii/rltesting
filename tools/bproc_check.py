@@ -43,7 +43,7 @@ sc = bpy.context.scene
 spec = dict(lighting="day", atmosphere=atmo, sun=dict(elevation_deg=35.0, azimuth_deg=120.0), clouds=None, airglow_rgb=0.0)
 sc.world = rgb.world(spec, calib)
 rgb.lamps(spec, calib)
-W, H, hfov = 640, 512, 10.0
+W, H, hfov = 640, 512, min(cfgs["sensors"]["hfov_deg"])      # S1 narrow (50 mm)
 cam = pl.Camera(W, H, hfov, (0, 0, 2.0), 0.0, 12.0)
 bproc.camera.set_intrinsics_from_blender_params(lens=pl.focal_mm(36.0, hfov), lens_unit="MILLIMETERS",
                                                 image_width=W, image_height=H, clip_start=rc["clip_m"][0],

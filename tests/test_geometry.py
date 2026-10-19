@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "target"))
+import engine_l550e as el  # noqa: E402
 import kal_geometry as kg  # noqa: E402
 import kal_measure as km  # noqa: E402
 
@@ -61,6 +62,20 @@ def test_all_slots_present():
     assert used == set(kg.SLOTS) - {"nose_window"}
 
 
+def test_engine_parts_come_from_the_engine_module():
+    """Every engine primitive becomes one closed eng_* part with its slot; stubs and outlets group as exhaust."""
+    mesh = kg.build_mesh(kg.defaults(CFG))
+    slot_of = {}
+    for part, s in zip(mesh["face_parts"], mesh["face_slots"]):
+        slot_of.setdefault(part, set()).add(kg.SLOTS[s])
+    for prt in el.parts():
+        assert slot_of["eng_" + prt["name"]] == {prt["slot"]}
+    groups = {kg.part_group(p) for p in slot_of if p.startswith("eng_")}
+    assert groups == {"engine", "exhaust"}
+    assert {kg.part_group(f"eng_{k}_stbd_front") for k in ("stub", "outlet")} == {"exhaust"}
+    assert el.check_envelope() == []
+
+
 def test_yamlite_matches_pyyaml():
     yaml = pytest.importorskip("yaml")
     import _yamlite
@@ -74,8 +89,34 @@ def test_mesh_matches_parameters(seed):
     assert km.validate(kg.build_mesh(p)) == []
 
 
-def test_exhaust_hidden_from_level_front():
+def test_engine_mostly_hidden_from_level_front_and_exhaust_most_visible_from_below():
+    """The forebody hides almost all of the engine head-on (only the stub ends below it show); the rear exposes
+    the heads and barrels; the downward stubs are seen from below, not from above."""
     mesh = kg.build_mesh(kg.defaults(CFG))
-    front, rear, below = (km.direction(0, 0), km.direction(180, 0), km.direction(90, -45))
-    vis = km.hot_visibility(mesh, np.array([front, rear, below]))
-    assert vis[0] == 0.0 and vis[1] > 0 and vis[2] > 0
+    front, rear = km.direction(0, 0), km.direction(180, 0)
+    vis = km.hot_visibility(mesh, np.array([front, rear]))
+    assert vis[0] < 0.1 * vis[1] and vis[1] > 0
+    below, above = km.direction(90, -45), km.direction(90, 45)
+    stubs = km.hot_visibility(mesh, np.array([below, above]), ("exhaust_stub",))
+    assert stubs[0] > 3 * stubs[1] > 0
+
+
+@pytest.mark.parametrize("span", [2.0, 2.3, 2.6])
+def test_engine_dimensions_do_not_scale_with_airframe(span):
+    p = dict(kg.defaults(CFG), span_m=span)
+    mesh = kg.build_mesh(p)
+    m = km.measure(mesh)
+    assert m["engine_length_m"] == pytest.approx(el.LENGTH_M)
+    assert m["engine_width_m"] == pytest.approx(el.WIDTH_M)
+    assert m["engine_height_m"] == pytest.approx(el.HEIGHT_M)
+
+
+@pytest.mark.parametrize("seed", [None, 0, 7, 21])
+def test_engine_clears_the_trailing_edge_and_sits_on_the_neck(seed):
+    """Fin packs aft of the wing TE, mounting face no wider than the neck, flange ahead of the propeller hub."""
+    p = kg.defaults(CFG) if seed is None else kg.sample_variant(CFG, seed)
+    g = kg.derive(p)
+    assert g["engine_fins_front_x"] >= g["te_x"] - 1e-9
+    assert g["R_neck"] >= 0.98 * g["engine_mount_radius"]
+    assert g["eng1"] < g["hub_x"] - g["spinner_len"] / 2 + 1e-9
+    assert g["eng1"] - g["eng0"] == pytest.approx(el.LENGTH_M / g["span_m"])

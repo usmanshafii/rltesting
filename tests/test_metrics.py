@@ -53,3 +53,39 @@ def test_bootstrap_and_summary_run():
     assert s["bins"]["2-4"]["op_centre"]["recall"] == pytest.approx(0.5)
     d = M.bootstrap_diff(rs, rs, lambda r: M.ap(r, "centre", 0.0, cfg=CFG), 50)
     assert d["diff"] == 0.0 and not d["significant"]
+    assert 0 < s["overall"]["ap50_ci95"]["lo"] < s["overall"]["ap50_ci95"]["hi"] < 1
+    ci = s["bins"]["2-4"]["op_centre"]["recall_ci95"]
+    assert ci["lo"] < .5 < ci["hi"]
+
+
+def test_pairing_refuses_different_test_sets_and_empty_curves_are_explicit():
+    a = rec("s1", [], [([10, 10, 13, 13], 0, "2-4", "target")])
+    b = dict(a, scene_id="s2")
+    with pytest.raises(ValueError, match="identical"):
+        M.bootstrap_diff([a], [b], lambda r: M.ap(r, cfg=CFG), 10)
+    c = M.pd_curve([], [2, 4, 8], 10)
+    assert c["n"] == [0, 0] and all(np.isnan(x) for x in c["pd"])
+
+
+def test_aspect_and_lighting_slices():
+    r = rec("s1", [([10, 10, 13, 13], 0.9, 0)], [([10, 10, 13, 13], 0, "2-4", "target")])
+    r["target_aspect_deg"] = 12.0
+    assert M.CONDITIONS["aspect_head"](r) and M.CONDITIONS["day_head"](r)
+    assert not M.CONDITIONS["aspect_tail"](r) and not M.CONDITIONS["night_head"](r)
+    assert not M.CONDITIONS["aspect_beam"](dict(r, target_aspect_deg=-1.0))       # unknown aspect: no slice
+    s = M.summary([r], CFG)
+    assert "day_head" in s["conditions"] and "aspect_tail" not in s["conditions"]
+    meta = dict(extra=dict(objects=[dict(cls="target", aspect_deg=170.0)]))
+    assert M.target_aspect_deg(meta) == 170.0 and M.target_aspect_deg({}) == -1.0
+
+
+def test_sensitivity_swing_and_wilson():
+    from eval import sensitivity as SE
+    lo, hi = SE.wilson(5, 10)
+    assert 0.18 < lo < 0.25 and 0.75 < hi < 0.82
+    dets = [dict(scene=f"s{i}", size_px=10.0, detected=i >= 50) for i in range(100)]
+    inputs = {f"s{i}": dict(sky_rh=i / 100.0, noise=float(i % 7)) for i in range(100)}
+    rows = SE.table(dets, inputs, "lwir_only")
+    sw = {r["input"]: r["swing"] for r in rows}
+    assert sw["sky_rh"] == pytest.approx(1.0) and sw["noise"] < 0.5
+    assert all(r["size_group"] == "8-32" for r in rows)

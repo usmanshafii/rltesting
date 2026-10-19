@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KAL Detection Console</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header>
+  <div class="brand"><b>KAL DETECTION CONSOLE</b><span>M1 demonstrator &middot; live simulation &middot; RGB + thermal</span></div>
+  <nav>
+    <button class="tab active" data-tab="live">Live</button>
+    <button class="tab" data-tab="evidence">Held-out evidence</button>
+    <button class="tab" data-tab="results">Results</button>
+    <button class="tab" data-tab="about">How it works</button>
+  </nav>
+  <div class="status"><span id="chip" class="chip idle">IDLE</span><span id="clock">T+0.0 s</span><span id="fps">&ndash; fps</span></div>
+</header>
+
+<main>
+<section id="live" class="pane active">
+  <aside class="controls">
+    <h3>Scenario</h3>
+    <select id="scenario"></select>
+    <p id="scenarioInfo" class="muted"></p>
+    <h3>Detector</h3>
+    <select id="model"></select>
+    <p id="modelInfo" class="muted"></p>
+    <div class="row"><button id="start" class="primary">Start</button><button id="stop">Stop</button></div>
+
+    <h3>Operating point</h3>
+    <div id="thrModes"></div>
+    <input id="thrSlider" type="range" min="0.05" max="0.99" step="0.01" value="0.5" disabled>
+    <p class="muted" id="thrValue"></p>
+
+    <h3>Sensors</h3>
+    <label class="toggle"><input type="checkbox" id="rgb_on" checked> Daylight camera (RGB)</label>
+    <label class="toggle"><input type="checkbox" id="lwir_on" checked> Thermal camera (LWIR)</label>
+    <label>Thermal noise <span id="noiseVal">1.0x</span></label>
+    <input id="thermal_noise" type="range" min="0.5" max="3" step="0.1" value="1">
+    <label>Thermal stripes <span id="stripeVal">1.0x</span></label>
+    <input id="stripes" type="range" min="0" max="3" step="0.1" value="1">
+
+    <h3>Scene</h3>
+    <label class="toggle"><input type="checkbox" id="target_free"> Empty sky (no target): false-alarm test</label>
+    <label class="toggle"><input type="checkbox" id="show_truth"> Show truth box (evaluation only)</label>
+    <label class="toggle"><input type="checkbox" id="loop" checked> Loop the approach</label>
+  </aside>
+
+  <div class="views">
+    <div class="view">
+      <div class="vtitle"><b>DAYLIGHT CAMERA</b><span>640 x 512 &middot; detector input</span></div>
+      <div class="frame"><canvas id="cv_rgb" width="640" height="512"></canvas><canvas id="mag_rgb" class="mag" width="150" height="150"></canvas></div>
+    </div>
+    <div class="view">
+      <div class="vtitle"><b>THERMAL CAMERA</b><span>LWIR 8-14 &micro;m, white-hot &middot; detector input</span></div>
+      <div class="frame"><canvas id="cv_lwir" width="640" height="512"></canvas><canvas id="mag_lwir" class="mag" width="150" height="150"></canvas></div>
+    </div>
+    <div class="timeline">
+      <div class="vtitle"><b>DETECTOR CONFIDENCE</b><span>best score per frame vs threshold &middot; green = confirmed track on the target</span></div>
+      <canvas id="chart" width="1300" height="120"></canvas>
+    </div>
+  </div>
+
+  <aside class="telemetry">
+    <h3>Track</h3>
+    <div class="kv"><span>First confirmed</span><b id="tFirst">&ndash;</b></div>
+    <div class="kv"><span>Held since then</span><b id="tHeld">&ndash;</b></div>
+    <div class="kv"><span>False confirmed tracks</span><b id="tFalse">0</b></div>
+    <div class="kv"><span>Detections this frame</span><b id="tDets">0</b></div>
+    <h3>Simulation truth</h3>
+    <div class="kv"><span>Range</span><b id="tRange">&ndash;</b></div>
+    <div class="kv"><span>Target size</span><b id="tSize">&ndash;</b></div>
+    <div class="kv"><span>Frame</span><b id="tFrame">&ndash;</b></div>
+    <h3>Detector</h3>
+    <div class="kv"><span>Inputs</span><b id="tBands">&ndash;</b></div>
+    <div class="kv"><span>Threshold</span><b id="tThr">&ndash;</b></div>
+    <div class="kv"><span>Inference</span><b id="tMs">&ndash;</b></div>
+    <p class="legend"><i class="sw det"></i>detection <i class="sw trk"></i>confirmed track <i class="sw tent"></i>tentative <i class="sw tru"></i>truth</p>
+    <p class="muted small">Rendered target and sky; sensor noise, detector and tracker run live. Truth is never an input.</p>
+  </aside>
+</section>
+
+<section id="evidence" class="pane">
+  <div class="evbar">
+    <select id="evModel"></select>
+    <select id="evFilter"><option value="">All test scenes</option><option value="day">Day</option><option value="night">Night</option>
+      <option value="2-4">2-4 px</option><option value="4-8">4-8 px</option><option value="8-16">8-16 px</option></select>
+    <span class="muted">Each test frame is rebuilt from its rendered layers with the evaluation's seeds; the saved weights run again and are checked against the stored evaluation.</span>
+  </div>
+  <div class="evbody">
+    <ul id="evList"></ul>
+    <div class="evview">
+      <div id="evMsg" class="muted">Available after the M1 detector v2 evaluation.</div>
+      <div class="row2"><canvas id="ev_rgb" width="640" height="512"></canvas><canvas id="ev_lwir" width="640" height="512"></canvas></div>
+      <p id="evResult"></p>
+    </div>
+  </div>
+</section>
+
+<section id="results" class="pane"><div id="resBody" class="doc"></div></section>
+
+<section id="about" class="pane"><div class="doc">
+  <h2>What runs live</h2>
+  <div class="pipe">
+    <div>Rendered sky + KAL layers<small>Blender, per frame (the only precomputed step)</small></div>
+    <div>Atmosphere<small>haze, LWIR water vapour, optical blur</small></div>
+    <div>Camera model<small>RGB shot/read noise; LWIR stripes, drift, NETD; 8-bit video</small></div>
+    <div>Pre-processing<small>stripe filter, per-frame standardisation</small></div>
+    <div>CNN detector<small>saved weights, threshold frozen on validation</small></div>
+    <div>Tracker<small>confirm 3 of 5 frames, coast 10</small></div>
+  </div>
+  <h2>What this demonstrates, and what it does not</h2>
+  <ul>
+    <li>A detector trained only on synthetic, physics-based RGB + thermal images finds a KAL-class aircraft (MD-550 / L550E engine model) on commodity-camera frames, with frozen operating points.</li>
+    <li>Switching a camera off shows the single-band behaviour (models trained with random band dropout).</li>
+    <li>The empty-sky mode measures false alarms after track confirmation, the unit that matters for video.</li>
+    <li>Not shown: real cameras, birds, aircraft, clouds or terrain. Thermal and spectral properties are modelling assumptions. Numbers are from held-out synthetic scenes only.</li>
+  </ul>
+  <h2>Where the numbers are</h2>
+  <p>Held-out results: <code>out/m1/det2/results.md</code> (v2) and <code>out/m1/pilot/results.md</code> (compact pilot). Design and rules: <code>docs/m1_v2.md</code>.</p>
+</div></section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -3,32 +3,27 @@
 Each material's base colour is its SWIR reflectance. The sun is kept (the grey lamp uses the red
 channel of the calibrated Nishita sun, the longest visible wavelength); the sky is the red channel
 of the same Nishita sky divided by 3-30. At night a dim uniform airglow replaces the sun.
-Optional self-emission for parts above ~250 C: Planck radiance in 0.9-1.7 um with emissivity
-1 - reflectance, converted to render units with the in-band solar irradiance (signatures.yaml).
+Self-emission of hot parts: Planck radiance in 0.9-1.7 um with emissivity 1 - reflectance (Kirchhoff),
+converted to render units with the in-band solar irradiance (signatures.yaml). Always on for the target's
+parts above hot_emission.min_temp_c; a per-scene option for the hard negatives.
 """
 from __future__ import annotations
 
-import numpy as np
-
 from render import bpy_util as bu
+from render.rotation_blur import per_cap_alpha
 from render.rgb import ATLAS, ATLAS_WHITE
-from thermal.planck_lut import swir_lut
-
-K0 = 273.15
+from render.signatures import swir_self_emission
 
 
 def hot_emission(p_swir: dict, T_kelvin: float, spec: dict, sig: dict) -> float:
-    he = sig["swir"]["hot_emission"]
-    if not spec.get("swir_hot_emission") or T_kelvin < he["min_temp_c"] + K0:
-        return 0.0
-    eps = 1.0 - p_swir["reflectance"]
-    units = he["nishita_sun_units"] / he["inband_solar_irradiance"]
-    return float(eps * swir_lut().radiance(min(T_kelvin, 1200.0)) * units)
+    """Emission strength in render units (render/signatures.swir_self_emission)."""
+    return swir_self_emission(p_swir, T_kelvin, spec, sig)
 
 
 def _surface(nt, p, alpha=None, emission=0.0):
     import bpy  # noqa: F401
-    b = bu.principled(nt, [p["reflectance"]] * 3, p.get("roughness", 0.5), p.get("metallic", 0.0), p.get("coat", 0.0),
+    color = [p["reflectance"]] * 3
+    b = bu.principled(nt, color, p.get("roughness", 0.5), p.get("metallic", 0.0), p.get("coat", 0.0),
                       1.0 if alpha is None else alpha)
     sh = b.outputs[0]
     if emission > 0:
@@ -41,7 +36,7 @@ def _surface(nt, p, alpha=None, emission=0.0):
     return sh
 
 
-def target_material(name: str, slot: str, p: dict, emission: float = 0.0):
+def target_material(name: str, slot: str, p: dict, emission: float = 0.0, alpha_img=None):
     import bpy
     m, nt, out = bu.new_material(name)
     if slot == "decal":
@@ -55,14 +50,19 @@ def target_material(name: str, slot: str, p: dict, emission: float = 0.0):
         b = bu.principled(nt, sc.outputs[0], p.get("roughness", 0.5), alpha=tex.outputs["Alpha"])
         sh = b.outputs[0]
     else:
-        sh = _surface(nt, p, p.get("alpha") if slot == "propeller_disc" else None, emission)
+        if alpha_img and slot == "propeller_disc":
+            alpha = bu.disc_texture(nt, *alpha_img)
+        else:
+            alpha = float(per_cap_alpha(p["alpha"])) if slot == "propeller_disc" else None
+        sh = _surface(nt, p, alpha, emission)
     nt.links.new(sh, out.inputs["Surface"])
     return m
 
 
 def negative_material(name: str, slot: str, p: dict, emission: float = 0.0):
     m, nt, out = bu.new_material(name)
-    nt.links.new(_surface(nt, p, p.get("alpha"), emission), out.inputs["Surface"])
+    alpha = float(per_cap_alpha(p["alpha"])) if "alpha" in p else None      # discs are two-capped solids
+    nt.links.new(_surface(nt, p, alpha, emission), out.inputs["Surface"])
     return m
 
 

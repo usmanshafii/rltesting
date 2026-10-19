@@ -6,8 +6,12 @@ models:                                  # spec 8: models compared on identical 
   rgb_only:  {bands: [rgb]}
   lwir_only: {bands: [lwir]}
   rgb_lwir:  {bands: [rgb, lwir]}        # the baseline the student must beat
-  teacher:   {bands: [rgb, lwir, swir]}  # SWIR is training-only privileged information
+  # CLAUDE.md sensor set rule 5 (user, 2026-10-12): the privileged, training-only teacher sees all four sensors, the
+  # deployable student RGB + LWIR uncooled. SWIR is deferred (the earlier three-band teacher is retired).
+  teacher:   {bands: [rgb, lwir, lwir_cooled, mwir]}
   student:   {bands: [rgb, lwir], distill_from: teacher}
+  lwir_cooled_only: {bands: [lwir_cooled]}     # single-sensor references reported per sensor (rule 4)
+  mwir_only: {bands: [mwir]}
 
 detector:
   width: [16, 32, 64, 128, 256]          # channels at strides 2, 4, 8, 16, 32 (YOLOv8n-sized)
@@ -37,9 +41,9 @@ train:
 
 loss: {w_cls: 0.5, w_box: 7.5, w_nwd: 2.0, tiny_px: 16.0, nwd_C: 12.8, topk: 10, near_k: 4}
 
-distill:                                 # spec 7.2 student training, models/distill.py. Nothing reads this
-                                         # yet: train/engine.py raises NotImplementedError for distill_from
-  modality_dropout: {rgb+lwir: 0.5, lwir: 0.3, rgb: 0.2}  # student input per batch; teacher always gets all 3
+distill:                                 # spec 7.2 student training: train/engine.py (_Distiller), models/distill.py.
+                                         # The separate compact M1 response-KD pilot is tools/m1_pilot.py.
+  modality_dropout: {rgb+lwir: 0.5, lwir: 0.3, rgb: 0.2}  # student input per batch; the teacher always gets all 4
   lambda_resp: 1.0                       # L = L_det + lambda_resp * L_resp + lambda_feat * L_feat
   lambda_feat: 1.0                       # start values, tune on val; both 0 = the modality-dropout-only ablation
   temperature: 2.0                       # L_resp: softened class scores and box distributions

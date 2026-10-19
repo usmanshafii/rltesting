@@ -1,0 +1,4 @@
+setting,barrel_h_min,barrel_h_max,barrel_eta_min,barrel_eta_max,v_naca_eq_min_mps,v_naca_eq_max_mps,heatsink_h_min,heatsink_h_max,heatsink_eta_min,heatsink_eta_max,centre_h_naca488,centre_h_channel_model,channel_over_naca
+low_power,31.8,146.7,0.869,0.976,9.7,65.8,9.1,167.9,0.822,0.991,69.0,54.3,0.787
+nominal,31.8,151.2,0.866,0.976,9.7,68.4,9.1,173.0,0.818,0.991,69.0,54.0,0.783
+high_power,31.8,155.2,0.863,0.976,9.7,70.7,9.1,177.6,0.814,0.991,69.0,53.9,0.781

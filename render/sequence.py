@@ -1,6 +1,6 @@
 try: import blenderproc as bproc  # noqa: E401,E701  first code line, as in render/scene.py
 except Exception: bproc = None  # noqa: E701
-__doc__ = """Fixed-camera flight sequences for the live demo video (tools/demo_video.py).
+__doc__ = """Fixed-camera flight sequences (shared helpers are also used by render/track_sequence.py).
 
     blender -b -P render/sequence.py -- --out out/demo --name day --seq-id 901 --lighting day
 
@@ -46,10 +46,11 @@ def _log(msg):
 def find_scene(cfgs, a):
     """First scene index >= a.start with the requested lighting and clear air: open sky, narrow lens,
     the camera tilted to a.cam_el (a steeper look puts the drone higher, and while it closes in it
-    climbs out of the 8 deg vertical view), sun at least 25 deg off the line of sight."""
+    climbs out of the 7 deg vertical view), sun at least 25 deg off the line of sight."""
+    narrow = min(cfgs["sensors"]["hfov_deg"])           # S1 50 mm
     for idx in range(a.start, a.start + 1000):
         try:
-            spec, objs = sampling._sample_scene_once(idx, cfgs, None, 0, {"hfov": 10.0, "family": "open_sky"})
+            spec, objs = sampling._sample_scene_once(idx, cfgs, None, 0, {"hfov": narrow, "family": "open_sky"})
         except RuntimeError:
             continue
         if spec["lighting"] != a.lighting or spec["weather"]["visibility_km"] < 15.0:
@@ -148,12 +149,20 @@ def frame_meta(spec, fr, fid, a, bands, k):
         modalities={b: dict(layers=f"layers/{b}/{fid}.npz") for b in bands},
         negatives=[],
         extra=dict(objects=[fr], camera=cam, sun=spec["sun"], moon=spec["moon"], weather=spec["weather"],
-                   psf=spec["psf"], family=spec["family"]),
+                   psf=spec["psf"], family=spec["family"], signature_model=spec["signature_model"],
+                   engine=spec["engine"], signatures=spec["signatures"],
+                   config_overlay=spec.get("config_overlay")),
     )
 
 
 def render_sequence(cfgs, spec, objs, frames, a, bands):
     t0 = time.time()
+    # Ray cast only the accepted flight path, not flight_frames' rejected candidates.
+    from types import SimpleNamespace
+    for fr in frames:
+        matrix = np.asarray(fr["matrix_world"])
+        pose = SimpleNamespace(R=matrix[:3, :3], position=matrix[:3, 3])
+        fr["hot_visible_cm2"] = sampling._hot_visible(objs["target_mesh"], objs["camera"], pose)
     calib = rs.calibrate(spec, cfgs)
     spec["objects"] = [frames[0]]                    # the target is built at the first pose
     h = rs.build(spec, objs, cfgs, calib)
@@ -173,6 +182,7 @@ def render_sequence(cfgs, spec, objs, frames, a, bands):
         for k, fr in enumerate(frames):
             bu.set_matrix(tobj, fr["matrix_world"])
             bu.linear_motion(tobj, fr["matrix_world"], fr["velocity_mps"], exp_s)
+            rs.update_rotation(h, spec, fr["t_s"])         # blades turn between frames
             objects = rs.render_objects(band, spec, h, cfgs, tmp, lambda m: None, [fr])
             lpath = os.path.join(a.out, f"layers/{band}/{ids[k]}.npz")
             ref = os.path.relpath(os.path.join(a.out, bg_rel), os.path.dirname(lpath))
@@ -190,6 +200,8 @@ def render_sequence(cfgs, spec, objs, frames, a, bands):
                    lighting=spec["lighting"], thermal_state=spec["thermal_state"], weather=spec["weather"],
                    air_temp_c=spec["air_temp_c"], camera=spec["camera"], sun=spec["sun"], moon=spec["moon"],
                    variant=dict(span_m=tv["span_m"], length_m=tv["length_m"], sweep_deg=tv["sweep_deg"]),
+                   signature_model=spec["signature_model"],
+                   engine=spec["engine"], target_params=tv["params"],
                    signatures=dict(target=spec["signatures"]["target"]), frame_ids=ids,
                    frames=[dict(id=i, t_s=fr["t_s"], range_m=fr["range_m"], agl_m=fr["agl_m"], speed_mps=fr["speed_mps"],
                                 heading_deg=fr["pose"]["heading_deg"], size_px=fr["size_px"], bbox_px=fr["bbox_px"])

@@ -2,6 +2,7 @@
 
     python tools/generate_dataset.py --out out/dataset --n 720 --jobs 1 --chunk 20
     python tools/generate_dataset.py --out out/dataset --n 720 --summary-only
+    KAL_CONFIG_OVERLAY=configs/m1.yaml python tools/generate_dataset.py --out out/m1/dataset --n 600 --bands rgb,lwir
 
 Each chunk runs `blender -b -P render/scene.py -- --start i --count chunk`; finished scenes are
 skipped, so the command can be stopped and resumed. --jobs > 1 runs chunks in parallel (set
@@ -35,7 +36,7 @@ def find_blender(explicit=None):
 
 
 def run_chunk(blender, out, start, count, n, extra, log_dir):
-    cmd = [blender, "-b", "--factory-startup", "-P", os.path.join(ROOT, "render", "scene.py"), "--",
+    cmd = [blender, "-b", "--factory-startup", "--python-exit-code", "1", "-P", os.path.join(ROOT, "render", "scene.py"), "--",
            "--start", str(start), "--count", str(count), "--out", out, "--n-scenes", str(n)] + extra
     log = os.path.join(log_dir, f"chunk_{start:06d}.log")
     t = time.time()
@@ -78,22 +79,62 @@ def main():
     ap.add_argument("--threads", type=int, default=0)
     ap.add_argument("--samples", type=int, default=None)
     ap.add_argument("--blender", default=None)
+    ap.add_argument("--bands", default=None, help="comma-separated subset, e.g. rgb,lwir (M1); default the four sensors "
+                    "rgb,lwir,lwir_cooled,mwir (CLAUDE.md sensor set rule; add swir only if it is re-enabled)")
+    ap.add_argument("--count", type=int, default=None, help="render only this many scenes from --start (split still uses --n)")
     ap.add_argument("--summary-only", action="store_true")
     a = ap.parse_args()
     from render.sampling import load_configs
-    n = a.n or load_configs()["render"]["dataset"]["n_scenes"]
+    cfgs = load_configs()
+    n = a.n if a.n is not None else cfgs["render"]["dataset"]["n_scenes"]
+    if n <= 0 or a.chunk <= 0 or a.jobs <= 0 or not 0 <= a.start < n:
+        ap.error("n, chunk and jobs must be positive; start must be in [0, n)")
+    if a.count is not None and a.count <= 0:
+        ap.error("count must be positive")
+    if a.samples is not None and a.samples <= 0:
+        ap.error("samples must be positive")
+    if a.threads < 0:
+        ap.error("threads must be nonnegative (0 means all available cores)")
     out = os.path.abspath(a.out)
     os.makedirs(out, exist_ok=True)
     if not a.summary_only:
+        from data.provenance import check_scene, render_contract
+        from render.sampling import ALL_BANDS
+        bands = tuple((a.bands or "rgb,lwir,lwir_cooled,mwir").split(","))
+        if not bands or set(bands) - set(ALL_BANDS) or len(set(bands)) != len(bands):
+            ap.error("bands must be a unique nonempty subset of " + ",".join(ALL_BANDS))
+        if a.samples is not None:
+            rc = cfgs["render"]["render"]
+            rc["engine_samples"] = a.samples
+            rc["adaptive_min_samples"] = min(rc["adaptive_min_samples"], a.samples)
+        contract = render_contract(cfgs, n, bands)
+        # Validate the entire existing folder before writing any new chunks into it.
+        for path in glob.glob(os.path.join(out, "meta", "*.json")):
+            try:
+                with open(path) as f:
+                    meta = json.load(f)
+            except json.JSONDecodeError:
+                continue  # the renderer regenerates an interrupted completion marker
+            check_scene(meta, out, contract)
         blender = find_blender(a.blender)
         log_dir = os.path.join(out, "logs")
         os.makedirs(log_dir, exist_ok=True)
         extra = (["--threads", str(a.threads)] if a.threads else []) + (["--samples", str(a.samples)] if a.samples else [])
-        chunks = [(s, min(a.chunk, n - s)) for s in range(a.start, n, a.chunk)]
+        extra += ["--bands", ",".join(bands)]               # the contract's bands, explicitly
+        stop = min(n, a.start + a.count) if a.count else n
+        chunks = [(s, min(a.chunk, stop - s)) for s in range(a.start, stop, a.chunk)]
+        failed = []
         print(f"{len(chunks)} chunks of {a.chunk} scenes with {blender}, {a.jobs} parallel job(s)")
         with ThreadPoolExecutor(a.jobs) as ex:
             for start, count, rc, dt, log in ex.map(lambda c: run_chunk(blender, out, c[0], c[1], n, extra, log_dir), chunks):
                 print(f"scenes {start}-{start + count - 1}: exit {rc}, {dt / 60:.1f} min, log {log}")
+                if rc:
+                    failed.append(log)
+        missing = [s for s in range(a.start, stop)
+                   if not os.path.isfile(os.path.join(out, "meta", f"s{s:06d}.json"))]
+        if failed or missing:
+            raise RuntimeError(f"Render incomplete: {len(failed)} failed chunks, {len(missing)} missing scenes. "
+                               f"Rerun the same command. Logs: {failed}")
     from data.coco_export import export
     for split, (ni, na) in export(out).items():
         print(f"COCO {split}: {ni} images, {na} annotations")

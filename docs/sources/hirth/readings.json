@@ -1,0 +1,6 @@
+{
+ "source": "[HIRTH-23] p. 2 performance table",
+ "sfc_g_kwh_at_5500rpm": 660.0,
+ "sfc_g_kwh_best_point": 550.0,
+ "note": "best point: 70-80 % load, half rated speed; cross-check of the BSFC band only"
+}

@@ -20,6 +20,12 @@ Haze is applied here, so visibility can be swept without re-rendering (Sky doc):
     contrast against the sky is multiplied by t exactly (the Sky doc's "retains 24% of its
     contrast at 3.7 km for V = 10 km"); over ground L_inf is the horizon radiance.
 
+LWIR additionally loses contrast to water vapour (thermal/atmosphere.py: continuum plus band-edge
+lines, from the scene's humidity draw). `wv` carries those per-scene parameters; the water-vapour
+transmittance multiplies the aerosol one for objects (slant path) and for the ground (horizontal
+path). Sky pixels stay untouched for the same reason as above: the humidity-driven sky model
+already includes the vapour.
+
 Objects are composited far-to-near with the "over" operator; their crops were rendered with every
 other object and the terrain as holdouts, so occlusion is already resolved.
 """
@@ -29,6 +35,9 @@ import math
 import os
 
 import numpy as np
+
+from thermal import atmosphere
+from thermal import atmosphere_bands as atb
 
 K_COEF = 3.912            # Koschmieder: 2% contrast threshold
 
@@ -56,7 +65,15 @@ def _c(a):
     return a if a.ndim == 3 else a[..., None]
 
 
-def background(layer: dict, k: float):
+def _gas_t(d, wv, gas, elevation_deg=None):
+    """Gas transmittance: the band's layered-atmosphere table (horizontal path) when the scene has one, else the
+    legacy LWIR water-vapour model (thermal/atmosphere.py; 1 for RGB/SWIR)."""
+    if gas is not None:
+        return atb.horizontal_transmittance(gas, d)
+    return atmosphere.transmittance(d, wv, elevation_deg)
+
+
+def background(layer: dict, k: float, wv: dict | None = None, gas: dict | None = None):
     """Hazed background and the path-radiance field L_inf (both HxWxC)."""
     sky = _c(layer["sky"]).astype(np.float32)
     if "ground" not in layer:
@@ -64,21 +81,31 @@ def background(layer: dict, k: float):
     ga = layer["galpha"].astype(np.float32)[..., None]
     Lh = np.asarray(layer["horizon"], np.float32)
     Lh = Lh.reshape(1, -1, sky.shape[-1]) if Lh.ndim == 2 else Lh.reshape(1, 1, -1)
-    t = np.exp(-k * layer["gdepth"].astype(np.float32))[..., None]
+    d = layer["gdepth"].astype(np.float32)
+    t = (np.exp(-k * d) * _gas_t(d, wv, gas)).astype(np.float32)[..., None]
     L_inf = sky + ga * Lh
     return sky + _c(layer["ground"]).astype(np.float32) * t + ga * Lh * (1.0 - t), L_inf
 
 
 def composite(layer: dict, objects: list, k: float, scale_height_m: float | None = None,
-              skip: set | None = None) -> np.ndarray:
-    """Full frame for one band. objects: dicts with crop (x0, y0, x1, y1), P, A, range_m, elevation_deg."""
-    out, L_inf = background(layer, k)
+              skip: set | None = None, wv: dict | None = None, gas: dict | None = None) -> np.ndarray:
+    """Full frame for one band. objects: dicts with crop (x0, y0, x1, y1), P, A, range_m, elevation_deg, and
+    optionally t_gas (the exhaust plume's own gas transmittance). wv: legacy LWIR water-vapour parameters
+    (thermal/atmosphere.py); gas: the band's layered-atmosphere table (thermal/atmosphere_bands.scene_tables), which
+    replaces wv; both None for RGB."""
+    out, L_inf = background(layer, k, wv, gas)
     for o in sorted(objects, key=lambda o: -o["range_m"]):
         if skip and o["name"] in skip:
             continue
         x0, y0, x1, y1 = o["crop"]
         P, A = _c(o["P"]).astype(np.float32), o["A"].astype(np.float32)[..., None]
         t = float(transmittance(o["range_m"], k, o.get("elevation_deg"), scale_height_m))
+        if o.get("t_gas") is not None:
+            t *= float(o["t_gas"])
+        elif gas is not None and o["name"] in gas.get("tau_objects", {}):
+            t *= float(gas["tau_objects"][o["name"]])
+        else:
+            t *= float(_gas_t(o["range_m"], wv, gas, o.get("elevation_deg")))
         reg = out[y0:y1, x0:x1]
         out[y0:y1, x0:x1] = t * P + (1.0 - t) * A * L_inf[y0:y1, x0:x1] + (1.0 - A) * reg
     return out
@@ -118,6 +145,8 @@ def save_layers(path: str, layer: dict, objects: list, half: bool = True, backgr
             arrs[f"obj.{n}.{k}"], arrs[f"obj.{n}.{k}__scale"] = v, s
         arrs[f"obj.{n}.crop"] = np.asarray(o["crop"], np.int32)
         arrs[f"obj.{n}.geom"] = np.asarray([o["range_m"], o.get("elevation_deg") or 0.0], np.float64)
+        if o.get("t_gas") is not None:
+            arrs[f"obj.{n}.t_gas"] = np.float64(o["t_gas"])
     arrs["objects"] = np.array(names)
     arrs["psf_sigma0"] = np.float32(layer.get("psf_sigma0", 0.0))
     np.savez_compressed(path, **arrs)
@@ -151,5 +180,6 @@ def load_layers(path: str):
     for n in z["objects"].tolist():
         g = z[f"obj.{n}.geom"]
         objects.append(dict(name=n, P=get(f"obj.{n}.P"), A=get(f"obj.{n}.A"), crop=z[f"obj.{n}.crop"].tolist(),
-                            range_m=float(g[0]), elevation_deg=float(g[1])))
+                            range_m=float(g[0]), elevation_deg=float(g[1]),
+                            t_gas=float(z[f"obj.{n}.t_gas"]) if f"obj.{n}.t_gas" in z.files else None))
     return layer, objects

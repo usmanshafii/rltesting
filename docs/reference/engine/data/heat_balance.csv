@@ -1,0 +1,13 @@
+setting,case,load_per_cyl_kw,barrel_fins_kw,heatsink_kw,h_barrel_w_m2k,load_over_capacity
+low_power,centre,2.306,1.527,0.229,69.0,1.313
+low_power,centre_with_inflow_bound,2.306,1.789,0.269,81.7,1.12
+low_power,centre_without_heatsinks,2.306,1.527,0.0,69.0,1.51
+low_power,best_corner,2.306,3.058,0.699,144.8,0.614
+nominal,centre,3.602,1.848,0.277,69.0,1.695
+nominal,centre_with_inflow_bound,3.602,2.294,0.345,87.0,1.365
+nominal,centre_without_heatsinks,3.602,1.848,0.0,69.0,1.949
+nominal,best_corner,3.602,3.797,0.868,149.0,0.772
+high_power,centre,5.043,1.994,0.299,69.0,2.199
+high_power,centre_with_inflow_bound,5.043,2.607,0.392,92.0,1.682
+high_power,centre_without_heatsinks,5.043,1.994,0.0,69.0,2.529
+high_power,best_corner,5.043,4.202,0.959,153.2,0.977

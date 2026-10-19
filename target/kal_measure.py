@@ -5,7 +5,7 @@ so a measurement that disagrees with the YAML is a real defect. numpy only.
 Adapted from the earlier `kal_target.measure` module (validation, projected extent and
 ray-cast visibility), rewritten for the photo-based geometry in kal_geometry.py.
 
-    python target/kal_measure.py      -> invariant report + exhaust/engine visibility table
+    python target/kal_measure.py      -> invariant report + engine-surface visibility table
 """
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from typing import Dict, List, Sequence, Tuple
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import engine_l550e as el  # noqa: E402
 import kal_geometry as kg  # noqa: E402
 
 
@@ -70,6 +71,7 @@ def measure(mesh: dict) -> Dict[str, object]:
     fins = verts(lambda p: p.startswith("fin_"))
     disc = verts(lambda p: p == "prop_disc")
     probe = verts(lambda p: p == "probe")
+    engine = verts(lambda p: p.startswith("eng_") and p != "eng_prop_hub")
     # wing sections: group wing vertices by |y|
     ys = np.round(np.abs(wing[:, 1]), 7)
     root, tip = wing[ys == ys.min()], wing[ys == ys.max()]
@@ -85,6 +87,9 @@ def measure(mesh: dict) -> Dict[str, object]:
         "forebody_dia_m": float(np.ptp(fus[:, 1])),
         "fin_height_m": float(np.ptp(fins[:, 2])),
         "prop_dia_m": float(np.ptp(disc[:, 1])),
+        "engine_length_m": float(np.ptp(engine[:, 0])),
+        "engine_width_m": float(np.ptp(engine[:, 1])),
+        "engine_height_m": float(np.ptp(engine[:, 2])),
         "projected_extent_m": {k: projected_extent(V, d, u) for k, (d, u) in VIEWS.items()},
         "faces": len(mesh["faces"]),
     }
@@ -108,6 +113,9 @@ def validate(mesh: dict, tol: float = 2e-3) -> List[str]:
     close("forebody diameter", m["forebody_dia_m"], g["forebody_dia"] * S, 1e-2)
     close("fin height", m["fin_height_m"], g["fin_total_height"] * S)
     close("prop diameter", m["prop_dia_m"], g["prop_dia"] * S, 1e-2)
+    close("engine length", m["engine_length_m"], el.LENGTH_M, 1e-6)        # published envelope, fixed in metres
+    close("engine width", m["engine_width_m"], el.WIDTH_M, 1e-6)
+    close("engine height", m["engine_height_m"], el.HEIGHT_M, 1e-6)
     bad = kg.edge_report(mesh)
     if bad:
         out.append(f"open or inconsistently wound parts: {bad}")
@@ -152,13 +160,14 @@ def rays_blocked(origins, direction, tri_v, t_min=1e-7, chunk=256) -> np.ndarray
     return out
 
 
-def hot_visibility(mesh: dict, camera_dirs: np.ndarray, slots=("exhaust_outlet",)) -> np.ndarray:
-    """Visible projected area (m^2) of `slots` from distant cameras.
+def visible_triangle_area(mesh: dict, camera_dirs: np.ndarray, slots=None) -> Dict[str, np.ndarray]:
+    """Visible projected area (m^2) of every triangle of `slots` (all slots if None) from distant cameras.
 
     camera_dirs (K, 3): unit vectors from the target toward each camera, output frame.
     A sample point counts if its face looks toward the camera and nothing else is hit on
-    the way. The propeller disc is transparent (spinning blades cover ~5-10% of it);
-    decals never block.
+    the way. This geometric diagnostic ignores prop-disc attenuation and decals;
+    actual renders apply the sampled blade coverage (signatures.yaml propeller_disc_alpha).
+    Returns area (K, n), slot (n,) slot indices and normal (n, 3) output-frame unit normals.
     """
     V = kg.to_output_frame(mesh)
     tris, src = triangulate(mesh)
@@ -167,24 +176,31 @@ def hot_visibility(mesh: dict, camera_dirs: np.ndarray, slots=("exhaust_outlet",
     cr = np.cross(b - a, c - a)
     area = 0.5 * np.linalg.norm(cr, axis=1)
     nrm = cr / np.maximum(np.linalg.norm(cr, axis=1), 1e-30)[:, None]
-    hot = np.isin(slot_of, [kg.SLOTS.index(s) for s in slots])
+    sel = np.ones(len(tris), bool) if slots is None else np.isin(slot_of, [kg.SLOTS.index(s) for s in slots])
     occ = ~np.isin(slot_of, [kg.SLOTS.index("propeller_disc"), kg.SLOTS.index("decal")])
     occ_v = V[tris[occ]]
     bary = np.array([[1 / 3, 1 / 3, 1 / 3], [2 / 3, 1 / 6, 1 / 6], [1 / 6, 2 / 3, 1 / 6], [1 / 6, 1 / 6, 2 / 3]])
-    pts = np.einsum("sk,tkd->tsd", bary, V[tris[hot]]).reshape(-1, 3)
-    n_s = np.repeat(nrm[hot], len(bary), axis=0)
-    w_s = np.repeat(area[hot] / len(bary), len(bary))
+    pts = np.einsum("sk,tkd->tsd", bary, V[tris[sel]]).reshape(-1, 3)
+    n_s = np.repeat(nrm[sel], len(bary), axis=0)
+    w_s = np.repeat(area[sel] / len(bary), len(bary))
+    tri_of = np.repeat(np.arange(int(sel.sum())), len(bary))
     scale = float(np.linalg.norm(np.ptp(V, axis=0)))
     pts = pts + n_s * 1e-6 * scale
-    out = np.zeros(len(camera_dirs))
+    out = np.zeros((len(camera_dirs), int(sel.sum())))
     for k, d in enumerate(np.asarray(camera_dirs, float)):
         d = d / np.linalg.norm(d)
         cos = n_s @ d
         facing = cos > 1e-12
         if facing.any():
             blocked = rays_blocked(pts[facing], d, occ_v, t_min=1e-6 * scale)
-            out[k] = float((w_s[facing] * cos[facing])[~blocked].sum())
-    return out
+            seen = np.flatnonzero(facing)[~blocked]
+            out[k] = np.bincount(tri_of[seen], weights=(w_s * cos)[seen], minlength=out.shape[1])
+    return dict(area=out, slot=slot_of[sel], normal=nrm[sel])
+
+
+def hot_visibility(mesh: dict, camera_dirs: np.ndarray, slots=kg.HOT_SLOTS) -> np.ndarray:
+    """Visible projected area (m^2) of `slots` from distant cameras (visible_triangle_area summed)."""
+    return visible_triangle_area(mesh, camera_dirs, slots)["area"].sum(axis=1)
 
 
 def direction(azimuth_deg: float, elevation_deg: float) -> np.ndarray:
@@ -204,11 +220,11 @@ if __name__ == "__main__":
         if k != "projected_extent_m":
             print(f"  {k:22s} {v:.3f}" if isinstance(v, float) else f"  {k:22s} {v}")
     print("  projected extent (w x h, m):", {k: tuple(round(x, 2) for x in v) for k, v in m["projected_extent_m"].items()})
-    print("\nVisible hot area (cm^2): exhaust_outlet / engine_region")
+    print("\nVisible engine area (cm^2): hot surfaces (heads, barrels, stubs) / exhaust stubs; geometry only")
     els = (-45, -15, 0, 15, 45)
     print("  az\\el " + "".join(f"{e:>14d}" for e in els))
     for az in (0, 30, 60, 90, 120, 150, 180):
         dirs = np.array([direction(az, e) for e in els])
-        ex = hot_visibility(mesh, dirs, ("exhaust_outlet",)) * 1e4
-        en = hot_visibility(mesh, dirs, ("engine_region",)) * 1e4
-        print(f"  {az:4d}  " + "".join(f"{a:7.0f}/{b:<6.0f}" for a, b in zip(ex, en)))
+        hot = hot_visibility(mesh, dirs) * 1e4
+        stubs = hot_visibility(mesh, dirs, ("exhaust_stub",)) * 1e4
+        print(f"  {az:4d}  " + "".join(f"{a:7.0f}/{b:<6.0f}" for a, b in zip(hot, stubs)))

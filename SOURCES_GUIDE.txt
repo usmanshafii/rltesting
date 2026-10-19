@@ -1,0 +1,376 @@
+KAL MULTISPECTRAL DETECTION FYP (MD-550 / L550E ENGINE VERSION): WHICH SOURCE EACH COMPONENT COMES FROM
+===================================================================================================
+Updated 2026-10-11. One entry per component: what it does, where it lives, what it is built from, and how
+reliable each input is. Engine and solar sources are saved in docs/sources/ (each document, the pages cited, the
+images and the digitised data; the register with URLs, pages and SHA-256 is docs/sources/README.md; every reading is
+re-derived by tools/source_measurements.py). The full engine derivation with every number is
+docs/engine_signature_physics.md; every derived engine number is saved as data in docs/reference/engine/data/ by
+tools/engine_report.py.
+
+HOW TO READ THE TAGS
+--------------------
+Source tiers (CLAUDE.md, rule 2), about the source:
+  S1  authoritative and about the exact item (its manufacturer's datasheet, manual or drawing; a standard; a
+      regulator's document; a peer-reviewed measurement of the item)
+  S2  authoritative, about a close analogue or general physics (a comparable product's manufacturer manual,
+      peer-reviewed papers and theses, textbooks, handbooks, government research reports such as NACA)
+  S3  secondary (encyclopedias, vendor notes without conditions, press reports): cross-check or lead only
+  S4  weak, not used for values (forums, listings, snippets, AI text, unsourced specs)
+Evidence grades (configs/signatures.yaml header), about the value as used for the KAL:
+  A observed in KAL imagery   B strongly inferred or published   C+ engineering estimate with physics
+  C plausible assumption       D unknown
+Other tags used in the configs:
+  [spec]  a decision recorded in FYP_Build_Spec_Multispectral_Aerial_Detection.md or FYP_Sky_and_Background.md.
+          The spec records decisions, not evidence (user, 2026-10-10): such a value is not "sourced".
+  [calib] measured on this renderer (render units).
+  physics exact laws and standard correlations (energy, mass and momentum balances, Planck, fin theory).
+
+A value is only as strong as its weakest input: a B range computed with one C factor is C for that factor's share.
+
+
+1. AIRFRAME GEOMETRY (shape, size, fins, markings)
+-------------------------------------------------
+Files:    configs/target.yaml (all parameters and their ranges), target/kal_geometry.py (dataset mesh, variant
+          sampler, checks), target/kal_measure.py (ray-cast measurements), target/kal_hero.py and kal_hero_tex.py
+          (presentation model), assets/decals/, tools/draw_reference.py, tools/draw_spec_sheet.py,
+          tools/photo_check.py (photo acceptance check)
+Sources:  the user's photos P1-P8 (docs/reference/photos; local, user-supplied). Each target.yaml entry names
+          the photo it is measured on. Grades A (what a photo shows: configuration, fins, markings, finish) and
+          B (ratios measured on photos: span fractions, forebody diameter, fin heights).
+          P1 is AI-generated (user, 2026-10-08): appearance only, never dimensions.
+          G1: the closest drone analogue's photo as recorded in target.yaml (Wikimedia Commons), for details the
+          KAL photos do not show (B for the analogue, C for the KAL).
+          Absolute span: not published (D); 2.00-2.60 m from P5 length and P2 forebody scale (B/C).
+Not sourced: wing thickness (C, not visible), hinge lines (P1 appearance, C), several fuselage stations (P1
+          appearance). No manufacturer drawing of the KAL exists, so every airframe dimension is photo-measured.
+Checks:   tests/test_geometry.py (closed meshes, valid variants, engine clears the trailing edge),
+          tools/photo_check.py.
+
+2. ENGINE GEOMETRY (MD-550 / Limbach L550E)
+------------------------------------------
+Files:    target/engine_l550e.py (envelope, ratings, every part), tools/source_measurements.py (re-derives every
+          drawing measurement), docs/sources/limbach/ (datasheets, page images, photos, crops, measurements.json)
+Choice of engine: user decision 2026-10-08 (the KAL's engine is not published, D; the MD-550 is reported as an
+          L550E copy).
+Sources:  Limbach L550E and L550EF datasheets, limflug.de (S1 for the L550E):
+            ratings 37 kW at 7,500 rpm, bore 66, stroke 40, 548 cm3, 16 kg, cast Al Nikasil cylinders, four
+            diaphragm carburettors, optional exhaust stacks and heat sinks, 14 mm CHT thermocouple ............ B
+            envelope 300 x 410 x 301 mm from the drawings ................................................... B
+            fin pack (12 fins, 6.67 mm pitch, 2.5 mm, 108 x 114 mm), head, heat sinks (157-182 mm; the drawing's
+            363.4 mm "with optional heat sinks" vs 313.6 mm without), exhaust stacks (31.5 mm OD, 95.5 mm, centres
+            178 mm apart): measured on the drawings with their own dimension lines as the scale (+-1 mm); heat-sink
+            fin count (12 +- 2), orientation and black finish read by eye on the photos
+            (docs/sources/limbach/visual_readings.json) ....................................................... B-
+          The fin size is the drawing's and is not sampled: deeper fins (~100 x 140 mm, ~20 fins), once proposed
+          to reconcile a photo estimate with the old heat balance, would contradict the drawing, and the balance
+          now closes with NACA 488 and the heat sinks (component 3).
+            full-throttle SFC chart (digitised, docs/sources/limbach/sfc_chart_digitised.csv) .................. B
+          Installed orientation (carburettors up, stubs down): KAL photo P4 consistent, analogue G1 ........... B
+Not sourced: bank offset, case and carburettor boxes, ignition units, corner radii, stub wall (C, inside the
+          measured envelope).
+Checks:   tests/test_engine_heat.py (model = saved measurements, envelope = drawings), tests/test_geometry.py.
+
+3. ENGINE COOLING (free-air cooling, as on the original L550E)
+-------------------------------------------------------------
+What:     The L550E is cooled by the airflow over its cast cylinder fins and its optional finned heat sinks; no
+          fan or shroud is listed by Limbach (datasheets, S1). The model implements exactly that: ram air at the
+          flight speed x an installation factor, plus the pusher propeller's inflow, over the barrel fins and the
+          heat sinks; no fan, no baffles.
+Files:    thermal/engine_heat.py (fin_state, heatsink_state, fin_heat_balance, prop_inflow_ratio),
+          target/engine_l550e.py (FIN_PACK, HEAD, HEATSINK)
+Sources:  NACA Report 488, Biermann and Pinkel (1934): heat transfer from finned cylinders across a free air
+            stream, wind tunnel, 30-150 mph; the L550E's fins lie inside its tested ranges (S2, high relevance).
+            h ~ V^0.796, h ~ (fin space)^0.322, reference q from its fig. 9 (digitised,
+            docs/sources/naca/fig9_digitised.csv; reproduces the report's exponent and quoted values),
+            similitude for diameter and density (eqs. 2-6) .................................................. B
+          Fin efficiency tanh(mL)/(mL), straight-fin theory (Incropera; NACA 488 eq. 13 form) ............. physics
+          Propeller inflow at the engine: actuator-disc momentum theory, ideal-propeller upper bound ....... physics
+          Cooling load to be rejected: AFIT (Ausserer 2016) 10-11 % of fuel energy, with Limbach's SFC ...... B-
+          Cross-check: laminar channel-flow model (Incropera tab. 8.1, eq. 8.41) gives 22 % less than NACA 488 at
+            the envelope centre (54 vs 69 W/m2K: laminar, no free-stream turbulence; tested within 30 %) ....... physics
+          Heat sinks: Limbach's option, fitted (drawing and both photos); fins across the stream at the head
+            temperature, h = 0.25-1.0 x the NACA 488 value ......................................... B- geometry / C h
+Not sourced: installation factor of the local air speed (0.5-0.9 at the cylinders, 0.7-1.0 at the stubs: fuselage
+          wake, C); heat-sink h relative to aligned fins (0.25-1.0: its fins stand across the ram air, C);
+          head-to-heat-sink root ratio (C+). The temperatures depend weakly on these (fin efficiency 0.8-0.97).
+Result:   barrel fins + heat sinks carry the sourced cooling load inside the Rotax CHT band at the best-cooled
+          corner of the flight envelope (load / capacity 0.61 / 0.77 / 0.98 at low / nominal / high power); at its
+          centre 1.31 / 1.69 / 2.20 (1.12 / 1.36 / 1.68 with the propeller's inflow), so the head runs at the top of
+          its band there, as AFIT notes for pusher installations; without the heat sinks the ratios are 15 % higher.
+          Data: docs/reference/engine/data/heat_balance.csv, cooling.csv. Test: tests/test_engine_heat.py.
+
+4. ENGINE SURFACE TEMPERATURES (LWIR and SWIR self-emission)
+------------------------------------------------------------
+Thermal arms of pilot 2 (2026-10-19; docs/privileged_teacher_case.md 6c; tests/test_thermal_arms.py):
+          configs/m1_low_heat.yaml: every engine part at the air temperature, no plume (a bound; no source needed).
+          configs/m1_electric_like.yaml: thermal/engine_heat.py S7 (electric_like_envelope), the engine's own fins and
+          heat sinks carrying an electric drive's loss heat (1 - eta) / eta x shaft power; motor efficiency 0.90-0.96
+          from EU 2019/1781 Annex I (IE3/IE4 at 15-37 kW, S1/S2) and Hepperle 2012, NATO STO-MP-AVT-209 paper 9
+          (motor 95 %, controller 98 %, S2); docs/sources/electric_drive/, checked by electric_drive_readings() .. C+
+Files:    thermal/engine_heat.py (envelope -> configs/signatures.yaml lwir.target.engine_profiles),
+          docs/engine_signature_physics.md
+Sources:  CHT bands and 250 C cap: BRP-Rotax operator's manual 447/503/582 (S2, closest engine with published
+            limits; CHT at the spark-plug seat like the L550E's thermocouple) and EASA TCDS E.082 (Limbach L 1700,
+            250 C, S1/S2) ......................................................................................... B (analogue)
+          EGT bands: same Rotax manual (its own 580 C / 1,000 F inconsistency covered) ...................... B (analogue)
+          Air/fuel ratio: stoichiometry (oxygen balance) / equivalence ratio 1.0-1.2 of carburetted small
+            two-strokes (Ausserer 2016, AFIT; peer reviewed 2018) ............................................ B-
+          BSFC: Limbach chart (S1) and Rotax consumptions with EN 228 fuel density ........................... B
+          Exhaust stub wall: Gnielinski (1976), Churchill-Bernstein (1977), radiation, NTU ................... physics
+          Fuel LHV and heat of vaporisation: Heywood (1988), app. D (S2) ..................................... B
+          Exhaust plume (not rendered): LWIR emissivity from the water-vapour continuum (Roberts et al. 1976) and
+            the CO2 band edge: 3-15 % of the stubs' contrast (up to 46 % with a x3 margin), inside their own
+            emissivity range ........................................................................... physics / C+
+Not sourced: low-power EGT floor 400 C (C+), exhaust pulsation factor 1.2-2.0 (C+; Depcik and Assanis 2002 is the
+          check, not obtained), part-to-part fractions head/fin-root/case/flange/tail cone (C/C+; no measurement on
+          a comparable engine found), carburettor coupling (C), power-setting fractions and weights (coverage, C);
+          the SWIR plume (D: not calculated; Planck alone shows a band-average plume emissivity of 0.02-0.5 % would
+          equal the stubs, so it needs a sourced hot-gas band model, e.g. NASA SP-3080 or HITEMP).
+Temperature bands: the authentic source is Limbach's L550E operating manual (not public; not searched online by
+          the user's rule). Placed in docs/sources/limbach/, it replaces the Rotax bands in thermal/engine_heat.py.
+Validation within reach: a thermal camera on any running small air-cooled two-stroke (temperature ratios); a CHT
+          thermocouple and EGT probe on an L550E-class engine.
+
+5. SURFACE FINISHES AND EMISSIVITIES (all bands)
+-----------------------------------------------
+Files:    configs/signatures.yaml (rgb / lwir / swir groups), thermal/engine_heat.py (emissivity_ranges)
+Sources:  LWIR emissivities: FLIR ETS3xx user's manual T810252 (2017) Table 21.1, entries with waveband and
+            temperature from Bramson, Wolfe and Zissis, AGEMA measurements (S2) ............................... B
+            skin and tail cone 0.87-0.98, case 0.87-0.98, heat sinks 0.95-0.99, fins 0.36-0.99 (groove cavity,
+            Modest), carburettors 0.04-0.30, flange 0.06-0.95, stubs 0.28-0.95, heads 0.09-0.97
+          MWIR emissivities: the same table's SW (2-5 um) and total-band entries (thermal/engine_heat.
+            emissivity_ranges_mwir, signatures.yaml mwir) .................................................... B
+            skin and tail cone 0.84-0.97, heads 0.09-0.94, heat sinks 0.97-0.98, fins 0.36-0.98, case 0.50-0.95,
+            carburettors 0.04-0.30, flange 0.06-0.67, stubs 0.30-0.95; walls 0.81-0.97, roofs 0.84-0.97
+          Cooled LWIR (7.7-9.3 um): the LW entries, painted lower bounds widened by 0.03 (C).
+          All thermal bands: the LWIR draw's finish quantile (render/signatures.add_thermal_bands).
+          FLIR 12-page note 16-0539: authentic but S3 here (no waveband/temperature); cross-check only.
+          Engine finishes (colours): Limbach datasheet photos (B for the analogue); KAL skin finish and markings:
+            photos P1/P3 (A).
+Not sourced: numerical RGB albedos, roughness and metallic values (C); SWIR reflectances of paints by pigment
+          family (bounds B- as recorded earlier, weights C); heat-sink SWIR reflectance 0.05-0.50 (C, guided by the
+          FLIR table's 2-5 um value for black anodising); propeller emissivity (spec); MWIR and cooled-LWIR ground
+          emissivity 0.80-0.95 / 0.80-0.97, MWIR cloud reflectance 0.05-0.25, hard-negative MWIR emissivities (C).
+
+6. AIRFRAME SKIN TEMPERATURE
+---------------------------
+Files:    configs/signatures.yaml (lwir.target.groups.skin)
+Sources:  convective energy balance at 39-56 m/s with sun, ground and sky radiation (C+, estimate, not measured).
+
+7. SKY, CLOUDS AND ATMOSPHERE
+-----------------------------
+Files:    thermal/sky.py, thermal/atmosphere.py, configs/render.yaml (weather, sky), FYP_Sky_and_Background.md
+Sources:  LWIR clear sky: Idso (1981), Water Resources Research 17:295-304 (S2); slant law Granqvist and
+            Hjortsberg (1981) (S2) ....................................................................... B- humid / C+ dry
+          LWIR water-vapour continuum: Roberts, Selby and Biberman (1976), Applied Optics 15:2085 (S2) ........ B
+          FLIR note 16-0539 (80 % transmission over 100 m at 35 C / 80 % RH) used as a cross-check (S3).
+          Visible/SWIR sky: Blender's Nishita sky model (renderer), sun lamp calibrated on it ([calib]).
+Not sourced: weather probabilities and visibilities, cloud parameters, band extinction ratios, airglow levels,
+          relative-humidity ranges (C); dew-point cap 28 C (C, regional maximum).
+
+7c. SCENE CONDITIONS: LAHORE CLIMATE (2026-10-13)
+-----------------------------------------------
+What:     Each scene takes a real hour of Lahore's station record in its lighting state: air temperature, humidity,
+          weather kind, visibility, cloud cover, station pressure. docs/lahore_climate.md.
+Files:    render/sampling.py (climate_conditions), configs/render.yaml (climate), tools/source_measurements.py
+          (lahore_climate), docs/sources/noaa_isd/lahore_hourly_conditions_2022-08-25_2025-08-24.csv
+Sources:  NOAA NCEI ISD hourly records, LAHORE CITY 416400, 2022-08-25 to 2025-08-24 (the archive's last three
+            years); GSOD daily means 1995-2024 for the trend (S1, the station record) .......................... B
+          WMO present-weather code table 4677 via the ISD format document (smoke 04, haze 05, mist 10, fog 40-49) .. B
+          RGB sky haze from visibility: Blender 4.2 Nishita sky constants (the renderer's own source code) ...... B
+Not sourced: visibility beyond the station's ~5 km reporting ceiling for unobscured hours (drawn up to 15 km, C);
+          oktas -> procedural cloud-mask coverage (oktas / 8, C); rain rendered as haze (C).
+
+7a. THERMAL-BAND ATMOSPHERE (LWIR uncooled, LWIR cooled, MWIR; 2026-10-13)
+------------------------------------------------------------------------
+What:     Layered clear air above the camera from the scene's air temperature and humidity: sky radiance by
+          elevation, path transmittance (terrain, each object, the plume), direct sun, MWIR scattered sky.
+          docs/thermal_bands.md.
+Files:    thermal/gas_bands.py, thermal/atmosphere_bands.py, configs/render.yaml (thermal_atmosphere,
+          weather.band_ratio_thermal), render/thermal.py, data/composite.py, tests/test_gas_bands.py,
+          tests/test_atmosphere_bands.py
+Sources:  Narrow-band model and H2O / CO2 / CO band data: NASA SP-3080 (Ludwig et al. 1973, S2) via NIST RADCAL
+            (S2); checked against the handbook's worked example and Tables A2-29 / A2-33 / A2-2 / A2-3 ......... B
+          N2O, CH4, air CO: HITRAN2020 line lists (Gordon et al. 2022, S2) -> narrow-band tables ............. B
+          Water-vapour continuum: MT_CKD 4.3 (AER, S2), up to 1.44 x for Roberts et al. 1976 (S2) ............ B
+          N2 collision-induced 4.3 um band: Lafferty et al. 1996 via AER LBLRTM (S2) ............................. B
+          Temperature lapse and vapour scale height: NOAA IGRA 2 radiosondes, Lahore City / Patiala / New Delhi,
+            Oct 2023 - Sep 2026 (S1 measurements, regional) .............................................. B
+          CO2, N2O, CH4: NOAA GML global means 2023-2026 (S1) .................................................... B
+          Direct sun: ASTM E490 (S1); MWIR window check: ASTM G173-03 direct beam, model within 4 % (S1) ......... B
+            (read from docs/sources/astm/e490_am0_model_grid.csv, the E490 table on the model's 5 cm-1 grid)
+          US Standard Atmosphere 1976 Table 4 (S1): G173's own atmosphere in the check.
+          Idso (1981) (S2): the 8-14 um flux emittance the scene's window absorber can reach (gap 0.04-0.15) .. C+
+Not sourced: tropopause 16 km, CO 150-3000 ppb, the urban CO2 and regional CH4 tops, aerosol omega0 and g, the
+          cooled-LWIR and MWIR band ratios, the window absorber's 1.5 km height (C); surface pressure 988 hPa (C+,
+          ISA at Lahore's elevation until the climate update).
+
+7b. EXHAUST PLUME (all thermal bands)
+------------------------------------
+What:     The four exhaust jets, cut at the pusher propeller's plane, rendered analytically into the thermal
+          layers (not labelled). docs/thermal_bands.md section 5.
+Files:    thermal/plume.py, render/plume_layer.py, configs/signatures.yaml (plume), tests/test_plume.py
+Sources:  Exhaust chemistry: oxygen balance and the water-gas equilibrium K = 3.5, Heywood (1988) sec. 4.9.1 (S2) . B
+          Equivalence ratio 1.0-1.2 and short-circuiting 15-50 %: [AUSSERER] (S2) ................................ B
+          Exit temperature and mass flow: thermal/engine_heat.py (component 4) ............................. B / C+
+          Gas radiation: the narrow-band model of 7a ............................................................... B
+Not sourced: jet mixing constant K 5-20 and spread 0.08-0.11 around Pope (2000)'s round jet, the cut at the
+          propeller plane, independent and unoccluded jets (C / C+).
+
+4a. NIGHT RGB GLOW OF HOT PARTS
+------------------------------
+What:     Hot metal glows: (1 - albedo) x Planck radiance in each colour band, added to the RGB material, from
+          370 C (below it < 0.1 x the faintest night sky). Only the exhaust stubs get that hot; it shows over the
+          night sky in ~2.6 % of all scenes (docs/reference/engine/data/night_glow.csv).
+Files:    render/signatures.py (rgb_self_emission, add_rgb_glow_draw), render/rgb.py, render/scene.py,
+          configs/signatures.yaml rgb.hot_emission, tests/test_glow_and_glints.py
+Sources:  Planck's law and Kirchhoff (exact); render-unit calibration as SWIR: the renderer's sun disc / the
+            direct sun in the same band from the ASTM G173-03 standard spectrum (NREL's table, S1):
+            r 125.9, g 133.8, b 115.1 W/m2 (docs/sources/astm/band_integrals.csv) ............................ B
+          Temperatures: the RGB pass's own draw from the derived LWIR ranges (component 4).
+Not sourced: the colour camera's bands r 0.60-0.70, g 0.50-0.60, b 0.40-0.50 um (C+, an IR-cut colour camera);
+          the renderer's sun-disc calibration ([calib]).
+
+4b. LWIR SUN GLINTS
+-------------------
+What:     The specular reflection of the sun's own 8-14 um radiance by every surface with emissivity < 1:
+          (1 - eps) x f_s x E_sun / (pi sigma^2) x a Gaussian lobe around the mirror direction, evaluated in the
+          emission-only shader. FLIR's note: glints read hundreds of degrees too hot; here a bare-aluminium glint
+          reads +16 K (median scene) to +429 K (99th percentile) too hot at the mirror angle
+          (docs/reference/engine/data/sun_glint.csv).
+Files:    render/signatures.py (sun_glint_params, glint_radiance), render/lwir.py (_glint), render/sampling.py,
+          configs/signatures.yaml lwir.sun_glint, tests/test_glow_and_glints.py
+Sources:  E_sun above the atmosphere 1.261 W/m2 in 8-14 um: ASTM E490 standard spectrum (NREL's table, S1) ...... B
+          Sun's angular radius 0.2665 deg: IAU 2015 Resolution B3 radius / IAU 2012 B2 au (S1) ................ B
+          Transmittance (1 - eps_z)^(1 / sin el): the scene's Idso (1981) clear sky (component 7) ........ B- / C+
+          FLIR note 16-0539 p. 6: sun glints read hundreds of degrees too hot (S3, qualitative motivation).
+Not sourced: lobe width 0.5-6 deg and specular share 0.3-1.0 (C; validate with LWIR images of bare metal and
+          painted panels swept through the sun's mirror angle).
+Checks:   tests/test_glow_and_glints.py (physics, flux conservation, calibration against the saved standards);
+          tools/check_glow_glint_blender.py (the Blender shaders reproduce glint_radiance to 0.005 % and the
+          glow to 0.03 %; docs/reference/engine/data/blender_glow_glint_check.json).
+
+8. SENSORS, CAMERAS AND NOISE
+-----------------------------
+What:     Four cameras (CLAUDE.md sensor set rule; SWIR deferred): uncooled LWIR (student, sets each scene's output
+          grid), cooled LWIR and MWIR (teacher), RGB (student and teacher), on one mount. Each camera's format, lens,
+          band, NETD or read noise and frame rate are drawn per scene; the field of view follows from format and
+          lens, 2 atan(N p / 2 f); the loader emulates each camera on the grid (pixel size, coverage, own noise).
+          docs/camera_models.md explains it all.
+Files:    configs/sensors.yaml (cameras, camera_pipelines), render/cameras.py, data/camera_emulation.py, data/dataset.py,
+          noise/lwir_fpn.py, noise/rgb_noise.py, noise/isp.py, thermal/planck_lut.py (band_lut), tests/test_cameras.py,
+          tests/test_sensor_noise.py;
+          docs/sources/cameras/ (documents, page images, readings.json with page, quote and value)
+Sources:  Camera and detector manufacturer documents (S1 for each product, S2 for its class), 82 readings:
+            uncooled LWIR: Teledyne FLIR Boson datasheet (formats, 12 um, 8-14 um, NETD by grade, 60 / 8.6 Hz,
+            8 ms time constant, lens table, temporal row/column noise Table 13), Boson+ (<= 20 mK), Tau 2 (17 um,
+            7.5-13.5 um, 7.5-100 mm lenses), Leonardo DRS Tenum 640 (10 um), Exosens Dione 1280 (1280x1024) .... B
+            cooled LWIR: Lynred Scorpio LW (MCT 640x512 15 um, 7.7-9.3 um, 22 / 10 mK, 13.6 Me-), SCD Pelican-D
+            LW (T2SL, 9.3 um cut-off, 15 mK, < 0.04 % RNU, QE > 50 %, 6 Me-, F/1.2-2.7) ......................... B
+            MWIR: Lynred Scorpio MW (MCT 3.7-4.8 um, 18 mK), Lynred Daphnis-HD MW (1280x720 10 um, 20 mK), SCD Mini
+            Blackbird (HOT XBn 1280x1024 10 um, 3.6-4.2 um, < 25 mK), SCD Pelican-D (InSb 3.6-4.9 um, 20 mK, F/5.5),
+            MKS/Ophir SupIR 15-300 mm MWIR zoom (36.4-1.8 deg on 640x15 um) .................................. B
+            RGB: Sony IMX327 product information (1/2.8", 2.9 um, 1920x1080, 60 fps), Sony FCB-EV7520 technical
+            manual (30x zoom 4.3-129 mm, 63.7-2.3 deg, 720p outputs) ............................................ B
+          Field-of-view formula (pinhole geometry) reproduces the datasheets within their lens distortion ...... physics
+          Cooled integration time from capacity, fill, f-number and QE; residual fixed pattern in kelvin from the
+            0.04 % RNU and the band's photon-radiance slope ...................................................... C+
+          Camera output processing (2026-10-17; docs/sensor_noise.md; noise/isp.py, noise/rgb_noise.apply_camera,
+          noise/lwir_fpn.apply_camera; configs/sensors.yaml camera_pipelines, loader-only; off for training since the
+          verification of 2026-10-17, tools/noise_ablation.py):
+            uncooled output taps: 16-bit pipeline, AGC to 8 bits for display, output pre-AGC, post-AGC or post-zoom;
+              HEQ gives the dominant background most grey levels (product specification pp. 27, 30, 53) (S1) .......... B
+            uncooled: Boson signal pipeline, filters on by default, low-frequency shading and INU types, defects
+              < 1-2 % replaced from neighbours, histogram AGC with information-based weighting, plateau 7 %, max gain
+              1.38, linear 20 %, ACE 0.97, DDE 0.95 (product specification secs. 5, 6.6, 6.8, 11.3, 11.4); Tau 2 HEQ (S1) . B
+            cooled LWIR / MWIR: operability 99.5-99.8 %, core defect replacement, AGC / DRC, noise reduction (S1) ...... B
+            RGB: IMX327 10/12-bit ADC and Bayer mosaic; FCB-EV7520 gain to 50 dB (4x in high sensitivity), noise
+              reduction levels 1-5 acting with gain, edge enhancement 16 steps, gamma modes (S1) ....................... B
+          Noise models and their effect (docs/sources/sensor_noise/readings.json):
+            RGB raw noise: Wei et al., CVPR 2020 / TPAMI 2021 (Poisson shot, Tukey-lambda read, row, quantisation;
+              as good as real paired data) (S2); bilinear demosaicking: Brooks et al., CVPR 2019 (S2) ............... B
+            Camera effects raise real-data detection +4.3 to +7.3 AP: Carlson et al., ECCV-W 2018 (S2); hand-chosen
+              ranges can also lower it (-2.1 AP on one dataset), learned ranges did not: Carlson et al., RA-L 2019 (S2) ... B
+            Alternatives compared: real dark-frame sampling within 0.13 dB of the physics model in low light, calibrated
+              physics beats learned noise models (Zhang et al., ICCV 2021); Noise Flow (Abdelhamed et al., ICCV 2019) (S2) .. B
+            LWIR column fixed pattern, cubic per column: He et al., Applied Optics 2018 (S2); smooth structured
+              offset: Saragadam et al., ICCV-W 2021 (S2); few blinking pixels on a cooled array, caught by defect
+              detection: Ribet-Mohamed et al., SPIE 2019 (S2) ....................................................... B
+          SWIR noise model (deferred): Jiang, Wang and Zheng, ICCVW 2025 (S2).
+Not sourced: cooled-LWIR zoom range (1-25 deg, C: no cooled-LWIR zoom datasheet found), MWIR NETD lower edge
+          12 mK (C), RGB read noise 1-3 e- (C; Sony publishes sensitivity), MWIR QE (C), weights of formats,
+          detectors and frame rates (C), the rig geometry (co-boresighted, zoom to cover the grid, C), gains, full
+          well of the RGB model, uncooled FPN amplitudes and AGC percentiles (C); in the camera processing, the
+          sizes of shading, non-uniformities, column non-linearity, filter attenuation, missed defects and blinking
+          pixels, the spread of the AGC settings around the defaults, the noise-reduction and sharpening strengths
+          and the read-noise tail range (C).
+Open:     a real-camera check of the [C] ranges (docs/sensor_noise.md, last section); video compression, temporal
+          filters and the RGB camera's night monochrome mode are not modelled.
+
+9. SCENES, FLIGHT ENVELOPE AND HARD NEGATIVES
+---------------------------------------------
+Files:    configs/render.yaml, render/scene.py, render/sampling.py, render/sequence.py, render/negatives.py
+Sources:  scene counts, splits, families, camera height, sun ranges, clip and samples: [spec].
+          Airspeed 39-56 m/s and altitude up to 5,000 m: spec plus a press report (S3, as recorded in
+          render.yaml); not re-sourced, because the project does not research the target online.
+          Air temperature -20..+50 C: [spec].
+Not sourced: attitude ranges, negative-class shares, sizes and speeds of birds, kites, aircraft and UAVs, LWIR
+          temperatures of negatives (C or spec table).
+
+10. RENDERING PIPELINE
+----------------------
+Files:    target/build_target.py, render/*.py, thermal/planck_lut.py, render/rotation_blur.py
+Sources:  Planck's law and CODATA constants (exact); Kirchhoff (exact); the LWIR apparent radiance
+          L = eps L(T) + (1 - eps) L_env (physics) plus the sun glint (component 4b); the RGB glow of hot parts
+          (component 4a); rotation blur as the exact time average of the blade coverage (geometry); motion blur
+          from speed and exposure (geometry). SWIR in-band sun 250 W/m2: ASTM G173-03 direct 249.6 W/m2 (B).
+          Render settings (samples, bounces, supersampling): [spec] and [calib].
+
+11. DATASET, TRAINING AND EVALUATION
+------------------------------------
+Files:    data/*.py, models/*.py, train/*.py, eval/*.py, configs/train.yaml, configs/m1.yaml, tools/m1*.py
+Sources:  detector widths sized like YOLOv8n (design reference); CenterNet-style heads in the M1 pilot (design);
+          normalised Wasserstein distance for tiny objects: Wang et al. 2021 (arXiv:2110.13389) and Xu et al. 2022
+          (arXiv:2206.13996) (S2/S3: preprints); metrics follow COCO-style AP and recall definitions.
+          Splits, bins, sizes and training schedules: [spec] and design choices (C).
+          Privileged teacher and distillation (docs/privileged_teacher_case.md; docs/sources/privileged/, 12 papers,
+          readings checked by privileged_readings()): learning using privileged information (Vapnik and Izmailov
+          2015), generalized distillation (Lopez-Paz et al. 2016), the statistical view (Menon et al. 2021); measured
+          privileged gains with and without same-size controls (Hoffman 2016, Xu 2017, Garcia 2018, Lou 2026); the
+          caveats (Xue 2023, Furlanello 2018, Yuan 2020, Stanton 2021, Cho 2019) (S2) ............................ B
+          This project's signal-regime census of the four cameras (tools/privileged_census.py,
+          docs/reference/privileged/data/; a measurement on the synthetic scenes, not a source) .................. own
+          Methods for better detection (docs/detection_gain_plan.md; docs/sources/detection_methods/, 9 papers,
+          readings checked by detection_method_readings()): high-resolution-teacher distillation (Qi 2021),
+          LiDAR-to-camera distillation (UniDistill 2023, SimDistill 2024, MemDistill 2025), multi-frame infrared
+          small-target detection (MOCID 2025), small-target losses (MSHNet 2024), sliced inference (SAHI 2022),
+          benchmark variance (Bouthillier 2021), tiny thermal UAV tracking (CST Anti-UAV 2025) (S2) ........... B
+Note:     these are methods, not physical values; their correctness is checked by tests (tests/test_metrics.py,
+          tests/test_dataset.py, tests/test_detector.py and others), not by sources.
+
+12. LIVE DEMO APP
+-----------------
+Files:    app/, RUN_APP.bat
+Sources:  none needed (presentation of the model's outputs).
+
+
+WHAT IS STILL OPEN (no authentic source found)
+----------------------------------------------
+- The KAL's own engine operating temperatures and installation details (whether its heat sinks are fitted as on
+  the L550E, whether the MD-550 copies the L550E's fins, stub finish): not public; the analogue's are used.
+  Limbach's L550E operating manual would replace the Rotax temperature bands if supplied.
+- The SWIR emission of the exhaust plume (needs a sourced hot-gas band model).
+- The glint lobe width and specular share; the colour camera's bands for the night glow.
+- Part-to-part temperature fractions of the engine, installation air-speed factors, exhaust pulsation factor.
+- Flight envelope figures beyond the spec and the press report (not researched online by rule).
+- Numerical RGB/SWIR material values of most surfaces.
+Each is labelled C/C+ in its file with a validation note.
+
+RULES (CLAUDE.md)
+-----------------
+- Look up authentic sources first; estimate only what has none, with physics, a covering range and a grade.
+- Judge each source's tier and its relevance to this context; do not use weak sources.
+- Save every authentic source used: the document, the pages cited, the images and the digitised data, under
+  docs/sources/<source>/, registered in docs/sources/README.md with URL, date and SHA-256; keep the tool that
+  read numbers off it (tools/source_measurements.py) so the reading can be repeated.
+- The spec is not evidence; ranges taken from it are not sourced until traced.

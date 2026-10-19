@@ -1,0 +1,125 @@
+{
+ "ef_front": {
+  "source": "[L550EF-DS] p. 2 front view",
+  "scale_px_per_mm": 1.7046,
+  "scale_check": {
+   "width_392": 1.7066,
+   "height_363": 1.7025
+  },
+  "fin_pitch_mm": 6.55,
+  "fin_face_spacing_mm": 2.64,
+  "outermost_fin_mm": 143.0,
+  "rows": [
+   {
+    "z_mm": 45.0,
+    "centres_mm": [
+     143.0,
+     129.65,
+     122.76
+    ],
+    "face_spacing_mm": [
+     2.64,
+     2.35,
+     2.64
+    ]
+   },
+   {
+    "z_mm": 50.0,
+    "centres_mm": [
+     142.71,
+     135.81,
+     129.8,
+     122.76
+    ],
+    "face_spacing_mm": [
+     2.64,
+     2.35,
+     2.64,
+     2.64
+    ]
+   },
+   {
+    "z_mm": 55.0,
+    "centres_mm": [
+     142.56,
+     135.81,
+     129.8,
+     122.76,
+     116.45
+    ],
+    "face_spacing_mm": [
+     2.93,
+     2.35,
+     2.64,
+     2.64,
+     2.35
+    ]
+   }
+  ]
+ },
+ "ef_side": {
+  "source": "[L550EF-DS] p. 2 side view",
+  "scale_px_per_mm": 1.5754,
+  "outline_edges_px": [
+   129.5,
+   149.0,
+   159.0,
+   177.5,
+   226.5,
+   235.0,
+   241.5,
+   253.5,
+   268.0,
+   281.5,
+   291.0,
+   301.0,
+   313.0,
+   321.5,
+   331.5,
+   341.0,
+   355.0,
+   377.0,
+   388.5,
+   440.5,
+   459.0,
+   473.0
+  ],
+  "cylinder_end_width_mm": 109.0,
+  "cylinder_pitch_mm": 109.0
+ },
+ "e_front": {
+  "source": "[L550E-DS] p. 2 front view",
+  "scale_px_per_mm": 1.5878,
+  "width_lines_mm": [
+   410.0,
+   363.4,
+   313.6,
+   177.6
+  ],
+  "stack_od_mm": 31.5,
+  "stack_centre_mm": 88.5,
+  "vertical_dims_mm": [
+   [
+    -281.5,
+    -219.2
+   ],
+   [
+    -139.2,
+    93.8
+   ],
+   [
+    -54.2,
+    59.8
+   ],
+   [
+    0.0,
+    139.8
+   ],
+   [
+    0.0,
+    162.5
+   ]
+  ],
+  "note": "z from the crank axis, + towards the exhaust stacks"
+ }
+}

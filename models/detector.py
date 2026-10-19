@@ -25,7 +25,7 @@ import torch.nn as nn
 from models.fusion import ModalityFusion
 from models.stems import SPPF, BandStem, C2f, Conv
 
-BAND_CHANNELS = {"rgb": 3, "lwir": 1, "swir": 1}
+BAND_CHANNELS = {"rgb": 3, "lwir": 1, "lwir_cooled": 1, "mwir": 1, "swir": 1}   # SWIR deferred
 
 
 class Flat(NamedTuple):

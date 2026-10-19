@@ -1,0 +1,25 @@
+# Milestone 1 experiment overlay: the four-sensor preliminary evaluation (docs/m1_v2.md, "Four-sensor revision").
+# Merged over render.yaml, sensors.yaml and signatures.yaml when KAL_CONFIG_OVERLAY=configs/m1.yaml (render/sampling.py,
+# load_configs). Nested dicts merge key by key, so categories that M1 leaves out are set to 0 explicitly.
+# target.yaml and the protected flight settings (airspeed, min_agl_m, max_altitude_m) are not touched.
+# CLAUDE.md sensor set rule (2026-10-12): the four sensors on the camera rig of configs/sensors.yaml (the uncooled LWIR
+# camera sets the grid; the zoom cameras cover what their lenses allow), Lahore conditions (render.yaml climate and
+# thermal_atmosphere, both left on). M1 narrows only what it studies: open sky, day and night, no hard negatives.
+name: m1-four-sensor
+notes: open sky, day and night, RGB + LWIR uncooled + LWIR cooled + MWIR on the camera rig, Lahore climate, no hard negatives
+
+render:
+  dataset:
+    n_scenes: 600                          # proposal: 600 (minimum 200)
+    splits: {train: 0.60, val: 0.10, test: 0.30}   # larger test share: 180 test scenes instead of 90
+    families: {open_sky: 1.0, horizon: 0.0}
+    lighting: {day: 0.5, dusk: 0.0, night: 0.5}
+  render:
+    engine_samples: 128                    # open sky only; render noise ~0.3x sensor noise (measured on this renderer)
+  camera:
+    look_elevation_deg: {open_sky: [5.0, 25.0]}    # long-range approaches sit low in the sky; a wide grid starts higher
+                                                   # (half its vertical field + 1 deg, render/sampling.py)
+  negatives:
+    count: [0, 0]                          # hard negatives are M2
+  weather:
+    resample_in_training: 0.0              # each scene keeps its station hour's visibility (its sky is rendered with it)

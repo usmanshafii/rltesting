@@ -3,7 +3,7 @@
     python train/train_student.py --data out/dataset --teacher out/runs/teacher/best.pt
 
 Same architecture, data and schedule as the rgb_lwir baseline, so the difference between the two is
-the effect of distilling from the SWIR-trained teacher.
+the effect of distilling from the four-sensor teacher (RGB + LWIR uncooled + LWIR cooled + MWIR).
 """
 import os
 import sys

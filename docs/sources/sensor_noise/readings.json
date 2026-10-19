@@ -1,0 +1,516 @@
+{
+ "note": "Noise and camera-effect models used by noise/isp.py, noise/rgb_noise.py and noise/lwir_fpn.py, with the quotes they come from (tools/source_measurements.sensor_noise_readings() checks each against the saved copy). Documents are git-ignored copies; this file is committed. docs/sensor_noise.md uses them.",
+ "retrieved": "2026-10-17",
+ "documents": {
+  "WEI2020-ELD": {
+   "file": "Wei2020_ELD_CVPR.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2020 oral)",
+   "title": "Wei, Fu, Yang, Huang: A Physics-based Noise Formation Model for Extreme Low-light Raw Denoising. CVPR 2020, pp. 2758-2767",
+   "url": "https://openaccess.thecvf.com/content_CVPR_2020/papers/Wei_A_Physics-Based_Noise_Formation_Model_for_Extreme_Low-Light_Raw_Denoising_CVPR_2020_paper.pdf",
+   "sha256": "a2e107aba59e62bde7cbe04d3b93e22018422fd4d81ad374ce2597e81393ae73",
+   "retrieved": "2026-10-17",
+   "pages": [
+    4,
+    3,
+    5
+   ]
+  },
+  "WEI2021-ELD": {
+   "file": "Wei2021_ELD_TPAMI_arXiv2108.02158.pdf",
+   "tier": "S2 (peer-reviewed, IEEE TPAMI 2021; arXiv copy)",
+   "title": "Wei, Fu, Zheng, Yang: Physics-based Noise Modeling for Extreme Low-light Photography. IEEE TPAMI 44(11), 2021",
+   "url": "https://arxiv.org/pdf/2108.02158",
+   "sha256": "1edb42e1fcdb956613bbf5796163e0cef2856c8812b64a6a128665b97b2f55de",
+   "retrieved": "2026-10-17",
+   "pages": [
+    16
+   ]
+  },
+  "BROOKS2019": {
+   "file": "Brooks2019_Unprocessing_CVPR.pdf",
+   "tier": "S2 (peer-reviewed, CVPR 2019)",
+   "title": "Brooks, Mildenhall, Xue, Chen, Sharlet, Barron: Unprocessing Images for Learned Raw Denoising. CVPR 2019",
+   "url": "https://openaccess.thecvf.com/content_CVPR_2019/papers/Brooks_Unprocessing_Images_for_Learned_Raw_Denoising_CVPR_2019_paper.pdf",
+   "sha256": "2e155c462f5be2fe740a112df1eda048ea1cbdc1df2e7d5a27f2b7a9408968dd",
+   "retrieved": "2026-10-17",
+   "pages": [
+    4
+   ]
+  },
+  "CARLSON2018": {
+   "file": "Carlson2018_CameraEffects_ECCVW_arXiv1803.07721v5.pdf",
+   "tier": "S2 (peer-reviewed, ECCV 2018 Workshops; arXiv v5)",
+   "title": "Carlson, Skinner, Vasudevan, Johnson-Roberson: Modeling Camera Effects to Improve Visual Learning from Synthetic Data. ECCV Workshops 2018",
+   "url": "https://arxiv.org/pdf/1803.07721v5",
+   "sha256": "5907ad53f439b73febb63f2658ecd6baa5a80ebff05f2dd63a0087187a92ed8a",
+   "retrieved": "2026-10-17",
+   "pages": [
+    10,
+    11,
+    12,
+    9,
+    6
+   ]
+  },
+  "CARLSON2019": {
+   "file": "Carlson2019_SensorTransfer_RAL_arXiv1809.06256.pdf",
+   "tier": "S2 (peer-reviewed, IEEE RA-L 2019; arXiv copy)",
+   "title": "Carlson, Skinner, Vasudevan, Johnson-Roberson: Sensor Transfer: Learning Optimal Sensor Effect Image Augmentation for Sim-to-Real Domain Adaptation. IEEE RA-L 4(3), 2019",
+   "url": "https://arxiv.org/pdf/1809.06256",
+   "sha256": "3f4a4f98f5050a91cae0ca4e314ad02c598fddd6307dde76f511412365926e61",
+   "retrieved": "2026-10-17",
+   "pages": [
+    7
+   ]
+  },
+  "HE2018": {
+   "file": "He2018_ColumnFPN_AppliedOptics_57-18-D155.pdf",
+   "tier": "S2 (peer-reviewed, Applied Optics 57(18) D155, 2018; copy hosted by Linkoping University)",
+   "title": "He, Cao, Dong, Yang, Cao, Tisse: Single-image-based nonuniformity correction of uncooled long-wave infrared detectors: a deep-learning approach. Applied Optics 57(18), D155-D164, 2018",
+   "url": "https://www.cvl.isy.liu.se/education/masters-thesis/proposals/ao-57-18-D155.pdf",
+   "sha256": "e0c18d091305912d7e714dca93cabab412220d4a1c6c7229a6f3cbbee0b56c15",
+   "retrieved": "2026-10-17",
+   "pages": [
+    4,
+    6,
+    2,
+    3
+   ]
+  },
+  "SARAGADAM2021": {
+   "file": "Saragadam2021_ThermalPhysics_ICCVW_arXiv2108.07973.pdf",
+   "tier": "S2 (peer-reviewed, ICCV 2021 Workshops (LCI); arXiv copy)",
+   "title": "Saragadam, Dave, Veeraraghavan, Baraniuk: Thermal Image Processing via Physics-Inspired Deep Networks. ICCV Workshops 2021",
+   "url": "https://arxiv.org/pdf/2108.07973",
+   "sha256": "e928951ed6bdab39e6f8f76d7036dce04199d11a1ae29f3f33d304cfe40812b4",
+   "retrieved": "2026-10-17",
+   "pages": [
+    3,
+    4
+   ]
+  },
+  "RIBET2019": {
+   "file": "Ribet-Mohamed2019_T2SL_RTS_HAL-02162731_record.txt",
+   "tier": "S2 (SPIE Proc. 11002, 2019; abstract of the HAL record)",
+   "title": "Ribet-Mohamed et al.: Residual fixed pattern noise and random telegraph signal noise of a MWIR T2SL focal plane array. Infrared Technology and Applications XLV, SPIE 2019",
+   "url": "https://hal.science/hal-02162731",
+   "sha256": "ca52c0bb42c637232c66365b4a6225c9a7049a4fd68f5a7040068b50a7107889",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  },
+  "ZHANG2021-SFRN": {
+   "file": "Zhang2021_SFRN_RealNoiseSampling_ICCV_arXiv2110.04756.pdf",
+   "tier": "S2 (peer-reviewed, ICCV 2021; arXiv copy)",
+   "title": "Zhang, Qin, Wang, Li: Rethinking Noise Synthesis and Modeling in Raw Denoising. ICCV 2021",
+   "url": "https://arxiv.org/pdf/2110.04756",
+   "sha256": "118804ee91ecc0b1b63e2371e23cbe838b5d7f594663fc8a955321b17bf80832",
+   "retrieved": "2026-10-17",
+   "pages": [
+    4,
+    2
+   ]
+  },
+  "ABDELHAMED2019-NF": {
+   "file": "Abdelhamed2019_NoiseFlow_ICCV.pdf",
+   "tier": "S2 (peer-reviewed, ICCV 2019)",
+   "title": "Abdelhamed, Brubaker, Brown: Noise Flow: Noise Modeling with Conditional Normalizing Flows. ICCV 2019",
+   "url": "https://openaccess.thecvf.com/content_ICCV_2019/papers/Abdelhamed_Noise_Flow_Noise_Modeling_With_Conditional_Normalizing_Flows_ICCV_2019_paper.pdf",
+   "sha256": "828a65a3fb1d20255b10c783f811ba01c38f20eaae0da44e0f8bca6c2bbc845c",
+   "retrieved": "2026-10-17",
+   "pages": [
+    1
+   ]
+  }
+ },
+ "readings": [
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 4,
+   "quote": "N = KNp + Nread + Nr + Nq",
+   "values": {
+    "terms": [
+     "photon shot (Poisson)",
+     "read (Tukey lambda)",
+     "row",
+     "quantisation"
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 3,
+   "quote": "we model the read noise by a Tukey lambda distribution",
+   "values": {
+    "read_noise": "Tukey lambda"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 4,
+   "quote": "or derive a heavy-tailed distribution if λ < 0.14",
+   "values": {
+    "tukey_lambda_gaussian": 0.14
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 5,
+   "quote": "Paired real data 38.60 / 0.912 37.08 / 0.886 36.29 / 0.874",
+   "values": {
+    "psnr_db_real_paired": [
+     38.6,
+     37.08,
+     36.29
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 5,
+   "quote": "G 36.10 / 0.800 31.87 / 0.640 30.99 / 0.624",
+   "values": {
+    "psnr_db_gaussian_read_only": [
+     36.1,
+     31.87,
+     30.99
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 5,
+   "quote": "G+P 37.08 / 0.839 32.85 / 0.697 31.87 / 0.665",
+   "values": {
+    "psnr_db_heteroscedastic_gaussian": [
+     37.08,
+     32.85,
+     31.87
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2020-ELD",
+   "page": 5,
+   "quote": "G∗+P ∗+R+U 39.27 / 0.914 37.13 / 0.883 36.30 / 0.872",
+   "values": {
+    "psnr_db_full_model": [
+     39.27,
+     37.13,
+     36.3
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2021-ELD",
+   "page": 16,
+   "quote": "Ours 0.086 8.49 3.434",
+   "values": {
+    "downstream_detection_objects_per_image": 3.434
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "WEI2021-ELD",
+   "page": 16,
+   "quote": "Paired real data 0.091 10.36 3.233",
+   "values": {
+    "downstream_detection_objects_per_image_real_paired": 3.233
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "BROOKS2019",
+   "page": 4,
+   "quote": "follows the convention of using bilinear interpolation to perform demosaicing, which we adopt",
+   "values": {
+    "demosaic": "bilinear"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 10,
+   "quote": "Full Prop. Method 62.52 ↑4.27",
+   "values": {
+    "ap_car_gain_vkitti_full": 4.27
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 10,
+   "quote": "Full Prop. Method 55.85 ↑6.05",
+   "values": {
+    "ap_car_gain_gta_full": 6.05
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 10,
+   "quote": "2975 Prop. Method 61.88 ↑7.28",
+   "values": {
+    "ap_car_gain_vkitti_2975": 7.28
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 11,
+   "quote": "Additive Gaussian Noise 56.98 ↓1.27",
+   "values": {
+    "ap_car_gain_additive_gaussian_vkitti": -1.27
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 11,
+   "quote": "Additive Gaussian Noise 52.01 ↑2.21",
+   "values": {
+    "ap_car_gain_additive_gaussian_gta": 2.21
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 12,
+   "quote": "2975 Prop. Method Sensor Noise 58.60 ↑4.00",
+   "values": {
+    "ap_car_gain_sensor_noise_only_vkitti": 4.0
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 12,
+   "quote": "2975 Prop. Method Sensor Noise 48.09 ↑1.26",
+   "values": {
+    "ap_car_gain_sensor_noise_only_gta": 1.26
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 9,
+   "quote": "we are able to outperform the networks trained on over 20000 unaugmented images with a tiny subset of 2975 images augmented with using our approach",
+   "values": {
+    "augmented_2975_beat_unaugmented_images": 20000
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2018",
+   "page": 6,
+   "quote": "Iaug. = φcolor(φnoise(φexposure(φblur(φchrom.ab.(I)))))",
+   "values": {
+    "effects": [
+     "chromatic aberration",
+     "blur",
+     "exposure",
+     "noise",
+     "colour"
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "HE2018",
+   "page": 4,
+   "quote": "are randomly assigned to values in the interval between −0.1 and 0.1",
+   "values": {
+    "column_poly_coefficient_range": [
+     -0.1,
+     0.1
+    ]
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "HE2018",
+   "page": 6,
+   "quote": "similar when M is larger than 3",
+   "values": {
+    "column_poly_degree": 3
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "HE2018",
+   "page": 2,
+   "quote": "it is the first work revealing that NUC model trained using simulated data can be successfully employed to handle real- captured infrared images with column FPN",
+   "values": {
+    "sim_to_real": "column FPN model trained on simulation works on real images"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "HE2018",
+   "page": 3,
+   "quote": "its performance drops significantly when applied to real-captured infrared images with column FPN",
+   "values": {
+    "offset_only_model_on_real_images": "drops significantly (SNRCNN, trained with a simple offset model)"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "HE2018",
+   "page": 3,
+   "quote": "A simple offset model is used to simulate column FPN in [14]",
+   "values": {
+    "offset_model": "Kuang et al. 2017 [14]"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "SARAGADAM2021",
+   "page": 3,
+   "quote": "We instead model the offset term as a spatially smoothly varying signal",
+   "values": {
+    "offset": "spatially smooth"
+   }
+  },
+  {
+   "sensor": "lwir_uncooled",
+   "doc": "SARAGADAM2021",
+   "page": 4,
+   "quote": "the temporal autocorrelation gracefully reduces from 1.0 to 0.6 over 500 frames, with value being greater than 0.8 for up to 20 frames",
+   "values": {
+    "nonuniformity_autocorrelation": {
+     "20_frames": 0.8,
+     "500_frames": 0.6
+    }
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "RIBET2019",
+   "page": 1,
+   "quote": "RTS noise with only a few blinking pixels",
+   "values": {
+    "rts_pixels": "only a few"
+   }
+  },
+  {
+   "sensor": "mwir",
+   "doc": "RIBET2019",
+   "page": 1,
+   "quote": "the RTS pixels having an effect on the RFPN are fully detected by the algorithm used to rule out defective pixels before calculating RFPN",
+   "values": {
+    "rts_pixels_caught_by_defect_detection": true
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "ZHANG2021-SFRN",
+   "page": 4,
+   "quote": "P-G [14] 53.79 / 0.997 46.96 / 0.926 43.84 / 0.856",
+   "values": {
+    "psnr_db_poisson_gaussian": [
+     53.79,
+     46.96,
+     43.84
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "ZHANG2021-SFRN",
+   "page": 4,
+   "quote": "ELD [29] 53.43 / 0.997 47.77 / 0.970 45.46 / 0.940",
+   "values": {
+    "psnr_db_eld": [
+     53.43,
+     47.77,
+     45.46
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "ZHANG2021-SFRN",
+   "page": 4,
+   "quote": "PAP + HB 53.92 / 0.997 47.90 / 0.973 45.47 / 0.940",
+   "values": {
+    "psnr_db_real_dark_frame_sampling": [
+     53.92,
+     47.9,
+     45.47
+    ]
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "ZHANG2021-SFRN",
+   "page": 2,
+   "quote": "After careful cali- bration, the physics-based methods outperform the DNN- based methods.",
+   "values": {
+    "learned_vs_physics": "calibrated physics models beat learned ones"
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "ABDELHAMED2019-NF",
+   "page": 1,
+   "quote": "0.42 nats/pixel improvement",
+   "values": {
+    "noise_flow_nll_gain_nats_per_pixel": 0.42
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2019",
+   "page": 7,
+   "quote": "Carlson et al. [9] 48.94 ↓-2.07",
+   "values": {
+    "ap_car_gain_hand_ranges_kitti": -2.07
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2019",
+   "page": 7,
+   "quote": "Carlson et al. [9] 34.89 ↑+4.76",
+   "values": {
+    "ap_car_gain_hand_ranges_cityscapes": 4.76
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2019",
+   "page": 7,
+   "quote": "Proposed Method 52.67 ↑+1.66",
+   "values": {
+    "ap_car_gain_learned_ranges_kitti": 1.66
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2019",
+   "page": 7,
+   "quote": "Proposed Method 35.48 ↑+5.35",
+   "values": {
+    "ap_car_gain_learned_ranges_cityscapes": 5.35
+   }
+  },
+  {
+   "sensor": "rgb",
+   "doc": "CARLSON2019",
+   "page": 7,
+   "quote": "does worse than baseline across all levels of augmentation when tested on KITTI",
+   "values": {
+    "hand_ranges_can_hurt": true
+   }
+  }
+ ]
+}

@@ -21,7 +21,7 @@ import numpy as np  # noqa: E402
 from data.dataset import CLASSES, SceneDataset  # noqa: E402
 from render.sampling import load_configs  # noqa: E402
 
-BANDS = ["rgb", "lwir", "swir"]
+BANDS = ["rgb", "lwir", "lwir_cooled", "mwir", "swir"]       # SWIR deferred: shown only if rendered
 
 
 def main():
@@ -31,19 +31,25 @@ def main():
     ap.add_argument("--n", type=int, default=6)
     ap.add_argument("--out", default=os.path.join(ROOT, "out", "preview.png"))
     ap.add_argument("--train-aug", action="store_true", help="show training-time randomisation")
+    ap.add_argument("--bands", default=None, help="comma-separated; default: the bands the dataset was rendered with")
     a = ap.parse_args()
     cfgs = load_configs()
-    ds = SceneDataset(a.data, a.split, BANDS, cfgs, train=a.train_aug,
+    if a.bands:
+        bands = a.bands.split(",")
+    else:
+        from data.dataset import load_metas
+        bands = [b for b in BANDS if b in load_metas(a.data, a.split)[0]["modalities"]]
+    ds = SceneDataset(a.data, a.split, bands, cfgs, train=a.train_aug,
                       aug=dict(hflip=0.5, scale=[0.75, 1.6], scale_prob=0.5, min_obj_px=1.5))
     n = min(a.n, len(ds))
-    fig, axes = plt.subplots(n, 6, figsize=(24, 3.4 * n), squeeze=False)
+    fig, axes = plt.subplots(n, 2 * len(bands), figsize=(8 * len(bands), 3.4 * n), squeeze=False)
     for r in range(n):
         s = ds.load(r)
         m = s["meta"]
         t = s["boxes"][0] if len(s["boxes"]) else np.array([320, 256, 330, 266.0])
         cx, cy = (t[0] + t[2]) / 2, (t[1] + t[3]) / 2
         half = max(12, 2.5 * max(t[2] - t[0], t[3] - t[1]))
-        for k, b in enumerate(BANDS):
+        for k, b in enumerate(bands):
             img = s["images"][b]
             show = img if img.shape[-1] == 3 else img[..., 0]
             ax = axes[r, 2 * k]

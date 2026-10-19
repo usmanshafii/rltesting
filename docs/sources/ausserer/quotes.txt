@@ -1,0 +1,45 @@
+Ausserer, J. K. (2016). The Scaling of Loss Pathways and Heat Transfer in Small Scale Internal Combustion
+Engines. PhD dissertation AFIT-ENY-DS-16-S-055, Air Force Institute of Technology. Distribution A, approved for
+public release. Passages used in this project, verbatim, with the printed page (pdf page in brackets).
+Page images: ausserer_pdfpage<N>-<N>.png in this folder.
+
+p. v (pdf 7): "At peak power, the loss pathways ranked by relative magnitude were: short-circuiting (40%-50%),
+sensible exhaust enthalpy (14%-18%), incomplete combustion (11%-17%), brake power (14%-15%), and heat loss from the
+cylinder (10%-11%)."
+  -> used for: cooling load share (thermal/engine_heat.COOLING_SHARE), the energy check of the EGT bands.
+
+p. v (pdf 7): "thermal losses do not begin to increase substantially until engine displacement decreases below
+10 cm3."
+  -> used for: carrying the 10-11 % cooling share over to the L550E's 137 cm3 cylinders.
+
+p. 270 (pdf 309): "incomplete combustion more than tripled from 11% of total fuel energy at a delivery ratio of 1.1
+(WOT) to 36% of the total fuel energy at a delivery ratio of 0.3 (1/4 throttle)."
+  -> used for: the delivery-ratio check range (0.25-1.25).
+
+p. 284 (pdf 323): "Small engines are usually operated rich as a cooling measure and to provide a margin against the
+wide swings in equivalence ratio typical in simple carburetors over the operating range of such engines."
+p. 285 (pdf 324): "the 3W-55i engine was tuned to an equivalence ratio of 1.1 at 6000 rpm, which resulted in
+equivalence ratios varying from 0.8 to 1.2 over the entire operational speed range of the engine."
+p. 316 (pdf 355): "Typically, small ICEs are air carbureted in their COTS configuration, operating at equivalence
+ratios of 1.1 to 1.2."
+  -> used for: the air/fuel ratio band (equivalence ratio 1.0-1.2).
+
+p. 296 (pdf 335): "The exhaust gas temperature (EGT) is representative of the short-circuited charge and the burnt
+gas from inside the cylinder."
+  -> used for: taking the EGT band as the gas temperature entering the exhaust stubs.
+
+p. 299 (pdf 338): "cooling is primarily dependent on aircraft velocity and operators tend to err on the side of over
+cooling."
+p. 301 (pdf 340): "For pusher configuration aircraft where the engine is only exposed to the free stream, WOT
+cooling could be a challenge, and the engine manufacturer notes as much in their documentation."
+p. 301 (pdf 340): "the cooling load increased by about 30%. This corresponded to a change in cylinder head
+temperature of 60 C."
+  -> used for: free-air cooling at the flight speed, and the reading of the heat balance at high power.
+
+p. 307 (pdf 346): "The largest pathway shift was the reduction in short-circuiting, which fell from upwards of 50% at
+WOT to 15% to 20% at approximately half throttle."
+p. 311 (pdf 350): "despite increases in the relative magnitudes of incomplete combustion and heat transfer, the
+improvement in short-circuiting as the engines were throttled led to a 4%-6% (absolute) improvement in fuel
+conversion efficiency between WOT and half throttle."
+  -> used for: part-throttle BSFC below the full-throttle chart, the cooling share rising at part throttle
+     (low-power CHT bound), heat shifting from the exhaust to the head.

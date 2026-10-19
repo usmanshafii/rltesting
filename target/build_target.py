@@ -36,8 +36,15 @@ PREVIEW = {
     "tail_cone":       dict(color=(0.035, 0.037, 0.040), rough=0.40, coat=0.4),
     "markings":        dict(color=(0.80, 0.80, 0.80), rough=0.5),
     "decal":           dict(color=(0.80, 0.80, 0.80), rough=0.5, texture=True),
-    "engine_region":   dict(color=(0.30, 0.30, 0.31), rough=0.35, metal=0.8),
-    "exhaust_outlet":  dict(color=(0.12, 0.11, 0.10), rough=0.6, metal=0.6),
+    # MD-550 / L550E (L550E product photo): grey cast-aluminium fin packs and heads, black case and covers,
+    # silver carburettors, gold-coloured knurled drive disc, oxidised steel exhaust stubs
+    "engine_head":     dict(color=(0.32, 0.32, 0.33), rough=0.55, metal=0.8),
+    "engine_heatsink": dict(color=(0.02, 0.02, 0.022), rough=0.5, metal=0.4),     # black finned heat sinks (photo)
+    "engine_barrel":   dict(color=(0.30, 0.30, 0.31), rough=0.55, metal=0.8),
+    "engine_case":     dict(color=(0.025, 0.025, 0.028), rough=0.45, metal=0.3),
+    "engine_intake":   dict(color=(0.55, 0.55, 0.56), rough=0.35, metal=0.9),
+    "engine_flange":   dict(color=(0.55, 0.42, 0.20), rough=0.35, metal=0.9),
+    "exhaust_stub":    dict(color=(0.10, 0.075, 0.06), rough=0.6, metal=0.7),
     "propeller":       dict(color=(0.03, 0.03, 0.03), rough=0.4),
     "propeller_disc":  dict(color=(0.03, 0.03, 0.03), rough=0.4, alpha=0.25),
     "antenna":         dict(color=(0.03, 0.03, 0.03), rough=0.5),
@@ -118,11 +125,15 @@ def build_target(params: dict | None = None, cfg_path: str | None = None, name: 
             uv.data[li].uv = (u0 + cu * (u1 - u0), v0 + cv * (v1 - v0))
     me.validate(clean_customdata=False)
     me.update()
+    part_attr = me.attributes.new(name="kal_part", type="INT", domain="FACE")
+    part_attr.data.foreach_set("value", [kg.PART_NAMES.index(kg.part_group(part)) for part in mesh["face_parts"]])
 
     obj = bpy.data.objects.new(name, me)
     (collection or bpy.context.scene.collection).objects.link(obj)
     obj["kal_params"] = json.dumps({k: v for k, v in p.items()}, default=float)
     obj["kal_summary"] = json.dumps(kg.summary(mesh["derived"]))
+    obj["kal_engine"] = json.dumps(kg.engine_metadata(mesh["derived"]))
+    obj["kal_part_names"] = json.dumps(kg.PART_NAMES)
     return obj
 
 
@@ -189,6 +200,7 @@ def _args():
 
 if __name__ == "__main__":
     a = _args()
+    a.out = os.path.abspath(a.out)  # Blender resolves relative render paths against the saved file
     cfg = kg.load_config()
     os.makedirs(a.out, exist_ok=True)
     jobs = [("canonical", None)] + [(f"variant_{a.seed0 + i:03d}", kg.sample_variant(cfg, a.seed0 + i)) for i in range(a.variants)]

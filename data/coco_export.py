@@ -4,7 +4,8 @@
 
 Boxes come from projected mesh vertices (bbox_px, spec 4 step 3), COCO-style [x, y, w, h] with
 (x, y) the top-left corner. category_id uses the spec's class ids (0 target ... 6 warm_clutter).
-file_name points at the RGB preview; the per-band layers are listed under "fyp_modalities".
+file_name points at the RGB preview when present, otherwise LWIR or SWIR;
+fyp_preview_band identifies that choice. Per-band layers are listed under "fyp_modalities".
 Extra per-annotation fields (size_bin, size_px, range_m) let per-bin evaluation run on COCO files.
 """
 import argparse
@@ -26,8 +27,10 @@ def export(root: str, out_dir: str | None = None, use_blur_box: bool = False) ->
         images, anns = [], []
         for m in (x for x in metas if x["split"] == split):
             iid = int(m["scene_id"][1:])
-            images.append(dict(id=iid, file_name=m["modalities"]["rgb"]["png"], width=m["camera"]["width"],
+            preview_band = next(b for b in ("rgb", "lwir", "swir") if b in m["modalities"])
+            images.append(dict(id=iid, file_name=m["modalities"][preview_band]["png"], width=m["camera"]["width"],
                                height=m["camera"]["height"], scene_id=m["scene_id"],
+                               fyp_preview_band=preview_band,
                                fyp_modalities={b: v["layers"] for b, v in m["modalities"].items()},
                                conditions=m["conditions"], hfov_deg=m["camera"]["hfov_deg"]))
             for o in m["extra"]["objects"]:

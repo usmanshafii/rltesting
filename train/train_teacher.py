@@ -1,4 +1,5 @@
-"""Teacher (spec 7): RGB + LWIR + SWIR. SWIR is privileged, training-only information.
+"""Teacher (spec 7; CLAUDE.md sensor set rule 5): RGB + LWIR uncooled + LWIR cooled + MWIR. The cooled LWIR and
+MWIR cameras are privileged, training-only information (SWIR deferred).
 
     python train/train_teacher.py --data out/dataset
 """

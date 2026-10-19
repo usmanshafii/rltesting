@@ -53,6 +53,53 @@ def apply(L: np.ndarray, rng, cfg: dict, exposure_ms: float, params: dict | None
                                         lambda_read=(gain * p["read_e"] / p["full_well"]) ** 2)
 
 
+# ============================================================================ the whole camera (2026-10-17)
+def sample_pipeline(rng, pipe: dict) -> dict:
+    """One RGB camera's raw-noise and processing settings for a frame (configs/sensors.yaml camera_pipelines.rgb)."""
+    u = lambda r: float(rng.uniform(*r))  # noqa: E731
+    high = rng.uniform() < pipe["high_sensitivity_prob"]
+    level = int(rng.integers(pipe["nr_level"][0], pipe["nr_level"][1] + 1))
+    aperture = int(rng.integers(pipe["aperture_level"][0], pipe["aperture_level"][1] + 1))
+    return dict(bits=int(rng.choice(pipe["adc_bits"])), max_gain=10 ** (pipe["max_gain_db"] / 20) * (4.0 if high else 1.0),
+                high_sensitivity=bool(high), lam=u(pipe["read_tukey_lambda"]), row_frac=u(pipe["row_noise_frac"]),
+                nr_level=level, aperture=aperture, gamma="standard" if rng.uniform() < pipe["gamma_standard_prob"] else "straight",
+                ca_r=u(pipe["chromatic_aberration"]) * np.sign(rng.uniform(-1, 1)),
+                ca_b=u(pipe["chromatic_aberration"]) * np.sign(rng.uniform(-1, 1)))
+
+
+def apply_camera(L: np.ndarray, rng, cfg: dict, pipe: dict, exposure_ms: float,
+                 params: dict | None = None) -> tuple[np.ndarray, dict]:
+    """An RGB zoom camera's video frame (noise/isp.py; docs/sensor_noise.md).
+
+    Sensor (Wei et al., CVPR 2020: their noise formation model with every term, which matched training on real paired
+    data): radiance -> photo-electrons with the auto-exposure of `apply` (aperture / ND, then gain up to the camera's
+    limit) -> Bayer RGGB sampling (IMX327 colour mosaic) -> Poisson photon shot noise -> Tukey-lambda read noise -> row
+    (banding) noise -> gain, saturation and ADC quantisation (10 or 12 bits). Camera processing: bilinear demosaicking,
+    white-balance error, lateral chromatic aberration, noise reduction (FCB-EV7520 levels Off and 1-5, acting only
+    as the gain rises), edge enhancement (16 steps), display gamma. Returns display-referred HxWx3 in [0, 1]."""
+    from noise import isp
+    p = params or sample_params(rng, cfg)
+    q = sample_pipeline(rng, pipe)
+    e_open = np.clip(np.asarray(L, np.float32), 0, None) * (p["e_per_unit_ms"] * exposure_ms)
+    light, gain = auto_exposure(float(np.median(e_open.mean(-1))), p["full_well"], p["ae_target"], q["max_gain"])
+    raw = isp.mosaic_rggb(e_open * light)
+    h, w = raw.shape
+    raw = rng.poisson(np.clip(raw, 0, None)).astype(np.float32)                 # photon shot noise
+    raw = raw + isp.tukey_lambda(rng, q["lam"], p["read_e"], (h, w))            # read noise (long-tailed)
+    raw = raw + (rng.standard_normal(h) * q["row_frac"] * p["read_e"]).astype(np.float32)[:, None]   # row noise
+    top = 2 ** q["bits"] - 1
+    dn = np.round(np.clip(raw * gain / p["full_well"], 0.0, 1.0) * top) / top   # gain, saturation, quantisation
+    rgb = isp.demosaic_bilinear(dn.astype(np.float32)) * np.asarray(p["wb"], np.float32)
+    rgb = isp.chromatic_aberration(rgb, q["ca_r"], q["ca_b"])
+    gain_db = 20 * np.log10(max(gain, 1.0))
+    lo_db, hi_db = pipe["nr_gain_db"]
+    nr = pipe["nr_sigma_px"][q["nr_level"]] * float(np.clip((gain_db - lo_db) / (hi_db - lo_db), 0.0, 1.0))
+    rgb = isp.noise_reduction(rgb, nr)
+    rgb = isp.sharpen(rgb, pipe["sharpen_amount_max"] * q["aperture"] / 15.0)
+    out = isp.gamma_encode(rgb, q["gamma"])
+    return out, dict(p, gain=gain, light=light, nr_sigma_px=nr, pipeline=q)
+
+
 def nominal_sigma(L_level: float, exposure_ms: float, cfg: dict) -> float:
     """Noise sigma in radiance units at radiance L_level with the nominal sensor (for the CNR),
     with the same aperture / ND logic as apply() evaluated at that level."""
