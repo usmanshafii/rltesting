@@ -24,6 +24,10 @@ MANIFEST
 venv/
 ENV/
 env/
+# ...but the RL course project's environment package is source code, not a virtualenv
+!rl/env/
+# RL course project: raw training runs stay local; summaries go to rl/results/
+rl/runs/
 
 # Generated outputs: ignored by default. Datasets, caches, frames, weights and videos travel as zips
 # (tools/m1_det2.py export-data / package-results); only small evidence summaries are versioned.

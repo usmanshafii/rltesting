@@ -80,3 +80,8 @@ REB 30 electric version lives in `../fyp` and is not to be reintroduced here.
   meteorological and climate records.
 - Geometry changes to `target/engine_l550e.py` are followed by `python tools/draw_reference.py` and the Blender
   previews (`target/build_target.py`, `tools/hero_preview.py`) so the reference images match the model.
+
+## RL course project (CSE 482)
+
+Work in `rl/` and `tests/rl/` follows `AGENTS.md` and `rl/PLAN.md`. The evidence, sensor set
+and scope rules above apply there too.

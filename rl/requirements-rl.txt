@@ -1,0 +1,13 @@
+# RL course project: exact versions, pinned 2026-11-14 on M1's laptop with Python 3.11.9 (S-01).
+# Install into a fresh Python 3.11 virtual environment kept OUTSIDE OneDrive-synced folders, for example:
+#   py -3.11 -m venv %USERPROFILE%\venvs\kal-rl
+#   %USERPROFILE%\venvs\kal-rl\Scripts\python -m pip install -r rl/requirements-rl.txt
+# Adding a package needs a change request (AGENTS.md rule 5, invariant I9).
+numpy==1.26.4
+scipy==1.17.1
+PyYAML==6.0.3
+matplotlib==3.11.2
+pillow==13.0.0
+pytest==9.2.0
+gymnasium==1.4.0
+torch==2.15.0
