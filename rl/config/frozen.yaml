@@ -1,0 +1,81 @@
+# Frozen values of the RL course project (CSE 482): every value marked * in the Course project plan.
+#
+# Status: DRAFT by M1 (task M1-02), 2026-11-14. All four members approve it at S-03 (day 2); the commit is then tagged
+# interface-v1 and this file changes only through a change request in rl/PLAN.md. Values marked "placeholder" are fixed
+# on day 8-9 (M1-09, M3-07) and frozen again at env-v1.
+#
+# Every number names its source (a repo file) or is marked an estimate with a grade (CLAUDE.md evidence rule).
+# Grades: B = taken from a repo file that cites an S1/S2 source; C = estimate or project decision; P = placeholder.
+
+grid:
+  az_deg: [-30.0, 30.0]          # C: plan, a 60 deg sector, centred on the sector's own azimuth 0
+  el_deg: [5.0, 20.0]            # C: inside M1's open-sky look elevation 5-25 deg (configs/m1.yaml)
+  cell_deg: 5.0                  # C: plan, 12 x 3 cells
+
+cameras:
+  image_px: [640, 512]           # B: configs/sensors.yaml image (every band is emulated on this grid)
+  frame_hz: 25.0                 # B: configs/sensors.yaml fps [25, 30]
+  frames_per_step: 5             # C: plan, one decision per 0.2 s
+  zoom_hfov_deg: [46.0, 15.0, 5.0]   # C: plan; inside the uncooled LWIR range 5-46 deg (configs/sensors.yaml)
+  max_hfov_deg:                  # each camera's widest field; at a zoom step it uses min(zoom field, its widest)
+    rgb: 63.7                    # B: configs/sensors.yaml rgb, FCB-EV7520 63.7-2.3 deg
+    lwir: 46.0                   # B: configs/sensors.yaml lwir hfov_deg [5, 46]
+    lwir_cooled: 24.9            # B: configs/sensors.yaml zoom_focal_mm 21.7 on 640 x 15 um: 2 atan(4.8 / 21.7)
+    mwir: 36.4                   # B: configs/sensors.yaml mwir, SupIR 15-300 mm, 36.4 deg on 640 x 15 um
+    mwir_shared: 36.4            # the MWIR camera itself, with the plume's signal removed (Filter 1)
+  covered_min_fraction: 0.5      # C: a cell counts as covered when at least half of it is in the frame
+
+episode:
+  max_steps: 900                 # C: plan, 3 min at 0.2 s per step
+  drone_free_share: 0.30         # C: plan
+  speed_mps_train: [39.0, 50.0]  # B: configs/render.yaml airspeed range 39-56; plan holds 50-56 out
+  speed_mps_heldout: [50.0, 56.0]
+  span_m: [2.0, 2.6]             # B: configs/train.yaml span_range_m
+  entry_range_m: [4000.0, 7000.0]  # P: tuned on day 8 so raster scan confirms 40-70 % (M1-09); census max 7.47 km
+  entry_elevation_deg: [5.5, 9.0]  # C: sets altitude; the drone then climbs through the sector as it closes
+  lateral_offset_m: [-300.0, 300.0]  # C: around render/track_sequence.py's default 170 m
+  weave_deg: [0.0, 15.0]         # C: around render/track_sequence.py's default 10 deg
+  weave_s: [15.0, 30.0]          # C: around render/track_sequence.py's default 22 s
+  day_share: 0.43                # B: census.json, 54 of 126 scenes by day
+  cloudy_share: 0.51             # B: census.json, 64 of 126 scenes with cloud
+  cloud_cells: [2, 6]            # C: cells holding persistent cloud clutter in a cloudy episode
+  conditions: [train, heldout_speed, heldout_cloud, low_heat]   # C: plan's held-out set (visibility added by M2)
+
+detector:
+  fa_per_frame: 0.01             # B: the operating point of docs/privileged_teacher_case.md (0.01 per target-free frame)
+  logistic_a: -5.2425            # B: docs/reference/privileged/data/detector_vs_ideal.json, rgb_lwir logistic a
+  logistic_b: 1.3969             # B: same file, logistic b (half detection at d' = 42.6)
+
+confirmation:
+  threshold_A: 10.0              # P: fixed on day 8 at about 1 false confirmation per hour for raster scan (M1-09)
+  pd_nominal: 0.2                # P: the design detection probability inside the log-likelihood ratio
+  spread_rho: 0.5                # C: share of a cell's evidence passed to its neighbours each step (motion model)
+  confirmable_K_steps: 10        # C: plan, a drone is confirmable if 10 steps of dwell could reach A
+  raster_false_per_hour_target: 1.0   # C: plan
+
+reward:
+  correct: 1.0                   # C: plan
+  earliness_weight: 1.0          # C: plan, times the fraction of approach time left
+  false_confirmation: -1.0       # C: plan
+  missed_confirmable: -0.5       # C: plan
+  step: -0.001                   # C: plan
+  slew: -0.0005                  # C: plan, "a small slew cost"
+
+observation:
+  since_look_cap_steps: 100      # C: since-last-look is divided by this and capped at 1
+  evidence_clip_times_A: 2.0     # C: the evidence map is clipped at 2 A before the actor sees it
+
+gates:
+  toy_within_points: 10          # C: plan, day-5 gate (M3-05)
+  oracle_min_confirm_share: 0.95 # C: plan, WP1
+  min_steps_per_second_per_core: 2000   # C: plan, WP1
+  raster_confirm_share: [0.40, 0.70]    # C: plan, WP5 difficulty
+
+evaluation:
+  episodes_per_seed_condition: 200   # C: plan
+  thresholds_sweep: 5                # C: plan
+  seeds_core: 5                      # C: plan
+  seeds_ablation: 3                  # C: plan
+  seed_lists: null                   # P: written in the pre-registration before Tier 1 (WP5)
+
+ppo: null                        # P: chosen on the symmetric arm and frozen on day 8 (M3-07)
