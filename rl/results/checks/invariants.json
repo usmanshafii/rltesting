@@ -1,0 +1,19 @@
+{
+ "meta": {
+  "name": "invariants",
+  "when": "2026-11-19 02:04",
+  "env_version": "sky-env-0.1-stub-sensor",
+  "interface_version": "interface-v0-draft",
+  "frozen_sha256": "014dc8bdcb226a66ea388e15ca71ab6eb325d9194cf56e3f8375df02b7e11818",
+  "python": "3.11.9",
+  "machine": "",
+  "cores": 24
+ },
+ "rows": [
+  {
+   "check": "I1-I11 (skips = pending tasks)",
+   "status": "PASS",
+   "detail": "pytest exit code 0"
+  }
+ ]
+}
