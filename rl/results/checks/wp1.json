@@ -1,7 +1,7 @@
 {
  "meta": {
   "name": "wp1",
-  "when": "2026-11-14 22:23",
+  "when": "2026-11-21 21:17",
   "env_version": "sky-env-0.1-stub-sensor",
   "interface_version": "interface-v0-draft",
   "frozen_sha256": "014dc8bdcb226a66ea388e15ca71ab6eb325d9194cf56e3f8375df02b7e11818",
@@ -18,7 +18,8 @@
   {
    "check": "M1-06 SkyEnv: Gymnasium check_env",
    "status": "PASS",
-   "detail": ""
+   "detail": "sensor model calibrated-1.0-analytic-plume",
+   "sensor_version": "calibrated-1.0-analytic-plume"
   },
   {
    "check": "M1-06 drone-free share 30 +- 2 %",
@@ -29,15 +30,15 @@
   {
    "check": "M1-07 oracle confirms >= 95% of confirmable drones",
    "status": "PASS",
-   "detail": "1.000 of 101 confirmable drones",
+   "detail": "1.000 of 105 confirmable drones",
    "value": 1.0,
-   "n": 101
+   "n": 105
   },
   {
    "check": "M1-07 random < oracle (drones confirmed)",
    "status": "PASS",
-   "detail": "random 0.810, oracle 1.000",
-   "random": 0.8095238095238095,
+   "detail": "random 0.881, oracle 1.000",
+   "random": 0.8809523809523809,
    "oracle": 1.0
   },
   {
@@ -47,9 +48,9 @@
   },
   {
    "check": "M1-07 >= 2000 steps per second per core",
-   "status": "PASS",
-   "detail": "2261 steps/s on this laptop (a busy laptop measures low: rerun when idle)",
-   "value": 2261.380794592653
+   "status": "FAIL",
+   "detail": "1908 steps/s on this laptop (a busy laptop measures low: rerun when idle)",
+   "value": 1907.6445191428913
   }
  ]
 }

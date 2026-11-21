@@ -34,10 +34,21 @@ the deployed cameras' evidence decides when a drone is confirmed. Values and the
 
 ## Calibration status
 
-Until M2-08 the detection numbers come from `stub_sensor.StubSensorModel`: placeholders (grade C) from a crude fit to
-`docs/reference/privileged/data/census.json` and the detector's logistic curve. M2's calibrated model replaces it
-through the same `SensorModel` protocol (M1-08); nothing else changes. Threshold A, the entry range and the nominal
-detection probability are placeholders until M1-09.
+Since M1-08 the detection numbers come from M2's calibrated model, `rl/calib/sensor_model.CalibratedSensorModel`
+(version `calibrated-1.0-analytic-plume`; its fit, errors and limits: `rl/calib/REPORT.md`), through the same
+`SensorModel` protocol. `info["sensor_version"]` records the model in use; `SkyEnv(sensor_model=StubSensorModel())`
+still gives the earlier placeholders (grade C) for comparison.
+
+What follows from M2's model:
+
+- It checks its sources and `frozen.yaml` when it loads. Any change to `frozen.yaml` (M1-09 included) needs
+  `python -m rl.calib.calibrate` before the environment loads again.
+- It has no low-heat calibration (no original four-band renders), so `SkyEnv(condition="low_heat")` raises at reset;
+  the plan's fallback omits the low-heat test.
+- The environment still draws each camera's detections independently per frame; M2's shared LWIR clutter and
+  sensor-only dwell gain are not simulated yet (CR-M2-01; M1's answer in `rl/env/CHANGE_REQUESTS.md`).
+
+Threshold A, the entry range and the nominal detection probability stay placeholders until M1-09.
 
 ## Checks
 

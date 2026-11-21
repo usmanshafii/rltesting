@@ -219,3 +219,43 @@ def test_drone_free_episode_runs_to_the_time_limit():
 def test_learned_declaration_adds_one_action_only_when_on():
     assert SkyEnv().action_space.n == C.N_ACTIONS
     assert SkyEnv(learned_declaration=True).action_space.n == C.N_ACTIONS_LEARNED_DECLARE
+
+
+# ============================================================================ M1-08 M2's sensor model swapped in
+def test_default_sensor_model_is_m2_calibrated():
+    from rl.calib.sensor_model import CalibratedSensorModel
+    env = SkyEnv()
+    assert isinstance(env.sensor, CalibratedSensorModel)
+    _, info = env.reset(seed=3)
+    assert info["sensor_version"] == CalibratedSensorModel.version
+
+
+def test_stub_sensor_model_still_selectable():
+    from rl.env import StubSensorModel
+    _, info = SkyEnv(sensor_model=StubSensorModel()).reset(seed=3)
+    assert info["sensor_version"] == StubSensorModel.version
+
+
+def test_low_heat_needs_a_calibration_that_does_not_exist():
+    with pytest.raises(ValueError, match="low.heat"):
+        SkyEnv(condition="low_heat").reset(seed=3)
+
+
+def test_false_detections_partition_the_frame_exactly():
+    from rl.env.sky_env import frame_share_pfa
+    g = np.array([0.5, 0.3, 0.2])
+    for pfa in (0.01, 0.3):
+        assert np.prod(1.0 - frame_share_pfa(pfa, g)) == pytest.approx(1.0 - pfa)
+    assert frame_share_pfa(0.01, 0.0) == 0.0
+    assert frame_share_pfa(0.01, 0.25) == pytest.approx(0.01 * 0.25, rel=0.01)   # near first order when pfa is small
+
+
+def test_fast_spread_equals_the_neighbour_formula():
+    rng = np.random.default_rng(4)
+    for rho in (0.25, 0.5, 1.0):
+        for _ in range(50):
+            L = rng.exponential(3.0, C.GRID_SHAPE) * (rng.random(C.GRID_SHAPE) < 0.4)
+            cu = ev.Cusum(C.GRID_SHAPE)
+            cu.L = L.copy()
+            cu.spread(rho)
+            assert np.array_equal(cu.L, np.maximum(L, rho * ev.neighbour_max(L)))

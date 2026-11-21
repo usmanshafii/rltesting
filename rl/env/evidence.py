@@ -60,12 +60,20 @@ class Cusum:
 
     def __init__(self, shape: tuple[int, int]):
         self.L = np.zeros(shape, dtype=np.float64)
+        self._pad = np.zeros((shape[0] + 2, shape[1] + 2))   # zero border: cells outside the grid count as 0
 
     def update(self, increment: np.ndarray, covered: np.ndarray) -> None:
         self.L = np.where(covered, np.maximum(0.0, self.L + increment), self.L)
 
     def spread(self, rho: float) -> None:
-        if rho > 0:
+        if 0 < rho <= 1:
+            # Same result as max(L, rho * neighbour_max(L)), faster: with L >= 0 and rho <= 1, rho * L <= L, so the
+            # 3 x 3 maximum may include the cell itself; that maximum is taken along rows, then along columns.
+            p = self._pad
+            p[1:-1, 1:-1] = self.L
+            r = np.maximum(np.maximum(p[:, :-2], p[:, 1:-1]), p[:, 2:])
+            self.L = np.maximum(self.L, rho * np.maximum(np.maximum(r[:-2], r[1:-1]), r[2:]))
+        elif rho > 1:
             self.L = np.maximum(self.L, rho * neighbour_max(self.L))
 
     def crossing(self, A: float, covered: np.ndarray) -> tuple[int, int] | None:

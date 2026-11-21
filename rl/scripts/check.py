@@ -81,7 +81,8 @@ def wp1(episodes: int = 200, random_episodes: int = 60) -> bool:
 
     env = SkyEnv()
     check_env(env, skip_render_check=True)
-    rep.add("M1-06 SkyEnv: Gymnasium check_env", "PASS")
+    rep.add("M1-06 SkyEnv: Gymnasium check_env", "PASS", f"sensor model {env.sensor.version}",
+            sensor_version=env.sensor.version)
     share = float(np.mean([not sample_episode_spec(s).drone_present for s in range(10_000)]))
     rep.add("M1-06 drone-free share 30 +- 2 %", "PASS" if 0.28 <= share <= 0.32 else "FAIL", f"{share:.3f}",
             value=share)

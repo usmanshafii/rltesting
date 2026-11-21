@@ -10,18 +10,36 @@ import numpy as np
 import pytest
 
 from rl import contracts as C
-from rl.env import SkyEnv
+from rl.env import SkyEnv, default_sensor_model
 from rl.env.rewards import reward_terms
 from rl.env.stub_sensor import StubSensorModel
 
 RL = Path(__file__).resolve().parents[2] / "rl"
 
+# The environment's default (M2's calibrated model, since M1-08) and the stub it replaced.
+SENSOR_MODELS = {"calibrated": default_sensor_model, "stub": StubSensorModel}
 
-class _PrivilegedChanged(StubSensorModel):
-    """The stub with the privileged cameras made perfect: a student arm must not notice."""
+
+class _PrivilegedChanged:
+    """A sensor model with the privileged cameras made perfect: a student arm must not notice."""
+
+    def __init__(self, base):
+        self.base, self.version = base, f"{base.version}+privileged-perfect"
+
+    def begin_episode(self, spec, rng):
+        self.base.begin_episode(spec, rng)
+
+    def dprime(self, band, size_px, spec):
+        return self.base.dprime(band, size_px, spec)
 
     def pd_per_frame(self, band, size_px, spec):
-        return 0.999 if band in ("lwir_cooled", "mwir", "mwir_shared") else super().pd_per_frame(band, size_px, spec)
+        return 0.999 if band in ("lwir_cooled", "mwir", "mwir_shared") else self.base.pd_per_frame(band, size_px, spec)
+
+    def pfa_per_frame(self, band, spec, cloud):
+        return self.base.pfa_per_frame(band, spec, cloud)
+
+    def nominal_pd(self, band, spec):
+        return self.base.nominal_pd(band, spec)
 
 
 def _student_trajectory(env, seed=5, steps=300):
@@ -40,10 +58,13 @@ def test_I1_student_observation_space_holds_no_privileged_key():
     assert set(SkyEnv().observation_space.spaces) == set(C.STUDENT_OBS_KEYS)
 
 
+@pytest.mark.parametrize("model", list(SENSOR_MODELS))
 @pytest.mark.parametrize("seed", [5, 6, 17])
-def test_I1_student_observations_do_not_depend_on_privileged_cameras(seed):
-    base = _student_trajectory(SkyEnv(), seed)
-    for other in (SkyEnv(sensor_model=_PrivilegedChanged()), SkyEnv(compute_privileged=False)):
+def test_I1_student_observations_do_not_depend_on_privileged_cameras(model, seed):
+    make = SENSOR_MODELS[model]
+    base = _student_trajectory(SkyEnv(sensor_model=make()), seed)
+    for other in (SkyEnv(sensor_model=_PrivilegedChanged(make())),
+                  SkyEnv(sensor_model=make(), compute_privileged=False)):
         alt = _student_trajectory(other, seed)
         assert len(base) == len(alt)
         for a, b in zip(base, alt):
@@ -103,9 +124,10 @@ def test_I9_no_unlisted_dependency():
     assert not bad, "imports outside rl/requirements-rl.txt: " + ", ".join(bad)
 
 
-def test_I11_four_sensors_with_separate_uncooled_and_cooled_lwir():
+@pytest.mark.parametrize("model", list(SENSOR_MODELS))
+def test_I11_four_sensors_with_separate_uncooled_and_cooled_lwir(model):
     assert set(C.BANDS) == {"rgb", "lwir", "lwir_cooled", "mwir"}
-    model = StubSensorModel()
+    model = SENSOR_MODELS[model]()
     from rl.env.scenario import sample_episode_spec
     spec = sample_episode_spec(1)
     model.begin_episode(spec, np.random.default_rng(0))
