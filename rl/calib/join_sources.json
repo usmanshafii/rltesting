@@ -1,0 +1,120 @@
+{
+ "sources": {
+  "census": {
+   "path": "docs/reference/privileged/data/census.json",
+   "sha256": "a3eb21fb022d7411bb07757eb7c374088be91d6a2371f1bd711d45662fa1c2bf",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "detector": {
+   "path": "docs/reference/privileged/data/detector_vs_ideal.json",
+   "sha256": "673e503b65af0e7295ea229279ff5a8c2352ba97627024d0dc2e9545d362c4a7",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "detector_method": {
+   "path": "tools/detector_vs_ideal.py",
+   "sha256": "849024afdc577c47ddc81dea00f3db0b531aa822baa1060af29d1684dedd7595",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "census_method": {
+   "path": "tools/privileged_census.py",
+   "sha256": "7304992899c8cebe7fc468d64823aae5482a37f20cc9b133c1d87942bf8fb761",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "sampling": {
+   "path": "render/sampling.py",
+   "sha256": "e05ca8a1f965a24a124b02020c5fdf54107af1b1e948545b3ac231c9a5700762",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "placement": {
+   "path": "render/placement.py",
+   "sha256": "85ece63f3374d692529562fb4bee0dd51163adb25c64fd6b68c8c120cdae3472",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "geometry": {
+   "path": "target/kal_geometry.py",
+   "sha256": "a0e361a466e60c26191322ac1e3605dbdd38df4e155866e27a397a37589eaab5",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "measurement": {
+   "path": "target/kal_measure.py",
+   "sha256": "90b07edfb5ae01a06cae017fc46302d97f323fea55ffadb191cdc3bc0ca6247a",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "engine_geometry": {
+   "path": "target/engine_l550e.py",
+   "sha256": "808d512947dcd967ace380151a768b3e2c126ec88a02636e925a8365bc8516e6",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "signatures_method": {
+   "path": "render/signatures.py",
+   "sha256": "c1b5931a601ef295537920b33502772c6c10b5aaa754fc86e7a3ee371257bb37",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "cameras_method": {
+   "path": "render/cameras.py",
+   "sha256": "dcf2feceed51ca5eaf7f254f5451a8b07fdebfdfc45c128a95dd3f18cb009cac",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "overlay": {
+   "path": "configs/m1.yaml",
+   "sha256": "8b6c499c5dda92de3df4000d68e91f682ebdb210d3334fc0d6bad5f404b0da8f",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "low_heat_overlay": {
+   "path": "configs/m1_low_heat.yaml",
+   "sha256": "bbc4cf077bbf9dd996adba37eb64cdd3889049f188f812c0fc971789843c5204",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "render": {
+   "path": "configs/render.yaml",
+   "sha256": "d066f376356fb747b559f7f8ff2689e746ae9ec7e77cdfb981728b54e1a3d105",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "sensors": {
+   "path": "configs/sensors.yaml",
+   "sha256": "4c1aabfb97eb49be9f2d44c6eb9f87fbc003696c361951e79bda453041014552",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "signatures": {
+   "path": "configs/signatures.yaml",
+   "sha256": "bf3375b709740fc1e143f22b562849fd856c9b991c06ce88408d054d77471f77",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "target": {
+   "path": "configs/target.yaml",
+   "sha256": "59bf9683fd71dfacca542a5745cbc78e5c86957bdf79e8e354e0030bfc97c403",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "frozen": {
+   "path": "rl/config/frozen.yaml",
+   "sha256": "014dc8bdcb226a66ea388e15ca71ab6eb325d9194cf56e3f8375df02b7e11818",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "dwell": {
+   "path": "eval/detectability.py",
+   "sha256": "ba4668b0218ddaec2abd9f2acd186081066afc3cdd9b095aad1bc4ff11a3b660",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "plume_bounds": {
+   "path": "docs/thermal_bands.md",
+   "sha256": "25469963fa92b7404aa334a5e8034edd0c1c2d3a96a2b8b5d330727a158325fd",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "detector_correction": {
+   "path": "docs/privileged_teacher_case.md",
+   "sha256": "6a9399e4550088f7f2050df5b691a6b9a8c6c81fad1da9f7cda0ed76eb5a99bf",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "clutter_estimates": {
+   "path": "rl/env/stub_sensor.py",
+   "sha256": "1cae5fbc8e24c4d353cf0e6d3c18a3607f7c6bab45a7782456b79607368e0baa",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "climate": {
+   "path": "docs/sources/noaa_isd/lahore_hourly_conditions_2022-08-25_2025-08-24.csv",
+   "sha256": "6547478bd1b6ebfc9afb34b2a63fccc113457f9207755e22ab10e1449465aee5",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  }
+ },
+ "joined_sha256": "ad65e077b8292fcadfce82c42b5d0d6ca81e17f51d54a6859d502b436884e1da"
+}

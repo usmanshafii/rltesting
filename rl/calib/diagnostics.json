@@ -1,0 +1,441 @@
+{
+ "fallback_comparison": {
+  "rgb": {
+   "full_cv": 1.1398445403148227,
+   "simple_cv": 1.0946781102561938,
+   "full_heldout": 0.9668285768060698,
+   "simple_heldout": 1.1930128728629483
+  },
+  "lwir": {
+   "full_cv": 1.3612754474046147,
+   "simple_cv": 1.7157429413639544,
+   "full_heldout": 1.920959362997467,
+   "simple_heldout": 2.0156140922905132
+  },
+  "lwir_cooled": {
+   "full_cv": 1.7379650055096039,
+   "simple_cv": 1.9665419027660809,
+   "full_heldout": 1.601057381296167,
+   "simple_heldout": 1.479944259789527
+  },
+  "mwir": {
+   "full_cv": 1.9714011675788763,
+   "simple_cv": 2.0411159601820468,
+   "full_heldout": 1.8186698607482283,
+   "simple_heldout": 1.8377311936072964
+  }
+ },
+ "heldout_residuals": {
+  "rgb": [
+   {
+    "scene_id": "s000005",
+    "measured": 12.255616076557088,
+    "predicted": 7.630812264771488,
+    "log_residual": 0.47378999081142137
+   },
+   {
+    "scene_id": "s000006",
+    "measured": 0.5528580345599854,
+    "predicted": 3.9434893766315753,
+    "log_residual": -1.9647199890746554
+   },
+   {
+    "scene_id": "s000013",
+    "measured": 0.44897201990065627,
+    "predicted": 0.3666947752194177,
+    "log_residual": 0.20243074245142512
+   },
+   {
+    "scene_id": "s000014",
+    "measured": 206.26160885546835,
+    "predicted": 49.14274287305389,
+    "log_residual": 1.434416125932918
+   },
+   {
+    "scene_id": "s000016",
+    "measured": 279.43276125956777,
+    "predicted": 251.22788944264963,
+    "log_residual": 0.1064012424271894
+   },
+   {
+    "scene_id": "s000019",
+    "measured": 0.5358965902438072,
+    "predicted": 0.5643007721527755,
+    "log_residual": -0.0516461795034614
+   },
+   {
+    "scene_id": "s000024",
+    "measured": 3.7635084250656803,
+    "predicted": 2.2921080017665307,
+    "log_residual": 0.4958796951831641
+   },
+   {
+    "scene_id": "s000033",
+    "measured": 1.1737620751455922,
+    "predicted": 2.0384293147695214,
+    "log_residual": -0.5519655284053862
+   },
+   {
+    "scene_id": "s000041",
+    "measured": 8.675803379715513,
+    "predicted": 17.910676111291732,
+    "log_residual": -0.7248590356932234
+   },
+   {
+    "scene_id": "s000052",
+    "measured": 2.0573385169498133,
+    "predicted": 2.359445467642863,
+    "log_residual": -0.13701345467975612
+   },
+   {
+    "scene_id": "s000060",
+    "measured": 7.253610421286133,
+    "predicted": 3.121960698740866,
+    "log_residual": 0.8430381005279222
+   },
+   {
+    "scene_id": "s000100",
+    "measured": 5.000884070442406,
+    "predicted": 4.899102251641604,
+    "log_residual": 0.02056273651265128
+   },
+   {
+    "scene_id": "s000101",
+    "measured": 54.602141508124596,
+    "predicted": 606.4901474067075,
+    "log_residual": -2.4076153795086164
+   },
+   {
+    "scene_id": "s000106",
+    "measured": 655.1015298679303,
+    "predicted": 514.1718333025507,
+    "log_residual": 0.24223271543135194
+   },
+   {
+    "scene_id": "s000146",
+    "measured": 7.419599363157313,
+    "predicted": 17.663756750540415,
+    "log_residual": -0.8673898375460007
+   },
+   {
+    "scene_id": "s000151",
+    "measured": 44.30307831231193,
+    "predicted": 24.613591960692833,
+    "log_residual": 0.5877553534160955
+   }
+  ],
+  "lwir": [
+   {
+    "scene_id": "s000005",
+    "measured": 514.1017290107787,
+    "predicted": 958.2586074940095,
+    "log_residual": -0.6226965244986014
+   },
+   {
+    "scene_id": "s000006",
+    "measured": 6.634215401069192,
+    "predicted": 10.894758902229007,
+    "log_residual": -0.4960414296816573
+   },
+   {
+    "scene_id": "s000013",
+    "measured": 627.0102428494142,
+    "predicted": 7.284303541802372,
+    "log_residual": 4.455241043379754
+   },
+   {
+    "scene_id": "s000014",
+    "measured": 91.70658162536427,
+    "predicted": 297.35734592283546,
+    "log_residual": -1.1763404503443438
+   },
+   {
+    "scene_id": "s000016",
+    "measured": 104.18830371586408,
+    "predicted": 204.0259104559609,
+    "log_residual": -0.6720471232071663
+   },
+   {
+    "scene_id": "s000019",
+    "measured": 22.898178823808824,
+    "predicted": 7.37781392821679,
+    "log_residual": 1.1325800010100675
+   },
+   {
+    "scene_id": "s000024",
+    "measured": 23.970762890969944,
+    "predicted": 8.309614856697712,
+    "log_residual": 1.0594216140216912
+   },
+   {
+    "scene_id": "s000033",
+    "measured": 55.002675448971125,
+    "predicted": 87.45842618098571,
+    "log_residual": -0.4637817225175729
+   },
+   {
+    "scene_id": "s000041",
+    "measured": 489.77044232016596,
+    "predicted": 2162.8012910812577,
+    "log_residual": -1.4852227581862794
+   },
+   {
+    "scene_id": "s000052",
+    "measured": 20.42358411380794,
+    "predicted": 105.51523087143875,
+    "log_residual": -1.6421649938358103
+   },
+   {
+    "scene_id": "s000060",
+    "measured": 0.3730243984040919,
+    "predicted": 5.192166573283448,
+    "log_residual": -2.633262511775384
+   },
+   {
+    "scene_id": "s000090",
+    "measured": 0.15278730437131294,
+    "predicted": 6.64337473385873,
+    "log_residual": -3.772328569704376
+   },
+   {
+    "scene_id": "s000100",
+    "measured": 35.66341401892438,
+    "predicted": 256.578794751573,
+    "log_residual": -1.9733104635468273
+   },
+   {
+    "scene_id": "s000101",
+    "measured": 183.7981590797698,
+    "predicted": 240.41533618890713,
+    "log_residual": -0.26852980110593894
+   },
+   {
+    "scene_id": "s000105",
+    "measured": 7.038560984871652,
+    "predicted": 41.755206023680316,
+    "log_residual": -1.7804203949827548
+   },
+   {
+    "scene_id": "s000106",
+    "measured": 235.8119850886937,
+    "predicted": 1191.125713891076,
+    "log_residual": -1.619619302850281
+   },
+   {
+    "scene_id": "s000146",
+    "measured": 246.95563303812273,
+    "predicted": 29.58611356553361,
+    "log_residual": 2.121903582214726
+   },
+   {
+    "scene_id": "s000151",
+    "measured": 324.037540445129,
+    "predicted": 110.66714190185066,
+    "log_residual": 1.0743324001188288
+   }
+  ],
+  "lwir_cooled": [
+   {
+    "scene_id": "s000005",
+    "measured": 1783.4960436991146,
+    "predicted": 1165.4879116140048,
+    "log_residual": 0.4254356999408557
+   },
+   {
+    "scene_id": "s000006",
+    "measured": 13.617636644416368,
+    "predicted": 23.037983039665,
+    "log_residual": -0.5257785256175871
+   },
+   {
+    "scene_id": "s000013",
+    "measured": 394.58339254465005,
+    "predicted": 6.849158890297917,
+    "log_residual": 4.0537046508952
+   },
+   {
+    "scene_id": "s000014",
+    "measured": 358.24082174238345,
+    "predicted": 488.3099955481306,
+    "log_residual": -0.30974499427478897
+   },
+   {
+    "scene_id": "s000019",
+    "measured": 36.504210419353946,
+    "predicted": 5.235893071447233,
+    "log_residual": 1.9418901818529886
+   },
+   {
+    "scene_id": "s000024",
+    "measured": 34.10341605772075,
+    "predicted": 13.779683763090599,
+    "log_residual": 0.9062022405730752
+   },
+   {
+    "scene_id": "s000033",
+    "measured": 14.509197554078941,
+    "predicted": 76.33321948837946,
+    "log_residual": -1.6603254610576097
+   },
+   {
+    "scene_id": "s000041",
+    "measured": 933.939275245635,
+    "predicted": 3797.4892864931153,
+    "log_residual": -1.4026839929477193
+   },
+   {
+    "scene_id": "s000090",
+    "measured": 0.91378721424779,
+    "predicted": 3.428312294546935,
+    "log_residual": -1.3222256394796217
+   },
+   {
+    "scene_id": "s000100",
+    "measured": 48.98228967804159,
+    "predicted": 349.0265983564189,
+    "log_residual": -1.963689334718807
+   },
+   {
+    "scene_id": "s000101",
+    "measured": 134.1091378344862,
+    "predicted": 190.512737207221,
+    "log_residual": -0.3510651244032026
+   },
+   {
+    "scene_id": "s000105",
+    "measured": 57.827926257481096,
+    "predicted": 92.15626504826183,
+    "log_residual": -0.46601385706526877
+   },
+   {
+    "scene_id": "s000106",
+    "measured": 86.61285817421786,
+    "predicted": 912.5780038471972,
+    "log_residual": -2.354825283162299
+   },
+   {
+    "scene_id": "s000146",
+    "measured": 53.592602741927806,
+    "predicted": 33.89983833039891,
+    "log_residual": 0.4580008046463262
+   },
+   {
+    "scene_id": "s000151",
+    "measured": 398.0727114723506,
+    "predicted": 203.71437150738703,
+    "log_residual": 0.66991580767675
+   }
+  ],
+  "mwir": [
+   {
+    "scene_id": "s000005",
+    "measured": 1069.842576991471,
+    "predicted": 1146.4520763950427,
+    "log_residual": -0.06916050918214367
+   },
+   {
+    "scene_id": "s000006",
+    "measured": 8.800559537178101,
+    "predicted": 42.28798091022118,
+    "log_residual": -1.5696876032057232
+   },
+   {
+    "scene_id": "s000013",
+    "measured": 591.484958016553,
+    "predicted": 14.02796718272441,
+    "log_residual": 3.7415832599981207
+   },
+   {
+    "scene_id": "s000014",
+    "measured": 736.3286476127766,
+    "predicted": 604.5970418693029,
+    "log_residual": 0.19711436151935668
+   },
+   {
+    "scene_id": "s000016",
+    "measured": 637.9895306709172,
+    "predicted": 98.80437574747634,
+    "log_residual": 1.865179980888274
+   },
+   {
+    "scene_id": "s000019",
+    "measured": 62.21163806850294,
+    "predicted": 11.300093431039807,
+    "log_residual": 1.7057310955356964
+   },
+   {
+    "scene_id": "s000024",
+    "measured": 99.73843965740281,
+    "predicted": 26.42114411089965,
+    "log_residual": 1.32838655301095
+   },
+   {
+    "scene_id": "s000033",
+    "measured": 0.527289140780922,
+    "predicted": 40.81296012024942,
+    "log_residual": -4.349005907639378
+   },
+   {
+    "scene_id": "s000041",
+    "measured": 3555.5140183232284,
+    "predicted": 1467.2466644866186,
+    "log_residual": 0.8851120159044648
+   },
+   {
+    "scene_id": "s000052",
+    "measured": 42.62134597245661,
+    "predicted": 66.82502208541415,
+    "log_residual": -0.4497223855784829
+   },
+   {
+    "scene_id": "s000060",
+    "measured": 45.826204841494274,
+    "predicted": 11.765579232905393,
+    "log_residual": 1.359677831077811
+   },
+   {
+    "scene_id": "s000090",
+    "measured": 30.129951589080243,
+    "predicted": 6.391407173634404,
+    "log_residual": 1.5505652872941638
+   },
+   {
+    "scene_id": "s000100",
+    "measured": 53.41213730547916,
+    "predicted": 550.8290030706205,
+    "log_residual": -2.3333864112285645
+   },
+   {
+    "scene_id": "s000101",
+    "measured": 499.3221775739209,
+    "predicted": 349.3312323144098,
+    "log_residual": 0.3572309720246061
+   },
+   {
+    "scene_id": "s000105",
+    "measured": 156.47250302441597,
+    "predicted": 39.99828206664687,
+    "log_residual": 1.3640437901609372
+   },
+   {
+    "scene_id": "s000106",
+    "measured": 256.9561814105068,
+    "predicted": 792.8840655575807,
+    "log_residual": -1.1267714436576064
+   },
+   {
+    "scene_id": "s000146",
+    "measured": 110.82550413831699,
+    "predicted": 61.994498363503716,
+    "log_residual": 0.5809112845438991
+   },
+   {
+    "scene_id": "s000151",
+    "measured": 504.3172268184377,
+    "predicted": 137.78377369439934,
+    "log_residual": 1.2975198892956836
+   }
+  ]
+ },
+ "note": "Diagnostic only. No coefficients, splits, uncertainty or acceptance limits are changed using held-out outcomes. The size/day fallback does not repair the LWIR failure."
+}

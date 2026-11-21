@@ -1,1 +1,4 @@
-"""Calibration and the sensor model (owner: M2). See rl/calib/README.md and rl/PLAN.md, tasks M2-01 to M2-09."""
+"""M2: calibration and sensor-model handoff. No changes to the M1 environment."""
+from rl.calib.sensor_model import CalibratedSensorModel
+
+__all__ = ["CalibratedSensorModel"]

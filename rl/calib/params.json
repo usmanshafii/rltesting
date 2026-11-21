@@ -1,0 +1,3414 @@
+{
+ "version": "calibrated-1.0-analytic-plume",
+ "sources": {
+  "census": {
+   "path": "docs/reference/privileged/data/census.json",
+   "sha256": "a3eb21fb022d7411bb07757eb7c374088be91d6a2371f1bd711d45662fa1c2bf",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "detector": {
+   "path": "docs/reference/privileged/data/detector_vs_ideal.json",
+   "sha256": "673e503b65af0e7295ea229279ff5a8c2352ba97627024d0dc2e9545d362c4a7",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "detector_method": {
+   "path": "tools/detector_vs_ideal.py",
+   "sha256": "849024afdc577c47ddc81dea00f3db0b531aa822baa1060af29d1684dedd7595",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "census_method": {
+   "path": "tools/privileged_census.py",
+   "sha256": "7304992899c8cebe7fc468d64823aae5482a37f20cc9b133c1d87942bf8fb761",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "sampling": {
+   "path": "render/sampling.py",
+   "sha256": "e05ca8a1f965a24a124b02020c5fdf54107af1b1e948545b3ac231c9a5700762",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "placement": {
+   "path": "render/placement.py",
+   "sha256": "85ece63f3374d692529562fb4bee0dd51163adb25c64fd6b68c8c120cdae3472",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "geometry": {
+   "path": "target/kal_geometry.py",
+   "sha256": "a0e361a466e60c26191322ac1e3605dbdd38df4e155866e27a397a37589eaab5",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "measurement": {
+   "path": "target/kal_measure.py",
+   "sha256": "90b07edfb5ae01a06cae017fc46302d97f323fea55ffadb191cdc3bc0ca6247a",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "engine_geometry": {
+   "path": "target/engine_l550e.py",
+   "sha256": "808d512947dcd967ace380151a768b3e2c126ec88a02636e925a8365bc8516e6",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "signatures_method": {
+   "path": "render/signatures.py",
+   "sha256": "c1b5931a601ef295537920b33502772c6c10b5aaa754fc86e7a3ee371257bb37",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "cameras_method": {
+   "path": "render/cameras.py",
+   "sha256": "dcf2feceed51ca5eaf7f254f5451a8b07fdebfdfc45c128a95dd3f18cb009cac",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "overlay": {
+   "path": "configs/m1.yaml",
+   "sha256": "8b6c499c5dda92de3df4000d68e91f682ebdb210d3334fc0d6bad5f404b0da8f",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "low_heat_overlay": {
+   "path": "configs/m1_low_heat.yaml",
+   "sha256": "bbc4cf077bbf9dd996adba37eb64cdd3889049f188f812c0fc971789843c5204",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "render": {
+   "path": "configs/render.yaml",
+   "sha256": "d066f376356fb747b559f7f8ff2689e746ae9ec7e77cdfb981728b54e1a3d105",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "sensors": {
+   "path": "configs/sensors.yaml",
+   "sha256": "4c1aabfb97eb49be9f2d44c6eb9f87fbc003696c361951e79bda453041014552",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "signatures": {
+   "path": "configs/signatures.yaml",
+   "sha256": "bf3375b709740fc1e143f22b562849fd856c9b991c06ce88408d054d77471f77",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "target": {
+   "path": "configs/target.yaml",
+   "sha256": "59bf9683fd71dfacca542a5745cbc78e5c86957bdf79e8e354e0030bfc97c403",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "frozen": {
+   "path": "rl/config/frozen.yaml",
+   "sha256": "014dc8bdcb226a66ea388e15ca71ab6eb325d9194cf56e3f8375df02b7e11818",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "dwell": {
+   "path": "eval/detectability.py",
+   "sha256": "ba4668b0218ddaec2abd9f2acd186081066afc3cdd9b095aad1bc4ff11a3b660",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "plume_bounds": {
+   "path": "docs/thermal_bands.md",
+   "sha256": "25469963fa92b7404aa334a5e8034edd0c1c2d3a96a2b8b5d330727a158325fd",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "detector_correction": {
+   "path": "docs/privileged_teacher_case.md",
+   "sha256": "6a9399e4550088f7f2050df5b691a6b9a8c6c81fad1da9f7cda0ed76eb5a99bf",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "clutter_estimates": {
+   "path": "rl/env/stub_sensor.py",
+   "sha256": "1cae5fbc8e24c4d353cf0e6d3c18a3607f7c6bab45a7782456b79607368e0baa",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  },
+  "climate": {
+   "path": "docs/sources/noaa_isd/lahore_hourly_conditions_2022-08-25_2025-08-24.csv",
+   "sha256": "6547478bd1b6ebfc9afb34b2a63fccc113457f9207755e22ab10e1449465aee5",
+   "hash_convention": "SHA-256, CRLF normalized to LF"
+  }
+ },
+ "values": {
+  "rgb.intercept": {
+   "value": 0.09397253183540019,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.log_size": {
+   "value": 1.39137772985113,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.night": {
+   "value": -2.3761178763500572,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.night_log_size": {
+   "value": -0.45826771513139397,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.log_visibility": {
+   "value": 0.17385037670423842,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.cloud": {
+   "value": -0.6515905128678274,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.head_on": {
+   "value": 0.043263031406735056,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.tail_on": {
+   "value": -0.060362525709780096,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.engine_low": {
+   "value": 0.3737807915651816,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.engine_high": {
+   "value": 0.23345858535065284,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "rgb.residual_std": {
+   "value": 0.9947144275163952,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "rgb.cv_log_rmse": {
+   "value": 1.1398445403148227,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "rgb.heldout_log_rmse": {
+   "value": 0.9668285768060698,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "lwir.intercept": {
+   "value": 3.6157166739021633,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.log_size": {
+   "value": 0.8652605563761901,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.night": {
+   "value": 0.1548308186396207,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.night_log_size": {
+   "value": -0.14937493678059532,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.log_visibility": {
+   "value": -0.022005270813461014,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.cloud": {
+   "value": -2.180515404042145,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.head_on": {
+   "value": -0.9445098050907929,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.tail_on": {
+   "value": -0.14152663016874917,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.engine_low": {
+   "value": 0.5414438114596516,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.engine_high": {
+   "value": -0.03113920912375929,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir.residual_std": {
+   "value": 1.200310680933269,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "lwir.cv_log_rmse": {
+   "value": 1.3612754474046147,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "lwir.heldout_log_rmse": {
+   "value": 1.920959362997467,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "lwir_cooled.intercept": {
+   "value": 4.865212871477411,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.log_size": {
+   "value": 0.6133754365045238,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.night": {
+   "value": -1.4219923732029836,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.night_log_size": {
+   "value": 0.3094963831149813,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.log_visibility": {
+   "value": -0.2964479847818591,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.cloud": {
+   "value": -2.3362926135709667,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.head_on": {
+   "value": -0.7246784987755404,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.tail_on": {
+   "value": 0.14081059450476918,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.engine_low": {
+   "value": 0.5065279078164088,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.engine_high": {
+   "value": -0.13935553026318168,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "lwir_cooled.residual_std": {
+   "value": 1.484679286639533,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "lwir_cooled.cv_log_rmse": {
+   "value": 1.7379650055096039,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "lwir_cooled.heldout_log_rmse": {
+   "value": 1.601057381296167,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "mwir.intercept": {
+   "value": 4.524910641639931,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.log_size": {
+   "value": 0.5811237568433425,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.night": {
+   "value": -1.4921712153145013,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.night_log_size": {
+   "value": 0.3056039222309741,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.log_visibility": {
+   "value": 0.10158749251483709,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.cloud": {
+   "value": -1.8702496274520932,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.head_on": {
+   "value": -0.2707754003934413,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.tail_on": {
+   "value": 0.22684323036818704,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.engine_low": {
+   "value": -0.49308082943847964,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.engine_high": {
+   "value": -0.3599199808182213,
+   "source": "census",
+   "grade": "B",
+   "note": "Derived from training scenes only; features from regenerated specs"
+  },
+  "mwir.residual_std": {
+   "value": 1.7080619238658568,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "mwir.cv_log_rmse": {
+   "value": 1.9714011675788763,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "mwir.heldout_log_rmse": {
+   "value": 1.8186698607482283,
+   "source": "census",
+   "grade": "B",
+   "note": "Log units; scene-level five-fold CV; validation is never fitted"
+  },
+  "plume_to_stub_ratio_lower": {
+   "value": 0.1,
+   "source": "plume_bounds",
+   "grade": "C",
+   "note": "Section 5: source plume/stub contrast lower bound, not plume/whole-target fraction"
+  },
+  "plume_to_stub_ratio_upper": {
+   "value": 0.7,
+   "source": "plume_bounds",
+   "grade": "C",
+   "note": "Section 5: source plume/stub upper bound; analytic sensitivity only"
+  },
+  "plume_to_stub_ratio_central": {
+   "value": 0.4,
+   "source": "plume_bounds",
+   "grade": "C",
+   "note": "Midpoint of .1-.7 range; conservative removal d/(1+r), not a measured no-plume census"
+  },
+  "rgb.noise_share_median": {
+   "value": 0.8893507348824217,
+   "source": "census",
+   "grade": "B",
+   "note": "Training-only measured variance share; camera noise remains separate"
+  },
+  "lwir.noise_share_median": {
+   "value": 0.569478453079518,
+   "source": "census",
+   "grade": "B",
+   "note": "Training-only measured variance share; camera noise remains separate"
+  },
+  "lwir_cooled.noise_share_median": {
+   "value": 0.3711183598900558,
+   "source": "census",
+   "grade": "B",
+   "note": "Training-only measured variance share; camera noise remains separate"
+  },
+  "mwir.noise_share_median": {
+   "value": 0.5260037092136665,
+   "source": "census",
+   "grade": "B",
+   "note": "Training-only measured variance share; camera noise remains separate"
+  },
+  "mwir_shared.noise_share_median": {
+   "value": 0.5260037092136665,
+   "source": "census",
+   "grade": "B",
+   "note": "Training-only measured variance share; camera noise remains separate"
+  },
+  "rgb.cloud_factor.True": {
+   "value": 10.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "rgb.cloud_factor.False": {
+   "value": 1.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "lwir.cloud_factor.True": {
+   "value": 30.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "lwir.cloud_factor.False": {
+   "value": 30.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "lwir_cooled.cloud_factor.True": {
+   "value": 30.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "lwir_cooled.cloud_factor.False": {
+   "value": 30.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "mwir.cloud_factor.True": {
+   "value": 5.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "mwir.cloud_factor.False": {
+   "value": 5.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "mwir_shared.cloud_factor.True": {
+   "value": 5.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "mwir_shared.cloud_factor.False": {
+   "value": 5.0,
+   "source": "clutter_estimates",
+   "grade": "C",
+   "note": "Sensitivity estimate inherited from stub, NOT measured cloud false alarms"
+  },
+  "detector.fa_per_frame": {
+   "value": 0.01,
+   "source": "frozen",
+   "grade": "B",
+   "note": "Frozen historical joint-detector surrogate; per-band use is grade C"
+  },
+  "detector.logistic_a": {
+   "value": -5.2425,
+   "source": "frozen",
+   "grade": "B",
+   "note": "Frozen historical joint-detector surrogate; per-band use is grade C"
+  },
+  "detector.logistic_b": {
+   "value": 1.3969,
+   "source": "frozen",
+   "grade": "B",
+   "note": "Frozen historical joint-detector surrogate; per-band use is grade C"
+  }
+ },
+ "model": {
+  "feature_names": [
+   "intercept",
+   "log_size",
+   "night",
+   "night_log_size",
+   "log_visibility",
+   "cloud",
+   "head_on",
+   "tail_on",
+   "engine_low",
+   "engine_high"
+  ],
+  "bands": {
+   "rgb": {
+    "coefficients": [
+     0.09397253183540019,
+     1.39137772985113,
+     -2.3761178763500572,
+     -0.45826771513139397,
+     0.17385037670423842,
+     -0.6515905128678274,
+     0.043263031406735056,
+     -0.060362525709780096,
+     0.3737807915651816,
+     0.23345858535065284
+    ],
+    "fit_scene_ids": [
+     "s000000",
+     "s000002",
+     "s000008",
+     "s000012",
+     "s000015",
+     "s000017",
+     "s000018",
+     "s000020",
+     "s000021",
+     "s000023",
+     "s000025",
+     "s000026",
+     "s000027",
+     "s000029",
+     "s000030",
+     "s000032",
+     "s000035",
+     "s000036",
+     "s000037",
+     "s000038",
+     "s000039",
+     "s000040",
+     "s000042",
+     "s000045",
+     "s000046",
+     "s000049",
+     "s000050",
+     "s000051",
+     "s000053",
+     "s000056",
+     "s000062",
+     "s000064",
+     "s000065",
+     "s000066",
+     "s000067",
+     "s000069",
+     "s000070",
+     "s000071",
+     "s000072",
+     "s000074",
+     "s000075",
+     "s000077",
+     "s000078",
+     "s000079",
+     "s000080",
+     "s000082",
+     "s000084",
+     "s000086",
+     "s000088",
+     "s000091",
+     "s000093",
+     "s000094",
+     "s000095",
+     "s000097",
+     "s000099",
+     "s000103",
+     "s000104",
+     "s000107",
+     "s000109",
+     "s000111",
+     "s000112",
+     "s000113",
+     "s000114",
+     "s000115",
+     "s000118",
+     "s000119",
+     "s000120",
+     "s000122",
+     "s000123",
+     "s000125",
+     "s000127",
+     "s000129",
+     "s000130",
+     "s000131",
+     "s000133",
+     "s000134",
+     "s000136",
+     "s000137",
+     "s000139",
+     "s000141",
+     "s000142",
+     "s000143",
+     "s000145",
+     "s000147",
+     "s000149",
+     "s000150",
+     "s000153",
+     "s000154",
+     "s000155",
+     "s000158",
+     "s000160",
+     "s000161",
+     "s000162",
+     "s000163",
+     "s000165",
+     "s000167",
+     "s000171",
+     "s000172",
+     "s000176",
+     "s000177"
+    ],
+    "residual_std": 0.9947144275163952,
+    "cv_log_rmse": 1.1398445403148227,
+    "cv_folds": [
+     {
+      "fold": 0,
+      "n": 22,
+      "log_rmse": 1.1866112639543596
+     },
+     {
+      "fold": 1,
+      "n": 18,
+      "log_rmse": 1.2086073254384353
+     },
+     {
+      "fold": 2,
+      "n": 21,
+      "log_rmse": 1.0992037359068358
+     },
+     {
+      "fold": 3,
+      "n": 19,
+      "log_rmse": 1.212661791948119
+     },
+     {
+      "fold": 4,
+      "n": 20,
+      "log_rmse": 0.9833798721070821
+     }
+    ],
+    "heldout_log_rmse": 0.9668285768060698,
+    "heldout_n": 16
+   },
+   "lwir": {
+    "coefficients": [
+     3.6157166739021633,
+     0.8652605563761901,
+     0.1548308186396207,
+     -0.14937493678059532,
+     -0.022005270813461014,
+     -2.180515404042145,
+     -0.9445098050907929,
+     -0.14152663016874917,
+     0.5414438114596516,
+     -0.03113920912375929
+    ],
+    "fit_scene_ids": [
+     "s000000",
+     "s000002",
+     "s000008",
+     "s000012",
+     "s000015",
+     "s000017",
+     "s000018",
+     "s000020",
+     "s000021",
+     "s000023",
+     "s000025",
+     "s000026",
+     "s000027",
+     "s000029",
+     "s000030",
+     "s000032",
+     "s000035",
+     "s000036",
+     "s000037",
+     "s000038",
+     "s000039",
+     "s000040",
+     "s000042",
+     "s000045",
+     "s000046",
+     "s000049",
+     "s000050",
+     "s000051",
+     "s000053",
+     "s000056",
+     "s000062",
+     "s000064",
+     "s000065",
+     "s000066",
+     "s000067",
+     "s000069",
+     "s000070",
+     "s000071",
+     "s000072",
+     "s000074",
+     "s000075",
+     "s000077",
+     "s000078",
+     "s000079",
+     "s000080",
+     "s000082",
+     "s000084",
+     "s000086",
+     "s000088",
+     "s000091",
+     "s000093",
+     "s000094",
+     "s000095",
+     "s000096",
+     "s000097",
+     "s000099",
+     "s000102",
+     "s000103",
+     "s000104",
+     "s000107",
+     "s000109",
+     "s000111",
+     "s000112",
+     "s000113",
+     "s000114",
+     "s000115",
+     "s000118",
+     "s000119",
+     "s000120",
+     "s000122",
+     "s000123",
+     "s000125",
+     "s000127",
+     "s000129",
+     "s000130",
+     "s000131",
+     "s000132",
+     "s000133",
+     "s000134",
+     "s000136",
+     "s000137",
+     "s000139",
+     "s000141",
+     "s000142",
+     "s000143",
+     "s000144",
+     "s000145",
+     "s000147",
+     "s000149",
+     "s000150",
+     "s000153",
+     "s000154",
+     "s000155",
+     "s000156",
+     "s000158",
+     "s000160",
+     "s000161",
+     "s000162",
+     "s000163",
+     "s000165",
+     "s000167",
+     "s000170",
+     "s000171",
+     "s000172",
+     "s000174",
+     "s000176",
+     "s000177"
+    ],
+    "residual_std": 1.200310680933269,
+    "cv_log_rmse": 1.3612754474046147,
+    "cv_folds": [
+     {
+      "fold": 0,
+      "n": 22,
+      "log_rmse": 1.7033224708127628
+     },
+     {
+      "fold": 1,
+      "n": 22,
+      "log_rmse": 1.127494923791709
+     },
+     {
+      "fold": 2,
+      "n": 21,
+      "log_rmse": 1.3669203547871658
+     },
+     {
+      "fold": 3,
+      "n": 21,
+      "log_rmse": 1.2360029869426323
+     },
+     {
+      "fold": 4,
+      "n": 21,
+      "log_rmse": 1.2939927779064813
+     }
+    ],
+    "heldout_log_rmse": 1.920959362997467,
+    "heldout_n": 18
+   },
+   "lwir_cooled": {
+    "coefficients": [
+     4.865212871477411,
+     0.6133754365045238,
+     -1.4219923732029836,
+     0.3094963831149813,
+     -0.2964479847818591,
+     -2.3362926135709667,
+     -0.7246784987755404,
+     0.14081059450476918,
+     0.5065279078164088,
+     -0.13935553026318168
+    ],
+    "fit_scene_ids": [
+     "s000000",
+     "s000002",
+     "s000012",
+     "s000015",
+     "s000017",
+     "s000020",
+     "s000021",
+     "s000023",
+     "s000025",
+     "s000026",
+     "s000027",
+     "s000029",
+     "s000032",
+     "s000035",
+     "s000036",
+     "s000038",
+     "s000039",
+     "s000042",
+     "s000045",
+     "s000046",
+     "s000051",
+     "s000053",
+     "s000056",
+     "s000062",
+     "s000064",
+     "s000065",
+     "s000066",
+     "s000067",
+     "s000069",
+     "s000070",
+     "s000071",
+     "s000074",
+     "s000075",
+     "s000077",
+     "s000078",
+     "s000080",
+     "s000082",
+     "s000084",
+     "s000086",
+     "s000088",
+     "s000091",
+     "s000093",
+     "s000094",
+     "s000095",
+     "s000096",
+     "s000099",
+     "s000102",
+     "s000103",
+     "s000104",
+     "s000107",
+     "s000111",
+     "s000112",
+     "s000113",
+     "s000115",
+     "s000118",
+     "s000119",
+     "s000120",
+     "s000122",
+     "s000123",
+     "s000125",
+     "s000129",
+     "s000130",
+     "s000131",
+     "s000132",
+     "s000133",
+     "s000134",
+     "s000136",
+     "s000137",
+     "s000139",
+     "s000141",
+     "s000142",
+     "s000143",
+     "s000144",
+     "s000145",
+     "s000147",
+     "s000149",
+     "s000153",
+     "s000154",
+     "s000155",
+     "s000156",
+     "s000158",
+     "s000160",
+     "s000161",
+     "s000163",
+     "s000165",
+     "s000167",
+     "s000170",
+     "s000171",
+     "s000176",
+     "s000177"
+    ],
+    "paired_ratio_adjustment_log": 0.016174890543811847,
+    "training_paired_ratio": 1.1454733684323068,
+    "residual_std": 1.484679286639533,
+    "cv_log_rmse": 1.7379650055096039,
+    "cv_folds": [
+     {
+      "fold": 0,
+      "n": 17,
+      "log_rmse": 2.019003373326072
+     },
+     {
+      "fold": 1,
+      "n": 16,
+      "log_rmse": 1.238753945015649
+     },
+     {
+      "fold": 2,
+      "n": 16,
+      "log_rmse": 2.208118264757484
+     },
+     {
+      "fold": 3,
+      "n": 21,
+      "log_rmse": 1.521461689073243
+     },
+     {
+      "fold": 4,
+      "n": 20,
+      "log_rmse": 1.6026871661599489
+     }
+    ],
+    "heldout_log_rmse": 1.601057381296167,
+    "heldout_n": 15
+   },
+   "mwir": {
+    "coefficients": [
+     4.524910641639931,
+     0.5811237568433425,
+     -1.4921712153145013,
+     0.3056039222309741,
+     0.10158749251483709,
+     -1.8702496274520932,
+     -0.2707754003934413,
+     0.22684323036818704,
+     -0.49308082943847964,
+     -0.3599199808182213
+    ],
+    "fit_scene_ids": [
+     "s000000",
+     "s000002",
+     "s000008",
+     "s000012",
+     "s000015",
+     "s000017",
+     "s000018",
+     "s000020",
+     "s000021",
+     "s000023",
+     "s000025",
+     "s000026",
+     "s000027",
+     "s000029",
+     "s000032",
+     "s000035",
+     "s000036",
+     "s000037",
+     "s000038",
+     "s000039",
+     "s000040",
+     "s000042",
+     "s000045",
+     "s000049",
+     "s000050",
+     "s000051",
+     "s000053",
+     "s000056",
+     "s000062",
+     "s000064",
+     "s000065",
+     "s000066",
+     "s000067",
+     "s000069",
+     "s000070",
+     "s000071",
+     "s000074",
+     "s000075",
+     "s000077",
+     "s000078",
+     "s000079",
+     "s000080",
+     "s000082",
+     "s000084",
+     "s000086",
+     "s000088",
+     "s000091",
+     "s000093",
+     "s000094",
+     "s000095",
+     "s000096",
+     "s000097",
+     "s000099",
+     "s000102",
+     "s000103",
+     "s000104",
+     "s000107",
+     "s000111",
+     "s000112",
+     "s000113",
+     "s000115",
+     "s000118",
+     "s000119",
+     "s000120",
+     "s000122",
+     "s000123",
+     "s000125",
+     "s000129",
+     "s000130",
+     "s000131",
+     "s000132",
+     "s000133",
+     "s000134",
+     "s000136",
+     "s000137",
+     "s000139",
+     "s000141",
+     "s000142",
+     "s000143",
+     "s000144",
+     "s000145",
+     "s000147",
+     "s000149",
+     "s000150",
+     "s000153",
+     "s000154",
+     "s000155",
+     "s000156",
+     "s000158",
+     "s000160",
+     "s000161",
+     "s000162",
+     "s000163",
+     "s000165",
+     "s000167",
+     "s000170",
+     "s000171",
+     "s000172",
+     "s000174",
+     "s000176",
+     "s000177"
+    ],
+    "paired_ratio_adjustment_log": -0.04629055615257432,
+    "training_paired_ratio": 1.3503052859197948,
+    "residual_std": 1.7080619238658568,
+    "cv_log_rmse": 1.9714011675788763,
+    "cv_folds": [
+     {
+      "fold": 0,
+      "n": 19,
+      "log_rmse": 2.2221784567531784
+     },
+     {
+      "fold": 1,
+      "n": 22,
+      "log_rmse": 2.0067720717066857
+     },
+     {
+      "fold": 2,
+      "n": 18,
+      "log_rmse": 2.056054127983554
+     },
+     {
+      "fold": 3,
+      "n": 21,
+      "log_rmse": 1.5560899137013056
+     },
+     {
+      "fold": 4,
+      "n": 21,
+      "log_rmse": 1.9900475740474373
+     }
+    ],
+    "heldout_log_rmse": 1.8186698607482283,
+    "heldout_n": 18
+   }
+  },
+  "cv_seed": 0,
+  "fit_split": "train",
+  "heldout_split": "val",
+  "fold_assignment": {
+   "s000149": 0,
+   "s000071": 1,
+   "s000039": 2,
+   "s000017": 3,
+   "s000150": 4,
+   "s000035": 0,
+   "s000156": 1,
+   "s000167": 2,
+   "s000074": 3,
+   "s000170": 4,
+   "s000118": 0,
+   "s000029": 1,
+   "s000051": 2,
+   "s000070": 3,
+   "s000026": 4,
+   "s000025": 0,
+   "s000174": 1,
+   "s000021": 2,
+   "s000123": 3,
+   "s000023": 4,
+   "s000067": 0,
+   "s000045": 1,
+   "s000042": 2,
+   "s000038": 3,
+   "s000099": 4,
+   "s000095": 0,
+   "s000144": 1,
+   "s000093": 2,
+   "s000080": 3,
+   "s000078": 4,
+   "s000015": 0,
+   "s000049": 1,
+   "s000139": 2,
+   "s000147": 3,
+   "s000155": 4,
+   "s000115": 0,
+   "s000163": 1,
+   "s000141": 2,
+   "s000142": 3,
+   "s000125": 4,
+   "s000032": 0,
+   "s000062": 1,
+   "s000008": 2,
+   "s000069": 3,
+   "s000154": 4,
+   "s000162": 0,
+   "s000079": 1,
+   "s000036": 2,
+   "s000137": 3,
+   "s000053": 4,
+   "s000127": 0,
+   "s000037": 1,
+   "s000018": 2,
+   "s000012": 3,
+   "s000002": 4,
+   "s000114": 0,
+   "s000096": 1,
+   "s000046": 2,
+   "s000145": 3,
+   "s000131": 4,
+   "s000103": 0,
+   "s000040": 1,
+   "s000120": 2,
+   "s000130": 3,
+   "s000119": 4,
+   "s000086": 0,
+   "s000000": 1,
+   "s000109": 2,
+   "s000112": 3,
+   "s000082": 4,
+   "s000153": 0,
+   "s000050": 1,
+   "s000094": 2,
+   "s000091": 3,
+   "s000143": 4,
+   "s000165": 0,
+   "s000171": 1,
+   "s000075": 2,
+   "s000111": 3,
+   "s000027": 4,
+   "s000176": 0,
+   "s000065": 1,
+   "s000172": 2,
+   "s000084": 3,
+   "s000104": 4,
+   "s000030": 0,
+   "s000129": 1,
+   "s000072": 2,
+   "s000158": 3,
+   "s000064": 4,
+   "s000161": 0,
+   "s000088": 1,
+   "s000133": 2,
+   "s000132": 3,
+   "s000020": 4,
+   "s000113": 0,
+   "s000177": 1,
+   "s000122": 2,
+   "s000134": 3,
+   "s000107": 4,
+   "s000097": 0,
+   "s000056": 1,
+   "s000077": 2,
+   "s000102": 3,
+   "s000066": 4,
+   "s000136": 0,
+   "s000160": 1
+  },
+  "residual_bank": [
+   {
+    "scene_id": "s000000",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 12.355629534240126,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.08846874927491699,
+     "lwir": 1.1016525238769912,
+     "lwir_cooled": 2.5332321775077142,
+     "mwir": 3.548953609803161
+    },
+    "noise_share": {
+     "rgb": 0.2966980514086975,
+     "lwir": 0.6958110257854939,
+     "lwir_cooled": 0.9675313837287128,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000002",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 121.14511348239543,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 0.47514587121181817,
+     "lwir": 0.09240332851402489,
+     "lwir_cooled": 0.4169320045940581,
+     "mwir": -0.39019566618882084
+    },
+    "noise_share": {
+     "rgb": 0.09866108830483875,
+     "lwir": 0.8237223716629406,
+     "lwir_cooled": 1.0,
+     "mwir": 0.8293160955031227
+    }
+   },
+   {
+    "scene_id": "s000008",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 135.21972925279067,
+    "engine_setting": "nominal",
+    "visibility_km": 1.0,
+    "residuals": {
+     "rgb": -0.5261540594979509,
+     "lwir": -1.8378251019240501,
+     "mwir": -2.3687791568604015
+    },
+    "noise_share": {
+     "rgb": 0.9376137610972017,
+     "lwir": 1.0,
+     "lwir_cooled": null,
+     "mwir": 0.5260037092136665
+    }
+   },
+   {
+    "scene_id": "s000012",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 158.34809196655402,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -0.3020524175447612,
+     "lwir": 0.39733503549693605,
+     "lwir_cooled": 1.2566078051113032,
+     "mwir": 1.091038527901441
+    },
+    "noise_share": {
+     "rgb": 0.9524794404018955,
+     "lwir": 1.0,
+     "lwir_cooled": 0.9831276091924417,
+     "mwir": 0.8909497986462936
+    }
+   },
+   {
+    "scene_id": "s000015",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 12.129131686678509,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.01341146765265977,
+     "lwir": 0.8190997344852224,
+     "lwir_cooled": 0.40195269632254416,
+     "mwir": 1.3726497350813816
+    },
+    "noise_share": {
+     "rgb": 0.9808767795939903,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000017",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 159.90076393020564,
+    "engine_setting": "nominal",
+    "visibility_km": 10.590884708234583,
+    "residuals": {
+     "rgb": -2.5434596812301677,
+     "lwir": -0.9587849956768668,
+     "lwir_cooled": 0.4920006195527016,
+     "mwir": 0.1743346451691714
+    },
+    "noise_share": {
+     "rgb": 0.0035943937371730565,
+     "lwir": 0.00841623951682788,
+     "lwir_cooled": 0.004235328943995902,
+     "mwir": 0.24494360601034593
+    }
+   },
+   {
+    "scene_id": "s000018",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 114.1748395104309,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.7857271938889622,
+     "lwir": 1.2241199889044196,
+     "mwir": 1.986090230346231
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": null,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000020",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 128.18889243140586,
+    "engine_setting": "low_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 1.455602490002911,
+     "lwir": 0.3072323112496944,
+     "lwir_cooled": -1.015675973366089,
+     "mwir": 1.2134870359540502
+    },
+    "noise_share": {
+     "rgb": 0.5274401323310166,
+     "lwir": 0.32819485498422474,
+     "lwir_cooled": 1.0,
+     "mwir": 0.24533772440795198
+    }
+   },
+   {
+    "scene_id": "s000021",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 161.58368271340277,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.0066503890935425,
+     "lwir": -0.19297151472516916,
+     "lwir_cooled": 0.31152848661114874,
+     "mwir": 0.42178094403554045
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 0.4203745846046941,
+     "mwir": 0.7183457599204912
+    }
+   },
+   {
+    "scene_id": "s000023",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 11.02295285816479,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6737785927950837,
+     "lwir": -1.3094459331684174,
+     "lwir_cooled": -0.8801938358935075,
+     "mwir": 0.753302738593689
+    },
+    "noise_share": {
+     "rgb": 0.9119137900451754,
+     "lwir": 0.3014156778506184,
+     "lwir_cooled": 0.006605021929538889,
+     "mwir": 0.1034463522513183
+    }
+   },
+   {
+    "scene_id": "s000025",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 148.3333900618151,
+    "engine_setting": "nominal",
+    "visibility_km": 3.0,
+    "residuals": {
+     "rgb": -0.005564028368138629,
+     "lwir": 0.517746743128666,
+     "lwir_cooled": 0.33163325340397254,
+     "mwir": -0.5325377124637747
+    },
+    "noise_share": {
+     "rgb": 0.634180646226075,
+     "lwir": 0.8001183420633132,
+     "lwir_cooled": 0.8073154309324526,
+     "mwir": 0.8530744492910677
+    }
+   },
+   {
+    "scene_id": "s000026",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 69.06735453382956,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 0.007139726167305849,
+     "lwir": 1.2286630948445239,
+     "lwir_cooled": 0.5118056306958021,
+     "mwir": 0.8298323048479501
+    },
+    "noise_share": {
+     "rgb": 0.018483076277749276,
+     "lwir": 0.07197518419809096,
+     "lwir_cooled": 0.009046307008442745,
+     "mwir": 0.01929740924538701
+    }
+   },
+   {
+    "scene_id": "s000027",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 47.34561602605057,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.3530897469513148,
+     "lwir": 1.1417369743755241,
+     "lwir_cooled": 1.452870779051402,
+     "mwir": 0.9514273492276475
+    },
+    "noise_share": {
+     "rgb": 0.4750487533612908,
+     "lwir": 1.0,
+     "lwir_cooled": 0.9818311135213087,
+     "mwir": 0.8929719867881366
+    }
+   },
+   {
+    "scene_id": "s000029",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 143.95201433369007,
+    "engine_setting": "high_power",
+    "visibility_km": 3.0,
+    "residuals": {
+     "rgb": 0.6793135735161937,
+     "lwir": -1.4398310388803175,
+     "lwir_cooled": -1.0137101120005996,
+     "mwir": -0.04427069322449917
+    },
+    "noise_share": {
+     "rgb": 0.7272567604207568,
+     "lwir": 0.0014123391154316327,
+     "lwir_cooled": 5.759924473982606e-05,
+     "mwir": 0.0011273258961647995
+    }
+   },
+   {
+    "scene_id": "s000030",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 28.53763306357833,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -2.759221532204281,
+     "lwir": -2.1315609254612085
+    },
+    "noise_share": {
+     "rgb": 0.012666319001214335,
+     "lwir": 0.023788315873244547,
+     "lwir_cooled": null,
+     "mwir": null
+    }
+   },
+   {
+    "scene_id": "s000032",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 163.73553793166727,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6698180574786861,
+     "lwir": 0.2754109606087427,
+     "lwir_cooled": 1.123725946432776,
+     "mwir": -1.2823350235785524
+    },
+    "noise_share": {
+     "rgb": 0.9746468637680165,
+     "lwir": 0.05002672072709455,
+     "lwir_cooled": 0.08204035532220318,
+     "mwir": 0.0009366904034920401
+    }
+   },
+   {
+    "scene_id": "s000035",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 147.1483767011419,
+    "engine_setting": "nominal",
+    "visibility_km": 2.0,
+    "residuals": {
+     "rgb": -0.19784055549669866,
+     "lwir": 0.661121697793579,
+     "lwir_cooled": -1.0398050127339156,
+     "mwir": -0.16811322483418056
+    },
+    "noise_share": {
+     "rgb": 0.16447271260176324,
+     "lwir": 1.0,
+     "lwir_cooled": 0.006224406370067577,
+     "mwir": 0.002062661195696668
+    }
+   },
+   {
+    "scene_id": "s000036",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 75.67569690468136,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6846947426936439,
+     "lwir": -0.18190155722710788,
+     "lwir_cooled": -0.6853682435831296,
+     "mwir": 1.6475098199068143
+    },
+    "noise_share": {
+     "rgb": 0.23884378094138387,
+     "lwir": 0.05113701479370605,
+     "lwir_cooled": 0.01643045812774199,
+     "mwir": 0.4977685982041996
+    }
+   },
+   {
+    "scene_id": "s000037",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 150.24754661778843,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.7043047213022847,
+     "lwir": 1.005093233853747,
+     "mwir": 1.109357771373506
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.008684436961481481,
+     "lwir_cooled": null,
+     "mwir": 0.004607238487951636
+    }
+   },
+   {
+    "scene_id": "s000038",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 155.75315769263852,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6381796784258915,
+     "lwir": -1.8044082686436846,
+     "lwir_cooled": -2.1707156026602865,
+     "mwir": -0.10855703085682622
+    },
+    "noise_share": {
+     "rgb": 0.33501136160899364,
+     "lwir": 0.0013677614400628795,
+     "lwir_cooled": 0.0006921444915201129,
+     "mwir": 0.004846882734641726
+    }
+   },
+   {
+    "scene_id": "s000039",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 51.7436381493998,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.0686163626184445,
+     "lwir": -0.767852142022539,
+     "lwir_cooled": -1.155146830665545,
+     "mwir": -1.6651617740686244
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.006664955732578336,
+     "lwir_cooled": 0.013411035102662169,
+     "mwir": 0.006574384620205329
+    }
+   },
+   {
+    "scene_id": "s000040",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 124.18440392271893,
+    "engine_setting": "nominal",
+    "visibility_km": 2.0,
+    "residuals": {
+     "rgb": -0.21490981006591703,
+     "lwir": -0.5163523906135934,
+     "mwir": 0.004012352246309803
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.07613360219573592,
+     "lwir_cooled": null,
+     "mwir": 0.34485517051269043
+    }
+   },
+   {
+    "scene_id": "s000042",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 39.64942033470483,
+    "engine_setting": "low_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 1.2796356802977675,
+     "lwir": 2.676966065356354,
+     "lwir_cooled": 2.758212220323111,
+     "mwir": 2.934530216544894
+    },
+    "noise_share": {
+     "rgb": 0.7426694891737804,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000045",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 151.49346673210016,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 1.0118209420185043,
+     "lwir": -0.8981020565140727,
+     "lwir_cooled": -0.866502654905529,
+     "mwir": -0.9328570565328733
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.0020012887327796117,
+     "lwir_cooled": 0.00037560183023619185,
+     "mwir": 0.004017434176686458
+    }
+   },
+   {
+    "scene_id": "s000046",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 41.38316100050597,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.887085925989429,
+     "lwir": -2.895659138391202,
+     "lwir_cooled": -5.333728350318712
+    },
+    "noise_share": {
+     "rgb": 0.005678264297377285,
+     "lwir": 0.001823200653107256,
+     "lwir_cooled": 0.028349271733610872,
+     "mwir": null
+    }
+   },
+   {
+    "scene_id": "s000049",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 149.32351337604976,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 0.05450740600123721,
+     "lwir": 0.8745112346165884,
+     "mwir": 1.507212855561896
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": null,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000050",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 48.51462699375069,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.2752337656377246,
+     "lwir": 0.06757849121578374,
+     "mwir": 0.12153785771909131
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.3984313034474882,
+     "lwir_cooled": null,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000051",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 145.3463227410862,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.8949276892355584,
+     "lwir": 0.6568114078024632,
+     "lwir_cooled": 0.46972877840172256,
+     "mwir": 0.2811209504606431
+    },
+    "noise_share": {
+     "rgb": 0.6689823154125549,
+     "lwir": 0.13396663739419856,
+     "lwir_cooled": 0.015571881019533013,
+     "mwir": 0.003998638272900825
+    }
+   },
+   {
+    "scene_id": "s000053",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 38.66960398434854,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.9786911492161181,
+     "lwir": 1.7253690739275198,
+     "lwir_cooled": 2.725951950151493,
+     "mwir": 3.2868387955784
+    },
+    "noise_share": {
+     "rgb": 0.5688182379967558,
+     "lwir": 0.11746920975498648,
+     "lwir_cooled": 0.06665921383505215,
+     "mwir": 0.18885574551918347
+    }
+   },
+   {
+    "scene_id": "s000056",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 144.55737561060295,
+    "engine_setting": "nominal",
+    "visibility_km": 12.905342002740449,
+    "residuals": {
+     "rgb": 1.7456321674236541,
+     "lwir": -0.10326198946970067,
+     "lwir_cooled": 0.050288145122607375,
+     "mwir": -1.4527272272614873
+    },
+    "noise_share": {
+     "rgb": 0.9874620324690939,
+     "lwir": 0.7662088186389051,
+     "lwir_cooled": 0.961923955330842,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000062",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 31.093031370280883,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -0.9271308896478493,
+     "lwir": -2.8272311646859807,
+     "lwir_cooled": -2.0113828795173725,
+     "mwir": -1.5189391679230893
+    },
+    "noise_share": {
+     "rgb": 0.9679531373492953,
+     "lwir": 0.7291298577379426,
+     "lwir_cooled": 1.0,
+     "mwir": 0.9440129478274916
+    }
+   },
+   {
+    "scene_id": "s000064",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 143.47926330257022,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 0.5218781062529074,
+     "lwir": 1.2297825658361594,
+     "lwir_cooled": 0.6790426297062648,
+     "mwir": -0.16204488419544827
+    },
+    "noise_share": {
+     "rgb": 0.8239516499695982,
+     "lwir": 0.42017299371851674,
+     "lwir_cooled": 0.21547036072549702,
+     "mwir": 0.47171287336022943
+    }
+   },
+   {
+    "scene_id": "s000065",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 148.60218126141018,
+    "engine_setting": "high_power",
+    "visibility_km": 2.0,
+    "residuals": {
+     "rgb": -0.33861493068206716,
+     "lwir": 0.4083253124221846,
+     "lwir_cooled": -0.45416701245991753,
+     "mwir": 1.1111853476832394
+    },
+    "noise_share": {
+     "rgb": 0.8978198610824656,
+     "lwir": 0.13280384708471396,
+     "lwir_cooled": 0.05827490940063335,
+     "mwir": 0.7495060113694801
+    }
+   },
+   {
+    "scene_id": "s000066",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 36.703870241387314,
+    "engine_setting": "low_power",
+    "visibility_km": 3.5,
+    "residuals": {
+     "rgb": -1.3191021484767664,
+     "lwir": 1.009289156222568,
+     "lwir_cooled": 1.5235561995532008,
+     "mwir": 1.7445117758347637
+    },
+    "noise_share": {
+     "rgb": 0.9384522386676061,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 0.9012005005120225
+    }
+   },
+   {
+    "scene_id": "s000067",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 18.83233776009125,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.2050500032835996,
+     "lwir": -0.3863071715981148,
+     "lwir_cooled": -0.17536900129539923,
+     "mwir": -0.5034535635384261
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.6870777575202189,
+     "lwir_cooled": 0.8918788562518982,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000069",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 158.81853242623782,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.34487855893425823,
+     "lwir": -0.2744249514243098,
+     "lwir_cooled": -0.46468905516671555,
+     "mwir": -0.6634478614960138
+    },
+    "noise_share": {
+     "rgb": 0.9371487660905551,
+     "lwir": 0.6681505067772314,
+     "lwir_cooled": 0.9995233238467882,
+     "mwir": 0.8423210384684592
+    }
+   },
+   {
+    "scene_id": "s000070",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 151.51827431034184,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.5036757864267192,
+     "lwir": 0.4002468091722369,
+     "lwir_cooled": 1.8213300228330178,
+     "mwir": 1.6864246011928383
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 0.5884049765758322
+    }
+   },
+   {
+    "scene_id": "s000071",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 119.41730493907758,
+    "engine_setting": "high_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 0.03593733294896895,
+     "lwir": 1.062374774670391,
+     "lwir_cooled": 1.288812200528021,
+     "mwir": 0.5120173621322
+    },
+    "noise_share": {
+     "rgb": 0.7542472254132114,
+     "lwir": 1.0,
+     "lwir_cooled": 0.18866370790908796,
+     "mwir": 0.056561203012451294
+    }
+   },
+   {
+    "scene_id": "s000072",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 141.88684459498427,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.3132737830809513,
+     "lwir": 0.5580086233611192
+    },
+    "noise_share": {
+     "rgb": 0.8689283571113785,
+     "lwir": 1.0,
+     "lwir_cooled": null,
+     "mwir": null
+    }
+   },
+   {
+    "scene_id": "s000074",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 156.91233712635028,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.2304886146686205,
+     "lwir": -1.800400612823771,
+     "lwir_cooled": -1.8569222669296495,
+     "mwir": -1.9520500610861595
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 0.4470057235140752,
+     "mwir": 0.4149671338301259
+    }
+   },
+   {
+    "scene_id": "s000075",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 24.503392489616097,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.995044698465616,
+     "lwir": 0.42218033516583375,
+     "lwir_cooled": 1.014229174475206,
+     "mwir": -0.8291873970208687
+    },
+    "noise_share": {
+     "rgb": 0.8239398651117731,
+     "lwir": 1.0,
+     "lwir_cooled": 0.9609009887541469,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000077",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 23.268424792147446,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.006041812415020997,
+     "lwir": -2.0327888825042546,
+     "lwir_cooled": -2.1369487668870044,
+     "mwir": -2.8390603664537046
+    },
+    "noise_share": {
+     "rgb": 0.9137103826052638,
+     "lwir": 0.0011946538866973691,
+     "lwir_cooled": 0.0002810854670706255,
+     "mwir": 0.00034693091112935893
+    }
+   },
+   {
+    "scene_id": "s000078",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 159.3333479311991,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.4010220163645686,
+     "lwir": 0.24962791689494512,
+     "lwir_cooled": 0.9068002523514795,
+     "mwir": 1.1425292053643004
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.01896167399427743,
+     "lwir_cooled": 0.01170686797290953,
+     "mwir": 0.15494776805511282
+    }
+   },
+   {
+    "scene_id": "s000079",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 100.49332142613925,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.1962343171386434,
+     "lwir": 1.6644832896977557,
+     "mwir": 1.5095758502574714
+    },
+    "noise_share": {
+     "rgb": 0.37620996239031257,
+     "lwir": 0.035562911279411656,
+     "lwir_cooled": null,
+     "mwir": 0.051095044190373175
+    }
+   },
+   {
+    "scene_id": "s000080",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 154.69260562387248,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -1.0912165225754955,
+     "lwir": -0.7386703485392228,
+     "lwir_cooled": -0.5844704705087382,
+     "mwir": -1.2304954401147343
+    },
+    "noise_share": {
+     "rgb": 0.0033539791102336707,
+     "lwir": 0.06411609765244275,
+     "lwir_cooled": 0.05628417291440603,
+     "mwir": 0.006110978570199136
+    }
+   },
+   {
+    "scene_id": "s000082",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 64.4239451633514,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.6601937765469046,
+     "lwir": 0.3900374438576799,
+     "lwir_cooled": 0.6484649354788887,
+     "mwir": -0.7609694063586776
+    },
+    "noise_share": {
+     "rgb": 0.75555002867076,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 0.7999580922551375
+    }
+   },
+   {
+    "scene_id": "s000084",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 65.34143867543848,
+    "engine_setting": "nominal",
+    "visibility_km": 2.0,
+    "residuals": {
+     "rgb": 0.26580090703622883,
+     "lwir": -2.622133099663535,
+     "lwir_cooled": -3.0784068703487693,
+     "mwir": -1.3359453696639871
+    },
+    "noise_share": {
+     "rgb": 0.8339239224023562,
+     "lwir": 0.027089841810051384,
+     "lwir_cooled": 0.004393034897730366,
+     "mwir": 0.06738432769735425
+    }
+   },
+   {
+    "scene_id": "s000086",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 60.215481562423754,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.8931250384388205,
+     "lwir": -3.0283051024345213,
+     "lwir_cooled": -3.43662497500627,
+     "mwir": -4.1585677076670065
+    },
+    "noise_share": {
+     "rgb": 0.334004499137316,
+     "lwir": 0.31383271970695054,
+     "lwir_cooled": 0.32186213517541745,
+     "mwir": 0.49269793983124965
+    }
+   },
+   {
+    "scene_id": "s000088",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 137.35345167605414,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6570557695760808,
+     "lwir": -0.22182754315031783,
+     "lwir_cooled": -0.624011403362446,
+     "mwir": -0.022875717304980725
+    },
+    "noise_share": {
+     "rgb": 0.9084381149692496,
+     "lwir": 0.7848580238234873,
+     "lwir_cooled": 0.6193347672035633,
+     "mwir": 0.9214146108364316
+    }
+   },
+   {
+    "scene_id": "s000091",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 108.64515049140624,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.4755625834565091,
+     "lwir": 0.221965569427498,
+     "lwir_cooled": -0.9056212682327995,
+     "mwir": 0.3081688737392474
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 0.1544377061270769,
+     "mwir": 0.6498518322978822
+    }
+   },
+   {
+    "scene_id": "s000093",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 132.69768223883256,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.4082158546280052,
+     "lwir": -0.11244488009603248,
+     "lwir_cooled": 0.5472960721225588,
+     "mwir": 0.5488049653844795
+    },
+    "noise_share": {
+     "rgb": 0.9894621587524852,
+     "lwir": 0.9984415888281102,
+     "lwir_cooled": 0.9635501940938985,
+     "mwir": 0.7852945828848718
+    }
+   },
+   {
+    "scene_id": "s000094",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 147.5239929664214,
+    "engine_setting": "high_power",
+    "visibility_km": 4.5,
+    "residuals": {
+     "rgb": -0.6055076546189488,
+     "lwir": 0.7585072319102455,
+     "lwir_cooled": 0.630672701504313,
+     "mwir": 0.4549435523864993
+    },
+    "noise_share": {
+     "rgb": 0.8865105693131317,
+     "lwir": 0.2649441360055637,
+     "lwir_cooled": 0.0796554116761872,
+     "mwir": 0.07137595406994092
+    }
+   },
+   {
+    "scene_id": "s000095",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 77.41781475661026,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.06886260602692662,
+     "lwir": -0.41588148288880955,
+     "lwir_cooled": -0.8701569794560351,
+     "mwir": -0.09167513543567196
+    },
+    "noise_share": {
+     "rgb": 0.9969645080052969,
+     "lwir": 0.05032369861675633,
+     "lwir_cooled": 0.030985213631543787,
+     "mwir": 0.5924168928283703
+    }
+   },
+   {
+    "scene_id": "s000096",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 15.436647465563945,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "lwir": 0.3664654046308664,
+     "lwir_cooled": 1.003157399322876,
+     "mwir": 0.6874412831838459
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 0.9604218237967176,
+     "lwir_cooled": 1.0,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000097",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 17.852237296090426,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.8288326087666715,
+     "lwir": 0.5172514392455962,
+     "mwir": -2.4193987558523147
+    },
+    "noise_share": {
+     "rgb": 0.5673801620486126,
+     "lwir": 0.011804654627538722,
+     "lwir_cooled": null,
+     "mwir": 0.001956158188359345
+    }
+   },
+   {
+    "scene_id": "s000099",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 46.52452264845256,
+    "engine_setting": "high_power",
+    "visibility_km": 0.5,
+    "residuals": {
+     "rgb": -0.6427885795466628,
+     "lwir": -0.7479291136835036,
+     "lwir_cooled": -1.2875171150507123,
+     "mwir": -0.516543311719805
+    },
+    "noise_share": {
+     "rgb": 0.991754229865044,
+     "lwir": 0.9435998195125068,
+     "lwir_cooled": 0.7240370522182242,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000102",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 9.104380573782947,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "lwir": -0.6594087718019406,
+     "lwir_cooled": -0.10622034441530959,
+     "mwir": 0.6407192823539591
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 0.7949828892634947,
+     "lwir_cooled": 1.0,
+     "mwir": 0.932472043821668
+    }
+   },
+   {
+    "scene_id": "s000103",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 163.85293837269026,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.9392090316549715,
+     "lwir": 0.2911654771534442,
+     "lwir_cooled": -0.2835547274703627,
+     "mwir": -0.6134518355026639
+    },
+    "noise_share": {
+     "rgb": 0.8149046638283265,
+     "lwir": 1.0,
+     "lwir_cooled": 0.8845639445060728,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000104",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 167.10411906888112,
+    "engine_setting": "high_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -0.2312134344415248,
+     "lwir": -1.0163833749821911,
+     "lwir_cooled": -2.1683034542967556,
+     "mwir": -3.0817310518286907
+    },
+    "noise_share": {
+     "rgb": 0.8526245745594296,
+     "lwir": 0.569478453079518,
+     "lwir_cooled": 0.17470768070458928,
+     "mwir": 0.07496419772881247
+    }
+   },
+   {
+    "scene_id": "s000107",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 92.47316233237385,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.1851261043894077,
+     "lwir": -1.9588640509566768,
+     "lwir_cooled": -1.439741609797629,
+     "mwir": 2.2537801800126855
+    },
+    "noise_share": {
+     "rgb": 0.006669524456636843,
+     "lwir": 0.0011029756505057556,
+     "lwir_cooled": 0.0020943699968535173,
+     "mwir": 0.06174432546262438
+    }
+   },
+   {
+    "scene_id": "s000109",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 60.688514436667006,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.013738187025246873,
+     "lwir": -0.44582017216459047
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.13051979478878029,
+     "lwir_cooled": null,
+     "mwir": null
+    }
+   },
+   {
+    "scene_id": "s000111",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 103.1911358595909,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.7796495172929188,
+     "lwir": 0.688412800863043,
+     "lwir_cooled": 1.2632118190589834,
+     "mwir": 0.8975247786345815
+    },
+    "noise_share": {
+     "rgb": 0.6056171336915951,
+     "lwir": 0.7983927460324354,
+     "lwir_cooled": 0.5715446951044836,
+     "mwir": 0.758999106972352
+    }
+   },
+   {
+    "scene_id": "s000112",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 138.0129657030228,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.6195520864618359,
+     "lwir": -1.5130949496801782,
+     "lwir_cooled": -1.5386008570184697,
+     "mwir": -1.2308344145919374
+    },
+    "noise_share": {
+     "rgb": 0.8400089960941496,
+     "lwir": 0.0008034107948358567,
+     "lwir_cooled": 0.0010139871143336925,
+     "mwir": 0.0014625976256195396
+    }
+   },
+   {
+    "scene_id": "s000113",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 141.27893783270054,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -1.1738251342173012,
+     "lwir": 1.9837684782247038,
+     "lwir_cooled": 2.4495337988218404,
+     "mwir": 2.641102193616156
+    },
+    "noise_share": {
+     "rgb": 0.004452519905799614,
+     "lwir": 0.272571710216979,
+     "lwir_cooled": 0.003037682653578598,
+     "mwir": 0.024259223483923488
+    }
+   },
+   {
+    "scene_id": "s000114",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 41.67840954517951,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.019373054301599746,
+     "lwir": 0.9891488797478174
+    },
+    "noise_share": {
+     "rgb": 0.241736884931382,
+     "lwir": 0.05954524152374361,
+     "lwir_cooled": null,
+     "mwir": null
+    }
+   },
+   {
+    "scene_id": "s000115",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 27.5027843662419,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.5397235522117589,
+     "lwir": 0.7638717952023177,
+     "lwir_cooled": 1.3234768769302634,
+     "mwir": 1.257304798447227
+    },
+    "noise_share": {
+     "rgb": 0.9445119384288286,
+     "lwir": 0.01680181818323617,
+     "lwir_cooled": 0.009404835790843113,
+     "mwir": 0.008587514305085241
+    }
+   },
+   {
+    "scene_id": "s000118",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 98.96316192869084,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.18682654941564703,
+     "lwir": 1.5391540129068266,
+     "lwir_cooled": 1.3392347581390132,
+     "mwir": 1.9886637992011291
+    },
+    "noise_share": {
+     "rgb": 0.8939726331845266,
+     "lwir": 0.27772297709903815,
+     "lwir_cooled": 0.04314525904287086,
+     "mwir": 0.36394500729205503
+    }
+   },
+   {
+    "scene_id": "s000119",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 39.70059252822639,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 0.10306629041471838,
+     "lwir": -1.3738853962307265,
+     "lwir_cooled": -2.1393275560579967,
+     "mwir": -1.6962449534872226
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.15265468551657446,
+     "lwir_cooled": 0.016000962437504433,
+     "mwir": 0.0010566433011734609
+    }
+   },
+   {
+    "scene_id": "s000120",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 64.98423536313285,
+    "engine_setting": "high_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -0.9898891793640711,
+     "lwir": -0.8481811194131228,
+     "lwir_cooled": -0.33703410773236175,
+     "mwir": -0.4590941250648575
+    },
+    "noise_share": {
+     "rgb": 0.8441618850369937,
+     "lwir": 1.0,
+     "lwir_cooled": 0.9290663578832415,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000122",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 107.8191251424841,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.15471885738510682,
+     "lwir": -0.14499796196647097,
+     "lwir_cooled": 0.03970746245139978,
+     "mwir": -0.41132587140188726
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.9948946129505314,
+     "lwir_cooled": 1.0,
+     "mwir": 0.843190423133739
+    }
+   },
+   {
+    "scene_id": "s000123",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 67.35238959900211,
+    "engine_setting": "high_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": -1.2829535506516305,
+     "lwir": -1.849910972217001,
+     "lwir_cooled": -1.1405552891957491,
+     "mwir": -2.7164090777283185
+    },
+    "noise_share": {
+     "rgb": 0.0012295703013831818,
+     "lwir": 0.00050402024769645,
+     "lwir_cooled": 0.00018225937351411432,
+     "mwir": 1.0070330265591888e-05
+    }
+   },
+   {
+    "scene_id": "s000125",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 29.9197657035906,
+    "engine_setting": "high_power",
+    "visibility_km": 1.5,
+    "residuals": {
+     "rgb": 2.274230636312568,
+     "lwir": 2.692277783334565,
+     "lwir_cooled": 3.4754861866191016,
+     "mwir": 3.5155509783968224
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 0.6350283019556047,
+     "mwir": 0.7241010410617932
+    }
+   },
+   {
+    "scene_id": "s000127",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 130.4597742780705,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.5716191798621408,
+     "lwir": -1.335775435825696
+    },
+    "noise_share": {
+     "rgb": 0.011969158244090854,
+     "lwir": 0.03487758143405051,
+     "lwir_cooled": null,
+     "mwir": null
+    }
+   },
+   {
+    "scene_id": "s000129",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 74.81428400984134,
+    "engine_setting": "low_power",
+    "visibility_km": 3.0,
+    "residuals": {
+     "rgb": -1.0253668430383023,
+     "lwir": -0.7166795934389212,
+     "lwir_cooled": -0.14972799058135955,
+     "mwir": -5.510052850940388
+    },
+    "noise_share": {
+     "rgb": 0.014394313310585346,
+     "lwir": 0.01150040938735967,
+     "lwir_cooled": 0.0072393701057173005,
+     "mwir": 0.0002505588888309402
+    }
+   },
+   {
+    "scene_id": "s000130",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 51.537346015892695,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.1924932709452758,
+     "lwir": 0.3784110062224739,
+     "lwir_cooled": 0.11172587589271021,
+     "mwir": -3.6963379889301757
+    },
+    "noise_share": {
+     "rgb": 0.0417735103860047,
+     "lwir": 0.1351548915171519,
+     "lwir_cooled": 0.019424197984365687,
+     "mwir": 0.023653468412505534
+    }
+   },
+   {
+    "scene_id": "s000131",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 68.57655637374002,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.5686570956260817,
+     "lwir": -1.3690245429354952,
+     "lwir_cooled": -0.8509670472312436,
+     "mwir": 0.969056131902418
+    },
+    "noise_share": {
+     "rgb": 0.7006534977065753,
+     "lwir": 0.0021921312622639744,
+     "lwir_cooled": 0.006733162900242962,
+     "mwir": 0.0880115232092235
+    }
+   },
+   {
+    "scene_id": "s000132",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 130.58538148325027,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "lwir": 0.5424035496889497,
+     "lwir_cooled": 0.43276053772265666,
+     "mwir": 0.13406104730751167
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000133",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 52.96801197665855,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.328660227479591,
+     "lwir": -1.1638471568193323,
+     "lwir_cooled": -2.538477257061338,
+     "mwir": -3.2134108307038507
+    },
+    "noise_share": {
+     "rgb": 0.8921909004517118,
+     "lwir": 0.0004195947670772283,
+     "lwir_cooled": 0.00019383520169783885,
+     "mwir": 0.0001821900902987255
+    }
+   },
+   {
+    "scene_id": "s000134",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 130.70542203119683,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 1.5650271579187929,
+     "lwir": 0.42323751691131406,
+     "lwir_cooled": 0.958461879721483,
+     "mwir": 0.4200031427102129
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.8523338082965175,
+     "lwir_cooled": 0.7992946293493456,
+     "mwir": 0.9943365550839643
+    }
+   },
+   {
+    "scene_id": "s000136",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 156.07057648769631,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.5442169116259956,
+     "lwir": 0.09255849497557556,
+     "lwir_cooled": -1.1345571132030141,
+     "mwir": -0.1233190779796347
+    },
+    "noise_share": {
+     "rgb": 0.2564303929955651,
+     "lwir": 0.9648090758335242,
+     "lwir_cooled": 0.20428781126727213,
+     "mwir": 0.24428124362637021
+    }
+   },
+   {
+    "scene_id": "s000137",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 107.0145368765252,
+    "engine_setting": "nominal",
+    "visibility_km": 1.2,
+    "residuals": {
+     "rgb": 1.604785109307219,
+     "lwir": 1.8476727919729843,
+     "lwir_cooled": 2.95418226470298,
+     "mwir": 2.0881850725857634
+    },
+    "noise_share": {
+     "rgb": 0.4811429717044338,
+     "lwir": 0.38747865785413393,
+     "lwir_cooled": 1.0,
+     "mwir": 0.6445950376627848
+    }
+   },
+   {
+    "scene_id": "s000139",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 45.3989073616465,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.05816172404032048,
+     "lwir": 0.5331563979408287,
+     "lwir_cooled": 1.519108448882168,
+     "mwir": 0.7193877733594212
+    },
+    "noise_share": {
+     "rgb": 0.9349626280177634,
+     "lwir": 1.0,
+     "lwir_cooled": 0.8165984921544862,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000141",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 124.62882186335811,
+    "engine_setting": "low_power",
+    "visibility_km": 1.5,
+    "residuals": {
+     "rgb": 0.1975842980512088,
+     "lwir": 0.42080231755377806,
+     "lwir_cooled": 0.4013438657372248,
+     "mwir": 0.9736526872196043
+    },
+    "noise_share": {
+     "rgb": 0.9766436027959503,
+     "lwir": 1.0,
+     "lwir_cooled": 0.530160320187051,
+     "mwir": 0.6914451625630935
+    }
+   },
+   {
+    "scene_id": "s000142",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 33.753879517184586,
+    "engine_setting": "nominal",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 1.0968797368482388,
+     "lwir": 0.5817530773052955,
+     "lwir_cooled": -0.35024117237431884,
+     "mwir": 1.0828446629337805
+    },
+    "noise_share": {
+     "rgb": 0.47169138577483316,
+     "lwir": 0.7418386015304222,
+     "lwir_cooled": 0.6024890907404851,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000143",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 137.21489147248687,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6754819323519812,
+     "lwir": 0.872829931948659,
+     "lwir_cooled": 0.7746208561245034,
+     "mwir": -0.07395744441582153
+    },
+    "noise_share": {
+     "rgb": 0.939881555196787,
+     "lwir": 1.0,
+     "lwir_cooled": 0.631249131338712,
+     "mwir": 0.0768781291391262
+    }
+   },
+   {
+    "scene_id": "s000144",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 120.13907841669236,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "lwir": -0.46656562080653097,
+     "lwir_cooled": -0.15570874597715356,
+     "mwir": 1.2156307387782297
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 0.8873946903458733,
+     "lwir_cooled": 1.0,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000145",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 127.10571190006155,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.8281074412394915,
+     "lwir": -0.03031349522760518,
+     "lwir_cooled": -0.7806247665988777,
+     "mwir": 2.063634619738312
+    },
+    "noise_share": {
+     "rgb": 0.7022361445735967,
+     "lwir": 1.0,
+     "lwir_cooled": 0.7398451608550798,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000147",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 22.68596502827827,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.6633603161515182,
+     "lwir": 0.7105228830479939,
+     "lwir_cooled": 0.2665898959987314,
+     "mwir": 0.37448303524429427
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000149",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 100.05080205741467,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.10287140555476704,
+     "lwir": -0.2337338761610317,
+     "lwir_cooled": 0.6949012448832947,
+     "mwir": 1.128260618762015
+    },
+    "noise_share": {
+     "rgb": 0.010607566662822246,
+     "lwir": 0.045722373854366595,
+     "lwir_cooled": 0.011053587222834218,
+     "mwir": 0.0956230763580115
+    }
+   },
+   {
+    "scene_id": "s000150",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 11.99888490382206,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.36422391366237905,
+     "lwir": 0.8656208039673654,
+     "mwir": 1.4896658606093274
+    },
+    "noise_share": {
+     "rgb": 0.9776080008518611,
+     "lwir": 0.87074966526945,
+     "lwir_cooled": null,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000153",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 148.97616605100714,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.4230142004914425,
+     "lwir": 2.489842639092111,
+     "lwir_cooled": 2.3612019280684624,
+     "mwir": 1.9193519633819003
+    },
+    "noise_share": {
+     "rgb": 0.9254772407916149,
+     "lwir": 0.8585323414456717,
+     "lwir_cooled": 0.6349230254082373,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000154",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 53.44978801353967,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.2534800401087949,
+     "lwir": 0.887828994118685,
+     "lwir_cooled": 0.5861285540702541,
+     "mwir": 0.6879752814380167
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.13375856414298679,
+     "lwir_cooled": 0.06460823925714992,
+     "mwir": 0.5838935194537453
+    }
+   },
+   {
+    "scene_id": "s000155",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 80.86732388198016,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.4590224795776492,
+     "lwir": 1.434803559200918,
+     "lwir_cooled": 1.4066913152119414,
+     "mwir": 0.96515112110297
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.39343460622675563,
+     "lwir_cooled": 0.11160073234511149,
+     "mwir": 0.114695492340773
+    }
+   },
+   {
+    "scene_id": "s000156",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 96.05264375915701,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "lwir": 0.158669627583524,
+     "lwir_cooled": 0.21105260820550686,
+     "mwir": -1.2262627270316506
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 1.0,
+     "lwir_cooled": 0.8243210481390151,
+     "mwir": 0.8105017432132012
+    }
+   },
+   {
+    "scene_id": "s000158",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 147.08925174816102,
+    "engine_setting": "nominal",
+    "visibility_km": 2.0,
+    "residuals": {
+     "rgb": -0.10738888064403918,
+     "lwir": 0.008302536194884524,
+     "lwir_cooled": 0.037774886763088045,
+     "mwir": -1.672468975595807
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.9268178314869846,
+     "lwir_cooled": 1.0,
+     "mwir": 0.5613630386914071
+    }
+   },
+   {
+    "scene_id": "s000160",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 81.35349194268808,
+    "engine_setting": "high_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.1611614741811467,
+     "lwir": -1.4492296401341669,
+     "lwir_cooled": -1.2615619511870166,
+     "mwir": -1.6213762538983065
+    },
+    "noise_share": {
+     "rgb": 0.9755769474226704,
+     "lwir": 0.0005012317193015934,
+     "lwir_cooled": 7.647296257793992e-05,
+     "mwir": 0.0001414413497396774
+    }
+   },
+   {
+    "scene_id": "s000161",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 104.66416718144731,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.015950356461505777,
+     "lwir": 2.9975466395557033,
+     "lwir_cooled": 1.8746126315743163,
+     "mwir": 3.770708511851044
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 1.0,
+     "mwir": 0.4467335432680851
+    }
+   },
+   {
+    "scene_id": "s000162",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 59.262926802434706,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -0.8029821898737988,
+     "lwir": -0.24696271578806095,
+     "mwir": 1.170606510833696
+    },
+    "noise_share": {
+     "rgb": 0.004590867806097942,
+     "lwir": 0.007331755100890352,
+     "lwir_cooled": null,
+     "mwir": 0.05421541255370522
+    }
+   },
+   {
+    "scene_id": "s000163",
+    "lighting": "day",
+    "clouds": false,
+    "aspect_deg": 70.31367912280004,
+    "engine_setting": "high_power",
+    "visibility_km": 5.0,
+    "residuals": {
+     "rgb": 1.174750687088772,
+     "lwir": 0.4693749052950267,
+     "lwir_cooled": 0.7401148229494945,
+     "mwir": 0.34833627137042367
+    },
+    "noise_share": {
+     "rgb": 0.5568126660912875,
+     "lwir": 1.0,
+     "lwir_cooled": 0.9727594077318337,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000165",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 111.84998605379589,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 1.1946446877422991,
+     "lwir": 0.8059652106359927,
+     "lwir_cooled": 0.7947772654213705,
+     "mwir": -1.7840903027303385
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.110819370797692,
+     "lwir_cooled": 0.006340586585688514,
+     "mwir": 3.7082350662556557e-05
+    }
+   },
+   {
+    "scene_id": "s000167",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 3.9271393412764186,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.12040216199706055,
+     "lwir": -0.3023417471239349,
+     "lwir_cooled": -0.8987279116157576,
+     "mwir": -2.4352774197404714
+    },
+    "noise_share": {
+     "rgb": 0.8088023855863576,
+     "lwir": 0.0011131172758047727,
+     "lwir_cooled": 0.005425063964775347,
+     "mwir": 3.22884201118677e-05
+    }
+   },
+   {
+    "scene_id": "s000170",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 33.62863076307718,
+    "engine_setting": "low_power",
+    "visibility_km": 1.2,
+    "residuals": {
+     "lwir": -0.13050290206669146,
+     "lwir_cooled": -0.35260855565373195,
+     "mwir": -0.41971732880878276
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 1.0,
+     "lwir_cooled": 0.9495544318063318,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000171",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 28.931475830245226,
+    "engine_setting": "nominal",
+    "visibility_km": 1.0,
+    "residuals": {
+     "rgb": -1.070703611818623,
+     "lwir": -0.03570704937448976,
+     "lwir_cooled": -0.3266053212590281,
+     "mwir": -1.3283733831846476
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 1.0,
+     "lwir_cooled": 0.8314526214073615,
+     "mwir": 1.0
+    }
+   },
+   {
+    "scene_id": "s000172",
+    "lighting": "night",
+    "clouds": true,
+    "aspect_deg": 67.48354164876231,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": 0.24134084976622106,
+     "lwir": -0.46858053781458686,
+     "mwir": 0.12275291738781835
+    },
+    "noise_share": {
+     "rgb": 1.0,
+     "lwir": 0.01336613603815068,
+     "lwir_cooled": null,
+     "mwir": 0.005341673293283784
+    }
+   },
+   {
+    "scene_id": "s000174",
+    "lighting": "night",
+    "clouds": false,
+    "aspect_deg": 58.74954851649556,
+    "engine_setting": "nominal",
+    "visibility_km": 1.0,
+    "residuals": {
+     "lwir": 0.16423942377753598,
+     "mwir": 1.2553751413399659
+    },
+    "noise_share": {
+     "rgb": null,
+     "lwir": 1.0,
+     "lwir_cooled": null,
+     "mwir": 0.8596416620606684
+    }
+   },
+   {
+    "scene_id": "s000176",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 120.52754786784486,
+    "engine_setting": "low_power",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.3712227712679208,
+     "lwir": -0.25563678540111123,
+     "lwir_cooled": -0.8997361921694984,
+     "mwir": -0.10870678929681343
+    },
+    "noise_share": {
+     "rgb": 0.010725277606268992,
+     "lwir": 0.0014223279264596483,
+     "lwir_cooled": 0.0011432256544903349,
+     "mwir": 0.016350151012002354
+    }
+   },
+   {
+    "scene_id": "s000177",
+    "lighting": "day",
+    "clouds": true,
+    "aspect_deg": 56.39893448513135,
+    "engine_setting": "nominal",
+    "visibility_km": 4.0,
+    "residuals": {
+     "rgb": -1.6875576192946267,
+     "lwir": -1.4029900324464686,
+     "lwir_cooled": -1.472255362805437,
+     "mwir": -2.986412092056341
+    },
+    "noise_share": {
+     "rgb": 0.00012536809609142046,
+     "lwir": 0.06424327291771212,
+     "lwir_cooled": 0.01675113292121166,
+     "mwir": 0.0008983844441997161
+    }
+   }
+  ]
+ },
+ "implementation_sha256": {
+  "calibrate.py": "336381bba903ebc21bd3467e54d7dc6c94cccd1ece974a4c3208b912754b47a0",
+  "clutter.py": "0486591d0a4813a3797ea5352ecd4780a2358be2a6fe18e67f348e01e1ff7a72",
+  "diagnostics.py": "5103dc9735a648fc4108cec2fb8bd833f003f28b240806a2d61e65602173e36f",
+  "fit_dprime.py": "458e5939e07c315d4800236f8c885ec0cce25ba883c93e3358caf41857036865",
+  "join_specs.py": "fd09fd86a161367f3d0fa5680d2297a81034764b4c20c9da1f456466a8fd1d75",
+  "pixels.py": "31afa611e404b00bb84ff4a8dd748f197e4bcae0ffac753e245502baeeee9ad0",
+  "score_model.py": "bf890d0905e78e4d678a8c9f30d0cf016d5c6751d399ac6f027b38e0670a1751",
+  "sensor_model.py": "258ab1c1fb3a1e5dfc101d72cdeeb3b9ef2909622af954ecf7711bc375a24748",
+  "validate.py": "86aeaf8980daafac9e39a7481e5efca682cc660b8e858739936615d189c7d4df",
+  "__init__.py": "dc7c9055b21bb748357411549463914ea0cf5a7f162e36d2eaac100cd77daa41"
+ },
+ "frozen_sha256": "014dc8bdcb226a66ea388e15ca71ab6eb325d9194cf56e3f8375df02b7e11818",
+ "availability": {
+  "census_renders": "unavailable",
+  "plume": "analytic-grade-C",
+  "low_heat": "unavailable"
+ },
+ "limitations": [
+  "Historical joint RGB+LWIR curve is a surrogate per band and was not a measured 0.01-FA test ROC.",
+  "No original four-band pixels: no five-scene pixel reproduction or empirical plume-free/low-heat census.",
+  "EpisodeSpec lacks aspect, power and visibility; draw matched training nuisance metadata once per episode.",
+  "SkyEnv v0 draws bands/frames independently; shared-clutter and dwell samplers require M1 integration."
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "workbook_sha256": "076cc3d48b701bcc45fe72051afc1846f8ea57cb15a568ffaa10f67eda951b77",
+ "csv_sha256": "df116ed4e44897cd9ee37ac3909bddc13ece97647b011544ef9ceba9542c49bd",
+ "numeric_rows": 2002,
+ "columns": [
+  "wavelength_nm",
+  "extraterrestrial",
+  "global_tilt",
+  "direct_circumsolar"
+ ],
+ "note": "Numeric values match the registered original workbook exactly. CSV serialization differs from historical f5e910... export; historical identity is not claimed."
+}

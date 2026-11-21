@@ -163,7 +163,13 @@ def quick() -> bool:
     return rep.save()
 
 
-WP_PENDING = {"wp2": "M2-08 (calibrated sensor model)", "wp3": "M3-05 (toy gate)",
+def wp2() -> bool:
+    """M2-owned WP2 checks; an incomplete gate returns failure, never a green PENDING."""
+    from rl.calib.validate import main as validate_main
+    return validate_main() == 0
+
+
+WP_PENDING = {"wp3": "M3-05 (toy gate)",
               "wp4": "M4-03/M4-04 (baselines, evaluation)", "wp5": "S-04 (integration)"}
 
 
@@ -178,6 +184,8 @@ def main(argv=None) -> int:
     ok = True
     if a.what in ("wp1", "all"):
         ok &= wp1(a.episodes)
+    if a.what in ("wp2", "all"):
+        ok &= wp2()
     for wp, tasks in WP_PENDING.items():
         if a.what in (wp, "all"):
             ok &= pending(wp, tasks)
